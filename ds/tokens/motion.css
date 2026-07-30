@@ -1,0 +1,30 @@
+/* ==========================================================================
+   Rebelle Rally — Motion tokens
+   Instrument-grade calm: motion settles like a needle finding north. The one
+   loop allowed on content is the live-dot pulse. Everything honors
+   prefers-reduced-motion at the surface level.
+   ========================================================================== */
+
+:root {
+  /* ---- Easing: standard (color/opacity) · out (entrance) · broadcast ---- */
+  --ease: cubic-bezier(0.2, 0, 0.2, 1); /* @kind other */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.25, 1); /* @kind other */
+  --bc-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --bc-ease-out: cubic-bezier(0.4, 0, 1, 1); /* @kind other */
+  --bc-ease-position: cubic-bezier(0.4, 0, 0.6, 1); /* @kind other */
+
+  /* ---- Durations: 100ms flicks → 8s route-trace ------------------------ */
+  --d-instant: 100ms; /* @kind other */
+  --d-quick: 240ms; /* @kind other */
+  --d-smooth: 320ms; /* @kind other */
+  --d-extended: 500ms; /* @kind other */
+  --d-count: 600ms; /* @kind other */
+  --d-flash: 800ms; /* @kind other */
+  --d-pulse: 1600ms; /* @kind other */
+  --d-trace: 8000ms; /* @kind other */
+}
+
+@keyframes rr-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}

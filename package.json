@@ -1,0 +1,17 @@
+{
+  "name": "@rebelle/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas.ts",
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "scripts": {
+    "build:tokens": "node scripts/build-tokens.mjs"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  }
+}

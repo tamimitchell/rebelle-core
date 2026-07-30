@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Rebelle Rally — Color tokens
+   Real values extracted 2026-06-26 from the broadcast graphics + live site.
+   Core (rr.*) is canonical. Desert + Field Glass (fg.*) are the elevation
+   layer sourced from real field imagery. Sponsor colors are lockup-only,
+   NEVER brand core. Status colors are semantic (red = on-air, cyan = active).
+   ========================================================================== */
+
+:root {
+  /* ---- Brand core ------------------------------------------------------ */
+  --rr-blue: #189fda;          /* Rebelle cyan — accent, active route, focus, position-up-in-UI */
+  --rr-blue-deep: #118899;     /* deeper teal — hover/pressed shade anchor */
+  --rr-navy: #0d213d;          /* brand ground — hero/overlay backgrounds */
+  --rr-navy-deep: #0c1420;     /* deepest navy — app body, atmospheric grounds */
+  --rr-navy-broadcast: #0f223e;/* the overlay's measured navy (header gradient base) */
+  --rr-white: #ffffff;
+
+  /* ---- Neutrals -------------------------------------------------------- */
+  --rr-paper: #f4f4f4;         /* neutral light background */
+  --rr-paper-warm: #f7f3ea;    /* warm paper — editorial/magazine ground */
+  --rr-gray-100: #e8e8e8;      /* light fills, dividers */
+  --rr-gray-400: #ababab;      /* mid neutral, muted text on light, disabled */
+  --rr-gray-navy: #515e73;     /* navy-tinted gray — secondary text/borders on navy */
+  --rr-text: #333333;          /* body text on light */
+  --rr-ink: #171720;           /* near-black — high-contrast headings */
+
+  /* ---- Desert (Field Glass terrain layer) ------------------------------ */
+  --rr-sand: #d8c3a0;          /* warm terrain ground */
+  --rr-sand-warm: #e8c49a;     /* peachier sand (graphics harvest) */
+  --rr-dust: #b89a78;          /* dry rules, shadows */
+  --rr-sage: #8b967a;          /* desert scrub / ecological note */
+  --rr-clay: #9e6f55;          /* warm terrain depth */
+  --rr-earth: #3e342a;         /* deep alluvial/umber ground */
+  --rr-pine: #3c4a36;          /* high-country evergreen */
+
+  /* ---- Field Glass instrument layer ------------------------------------ */
+  --rr-glass-frost: rgba(255, 255, 255, 0.68); /* light glass cards */
+  --rr-glass-navy: rgba(13, 33, 61, 0.78);      /* dark glass cards over terrain */
+  /* Field Glass surface gradients — glass gradients DEEPER top-to-bottom, never
+     fades to transparent. All pair with backdrop-filter: blur(14px).
+     Mega panel additionally gets a 2px --rr-blue bottom rule. */
+  --rr-glass-nav: linear-gradient(180deg, rgba(13, 33, 61, 0.64), rgba(13, 33, 61, 0.86)); /* @kind color */ /* nav bar */
+  --rr-glass-mega: linear-gradient(180deg, rgba(13, 33, 61, 0.86), rgba(12, 20, 32, 0.94)); /* @kind color */ /* mega panel */
+  --rr-glass-utility: linear-gradient(180deg, rgba(13, 33, 61, 0.78), rgba(12, 20, 32, 0.94)); /* @kind color */ /* top utility bar (darkest — the sand/mono strip) */
+  --rr-glass-blur: 14px;
+  --rr-line-topo: #2e8fb8;     /* decorative elevation-contour linework on navy (not a signal) */
+  --rr-sky-hi: #7fb0cc;        /* environmental sky ramp — high */
+  --rr-sky-lo: #2c6e93;        /* environmental sky ramp — low */
+  --rr-marker-flag: #e0552a;   /* warm field waypoint / recovery gear accent */
+  --rr-goldenhour-cream: #f2ddb4; /* editorial warm cream */
+  --rr-goldenhour-amber: #ffc04a; /* editorial warm amber (golden hour) */
+
+  /* ---- Compass metal ramp (evolving toward brass) ---------------------- */
+  --rr-metal-silver: #c8ccd0;  /* light instrument metal (chrome bezel) */
+  --rr-metal-pewter: #9da3ab;  /* mid brushed metal */
+  --rr-metal-gunmetal: #4a4e52;/* dark instrument metal */
+
+  /* ---- Sponsor (lockups ONLY, never brand core) ------------------------ */
+  --rr-sponsor-toyota: #eb0a1e;   /* Toyota red — TITLE SPONSOR */
+  --rr-sponsor-pirelli: #ec1e24;  /* Pirelli red — Scorpion Challenge */
+  --rr-sponsor-pennzoil: #fde100; /* Pennzoil yellow — Pennzoil Challenge */
+
+  /* ---- Status (semantic) ----------------------------------------------- */
+  --rr-status-live: #ff0000;     /* on-air / REC dot / LIVE pill */
+  --rr-status-up: #10b981;       /* position gained (green ▲) */
+  --rr-status-down: #df1f26;     /* position lost (red ▼) */
+
+  /* ---- Broadcast surface tints (cyan @ opacity over navy) -------------- */
+  --bc-row-odd: rgba(22, 160, 219, 0.08);
+  --bc-row-hover: rgba(22, 160, 219, 0.15);
+  --bc-row-highlight: rgba(22, 160, 219, 0.25);
+  --bc-row-even-dark: rgba(0, 0, 0, 0.15);
+  --bc-border: rgba(22, 160, 219, 0.8);
+  --bc-divider: rgba(22, 160, 219, 0.3);
+  --bc-divider-soft: rgba(22, 160, 219, 0.2);
+  --bc-header-tint: rgba(22, 160, 219, 0.1);
+  --bc-header-tint-soft: rgba(22, 160, 219, 0.05);
+  --bc-panel: rgba(52, 63, 82, 0.95);       /* info/badge panel fallback fill */
+  --bc-panel-divider: #5b6a7c;
+
+  /* ---- Semantic aliases ------------------------------------------------ */
+  --surface-page: var(--rr-navy-deep);
+  --surface-ground: var(--rr-navy);
+  --surface-card: var(--rr-white);
+  --surface-panel: var(--bc-panel);
+  --surface-paper: var(--rr-paper-warm);
+  --text-on-navy: var(--rr-white);
+  --text-on-navy-muted: rgba(255, 255, 255, 0.7);
+  --text-body: var(--rr-text);
+  --text-heading: var(--rr-ink);
+  --text-muted: var(--rr-gray-400);
+  --accent: var(--rr-blue);
+  --accent-hover: var(--rr-blue-deep);
+  --focus-ring: var(--rr-blue);
+}

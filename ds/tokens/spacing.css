@@ -1,0 +1,28 @@
+/* ==========================================================================
+   Rebelle Rally — Spacing tokens
+   20px base increment (the site's rhythm). Broadcast has its own tighter
+   dense scale for the 1080p overlay rows.
+   ========================================================================== */
+
+:root {
+  /* ---- Editorial / marketing spacing (20px base) ----------------------- */
+  --space-1: 20px;  /* base unit — default gap */
+  --space-2: 40px;  /* minor break — section padding */
+  --space-3: 50px;  /* medium break — CTA rhythm */
+  --space-4: 80px;  /* major section break */
+  --container-max: 1140px;
+  --container-wide: 1240px;
+
+  /* ---- Broadcast dense spacing (1080p overlay) ------------------------- */
+  --bc-space-xs: 3px;  /* hairline gaps inside dense rows */
+  --bc-space-sm: 4px;
+  --bc-space-md: 8px;  /* row horizontal padding */
+  --bc-space-lg: 16px; /* container padding */
+  --bc-space-xl: 20px; /* section padding */
+  --bc-space-xxl: 40px;
+  --bc-row-height: 30px; /* curtain team-row height */
+
+  /* ---- Broadcast canvas ------------------------------------------------ */
+  --bc-canvas-w: 1920px;
+  --bc-canvas-h: 1080px;
+}

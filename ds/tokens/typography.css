@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Rebelle Rally — Typography tokens
+   Two registers, one system. Display = Oswald (Tungsten stand-in), condensed
+   motorsport caps. Body/data = Inter with tabular numerals. Mono = IBM Plex
+   Mono for timing/micro-labels. Open Sans carries the softer magazine body.
+   ========================================================================== */
+
+:root {
+  /* ---- Families (serif wordmark · condensed display · body · mono · magazine) */
+  --font-wordmark: "Minion Pro", "Cormorant Garamond", "Optima", Georgia, serif; /* @kind font */
+  --font-display: "Oswald", "Arial Narrow", "Arimo", system-ui, sans-serif; /* @kind font */
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* @kind font */
+  --font-mono: "IBM Plex Mono", "SF Mono", ui-monospace, monospace; /* @kind font */
+  --font-magazine: "Open Sans", system-ui, sans-serif; /* @kind font */
+
+  /* ---- Weights: light=editorial body, medium=emphasis/labels,
+          semibold=display headers, bold=page titles/team numbers ---------- */
+  --fw-light: 300; /* @kind font */
+  --fw-regular: 400; /* @kind font */
+  --fw-medium: 500; /* @kind font */
+  --fw-semibold: 600; /* @kind font */
+  --fw-bold: 700; /* @kind font */
+
+  /* ---- Type scale (responsive display + fixed data) -------------------- */
+  --fs-page-title: clamp(54px, 11vw, 160px); /* @kind font */
+  --fs-page-subtitle: clamp(18px, 3.8vw, 56px); /* @kind font */
+  --fs-kicker: clamp(12px, 2.4vw, 32px); /* @kind font */
+  --fs-section: clamp(30px, 4.2vw, 52px); /* @kind font */
+  --fs-card-title: 24px; /* @kind font */
+  --fs-team-number: 64px; /* @kind font */
+  --fs-body: clamp(16px, 2.2vw, 20px); /* @kind font */
+  --fs-small: clamp(12px, 1.8vw, 16px); /* @kind font */
+  --fs-mono-data: 12px; /* @kind font */
+
+  /* ---- Broadcast data scale (fixed, 1080p canvas) ---------------------- */
+  --bc-h1: 28px; /* @kind font */
+  --bc-h2: 24px; /* @kind font */
+  --bc-h3: 18px; /* @kind font */
+  --bc-h4: 16px; /* @kind font */
+  --bc-data-xl: 26px; /* @kind font */
+  --bc-data-lg: 18px; /* @kind font */
+  --bc-data-md: 15px; /* @kind font */
+  --bc-data-base: 14px; /* @kind font */
+  --bc-data-sm: 12px; /* @kind font */
+  --bc-data-xs: 11px; /* @kind font */
+  --bc-col-header: 11px; /* @kind font */
+
+  /* ---- Letter-spacing: tight=display, open=meta, kicker + label -------- */
+  --ls-tight: -0.022em; /* @kind font */
+  --ls-open: 0.04em; /* @kind font */
+  --ls-kicker: 0.12em; /* @kind font */
+  --ls-label: 0.18em; /* @kind font */
+  --ls-wide: 0.3em; /* @kind font */
+
+  /* ---- Line-height: display tight · app tight · body · snug (UI) ------- */
+  --lh-display: 0.88; /* @kind font */
+  --lh-tight: 1.15; /* @kind font */
+  --lh-body: 1.5; /* @kind font */
+  --lh-snug: 1; /* @kind font */
+}
