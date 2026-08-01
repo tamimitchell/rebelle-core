@@ -11,4 +11,9 @@ Rules:
   After replacing `ds/`: `pnpm build:tokens`, commit both.
 - **Schemas are Zod** — types via `z.infer<>`, never separate interfaces.
   Schema changes ripple to site/studio/apps: bump consumers deliberately.
+- **The scoring contract is `api/v1/results.php`** — measured, not assumed
+  (2026-08-01). `api/standings.php` and `api/daily_scores.php` still respond and
+  need no params, which makes them an easy wrong turn: they ignore `?rally=`/
+  `?day=`, and serve **rid=10 (2024) hardcoded mock data**. Both production
+  consumers — the broadcast overlay and the site — ship against v1. Model v1.
 - Real brand: navy `#0d213d` + cyan `#189fda`; red/gold are sponsor-lockup-only.
