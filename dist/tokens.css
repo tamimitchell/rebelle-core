@@ -3,6 +3,9 @@
  * Re-import the design system, replace ds/, then run: pnpm build:tokens
  */
 
+/* Hoisted from ds/tokens/ — @import must precede all other rules. */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Open+Sans:wght@300;400;600;700&display=swap');
+
 /* ==========================================================================
    Rebelle Rally — Color tokens
    Real values extracted 2026-06-26 from the broadcast graphics + live site.
@@ -270,7 +273,6 @@
       ship the real faces. Inter (body) and the rest are the real faces.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Open+Sans:wght@300;400;600;700&display=swap');
 
 /* Real Rebelle wordmark face. Drop the licensed file at assets/fonts/MinionPro.woff2
    and it takes over; until then the token's Cormorant Garamond fallback renders. */
