@@ -229,3 +229,82 @@ export const DispatchSchema = z.object({
   mediaRefs: z.array(z.string()).default([]),
 });
 export type Dispatch = z.infer<typeof DispatchSchema>;
+
+// ── Studio release artifact ────────────────────────────────────────────────
+
+// The studio writes the artifact; every reader takes this shape from core so a
+// new section kind is a deliberate cross-repo contract change rather than an
+// untyped surprise at the site's network boundary.
+export const SectionModeSchema = z.enum(['pre-rally', 'live', 'post-rally']);
+export type SectionMode = z.infer<typeof SectionModeSchema>;
+
+export const CraftedSectionSchema = z
+  .object({
+    type: z.literal('crafted'),
+    modes: z.array(SectionModeSchema).min(1),
+    content: z
+      .object({
+        format: z.literal('html'),
+        html: z.string().min(1),
+        source_note: z.string().min(1).optional(),
+      })
+      .strict(),
+  })
+  .strict();
+export type CraftedSection = z.infer<typeof CraftedSectionSchema>;
+
+// These shapes predate crafted fragments. Keep them parseable while existing
+// releases remain current, but do not give the site a second renderer for
+// them: only `crafted` becomes a home-page surface.
+export const LegacySectionTypeSchema = z.enum([
+  'hero-live',
+  'hero-countdown',
+  'basics',
+  'follow-the-field-standings',
+  'follow-the-field-spotlight',
+  'quote',
+  'register-bar',
+  'from-the-field',
+  'train-and-impact',
+  'partners',
+  'newsletter',
+]);
+
+export const LegacySectionSchema = z
+  .object({
+    type: LegacySectionTypeSchema,
+    modes: z.array(SectionModeSchema).min(1),
+    content: z.record(z.unknown()),
+  })
+  .strict();
+
+export const ReleaseSectionSchema = z.discriminatedUnion('type', [
+  CraftedSectionSchema,
+  LegacySectionSchema,
+]);
+export type ReleaseSection = z.infer<typeof ReleaseSectionSchema>;
+
+export const ReleasePageSchema = z
+  .object({
+    page: z
+      .object({
+        slug: z.string().min(1),
+        title: z.string().min(1),
+        mode: SectionModeSchema,
+      })
+      .strict(),
+    sections: z.array(ReleaseSectionSchema),
+  })
+  .strict();
+export type ReleasePage = z.infer<typeof ReleasePageSchema>;
+
+export const ReleaseArtifactSchema = z
+  .object({
+    schema_version: z.string().min(1),
+    release_id: z.string().uuid(),
+    channel_key: z.string().min(1),
+    built_at: z.string().datetime({ offset: true }),
+    pages: z.array(ReleasePageSchema),
+  })
+  .strict();
+export type ReleaseArtifact = z.infer<typeof ReleaseArtifactSchema>;
