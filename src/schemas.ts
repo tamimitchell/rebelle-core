@@ -308,3 +308,65 @@ export const ReleaseArtifactSchema = z
   })
   .strict();
 export type ReleaseArtifact = z.infer<typeof ReleaseArtifactSchema>;
+
+// The first fast-lane contract. It is intentionally separate from a release
+// artifact: a post can reach a standing rail without freezing or publishing a
+// page, and a consumer must reject a record-contract drift rather than render
+// only whichever fields it happens to use.
+const CalendarDateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'must be YYYY-MM-DD')
+  .refine((value) => new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value, {
+    message: 'must be a real calendar day',
+  });
+
+const PostLinkSchema = z
+  .string()
+  .url()
+  .refine((value) => {
+    const url = new URL(value);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.length > 0;
+  }, 'must be an absolute http(s) URL');
+
+export const PostPayloadSchema = z
+  .object({
+    kind: z.enum(['dispatch', 'news']),
+    date: CalendarDateSchema,
+    category: z.string().min(1),
+    headline: z.string().min(1),
+    dek: z.string().min(1),
+    body: z.string().min(1).nullable(),
+    link: PostLinkSchema.nullable(),
+  })
+  .strict()
+  .superRefine((post, context) => {
+    if (post.kind === 'news' && post.link === null) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ['link'], message: 'news needs a link' });
+    }
+    if (post.kind === 'dispatch' && post.link !== null) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ['link'], message: 'dispatch has no link' });
+    }
+  });
+export type PostPayload = z.infer<typeof PostPayloadSchema>;
+
+export const PostsFeedRecordSchema = z
+  .object({
+    id: z.string().uuid(),
+    version_id: z.string().uuid(),
+    schema_version: z.literal('2'),
+    payload: PostPayloadSchema,
+  })
+  .strict();
+export type PostsFeedRecord = z.infer<typeof PostsFeedRecordSchema>;
+
+export const PostsFeedDocumentSchema = z
+  .object({
+    contract_version: z.literal('1'),
+    feed_key: z.literal('system.posts'),
+    record_type_key: z.literal('system.post'),
+    record_schema_version: z.literal('2'),
+    sent_at: z.string().datetime({ offset: true }),
+    records: z.array(PostsFeedRecordSchema),
+  })
+  .strict();
+export type PostsFeedDocument = z.infer<typeof PostsFeedDocumentSchema>;
