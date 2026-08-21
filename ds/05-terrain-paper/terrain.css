@@ -1,0 +1,148 @@
+/* Terrain Paper — the field notebook ground. 🟡 derived, refined 2026-08-20 against the cost book + site mockups.
+   The metaphor: a real printed sheet in desert light. Warm uncoated stock with tooth you feel more than see,
+   survey marks squaring the page, and topo contours surfacing only where the page is empty.
+   Contours retuned wide 2026-08-21: ten levels, not forty. Large and minimal reads as survey; dense reads as wallpaper.
+   THE LAW OF RESTRAINT: texture is felt, not read. Nothing here is meant to be noticed on its own —
+   if you can see a layer at a glance it is turned up too far and the page reads cheap. Strengths are
+   set for type ON the sheet; a band of cards has none, and .on-cards is that exception made mechanical.
+   tokens, not suggestions: fine grain .13, mottle baked at .19, contours .5 on already-pale baked ink.
+   Linework runs LIGHTER than the texture — the sheet should feel like stock, the lines like a light
+   pencil on it. If the linework outweighs the paper, the page reads as an interface. */
+:root{
+/* 🟡 derived — the sheet. Sand is WARM: oatmeal, the color of uncoated stock in desert light.
+   Never gray-beige, never cool. The edge is the same paper caught in shadow — the vignette that
+   makes a flat fill read as a sheet. */
+--paper-sand:var(--desert-sand);--paper-sand-edge:#E2D8C4;
+/* 🟡 derived — the contour ink. Warm brown-taupe, the color of printed topo; never navy, never gray. */
+--terrain-line:var(--desert-taupe);
+/* the tooth — TWO layers, because real stock is uneven at two scales.
+   Fine grain is the fiber you feel; the mottle is the cloudy unevenness that stops a fill reading as a fill.
+   Coarse on purpose: a tight high-frequency noise reads as screen dither, not as paper. Bigger particles,
+   fewer octaves. Per-layer strength is baked into each tile's rect opacity so both tune independently. */
+--tp-grain:.13;/* @kind other */
+--tp-grain-tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");/* @kind other */
+/* the mottle — low-frequency cloud, big soft patches of denser stock. Lives on the sheet, multiplied. */
+--tp-mottle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.009' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='700' height='700' filter='url(%23m)' opacity='.19'/%3E%3C/svg%3E");/* @kind other */
+/* ── WHAT MAKES A CUT — the same three laws as Navy Ground, because the two grounds are one mechanism
+   with different weather. A CUT IS A CHOSEN CROP: each sheet is drawn far larger than any page, and a
+   cut picks one window and zooms it. EVERY SIZE IS A PERCENTAGE, so the picture is container-relative
+   and a 200px swatch shows the same crop as a full sheet — a pixel size silently re-crops at every
+   width, which on paper means the specimen and the printed page disagree. EVERY POSITION IS CHOSEN,
+   never left at the origin: the test is not "can I see the marks" but "is anywhere denser than the
+   rest", judged at the aspect it will ship at. Paper differs from Navy in one way only, and it is the
+   next law down: here the crop also has to respect the clear zone.
+   (Navy's version of this block is in 02-navy-ground/navy.css. If one moves, move both.)
+   the contours — large lazy whorls, edges only. Scale stays big: dense topo is wallpaper, not a map.
+   The sheets are purpose-drawn with the warm ink baked in (topo-contours.svg / dune-ripple.svg).
+   Contours are TRUE ISO-LINES of a height field, extracted by marching squares — so they nest and
+   never cross, the way real survey contours can't. Ripples are one waveform offset vertically, which
+   guarantees the same. Independently drawn curves always end up crossing, and a crossed contour is
+   the tell that the texture is decoration rather than terrain.
+   Baked ink + one gradient mask = no mask-composite, so it survives print and PDF. */
+--tp-topo:.5;/* @kind other */
+--tp-topo-scale:130%;/* @kind other */
+/* THE CRACKS CUT — dried playa, and it is a different KIND of layer from the contours: linework is
+   drawn ON the sheet, cracks are the ground itself seen through it. That is why it takes no clear
+   zone. A crack network at .16 is as even as the mottle, so it reads as stock rather than as a map,
+   and nothing has to be kept off the type. Contours at map scale can't make that claim.
+   The master ships white-on-transparent, so a warm-ink COPY is baked (cracks-terrain.png, #7A6746)
+   rather than tinted with a CSS mask. Same rule as the contour sheets, and for the same three
+   reasons: it survives print and PDF, it needs no mask-composite, and a masked layer is one more
+   thing that can silently fail to render. Baked ink is the system's answer to tinting, everywhere.
+   SCALE IS THE WHOLE EFFECT here more than anywhere: 420% shows a few big plates, where the master's
+   native density is fine crazing that reads at 100% as noise rather than ground you could stand on.
+   Strength runs LOWER than the contours (.13 against .5) and that is not a preference: ten contour
+   lines cover almost none of the sheet, while a crack network covers all of it. Equal opacity is not
+   equal presence. At .5 this cut reads as a stone wall; at .13 it reads as ground. */
+--tp-cracks:.13;/* @kind other */
+--tp-cracks-scale:420%;/* @kind other */
+/* where the contours are allowed to exist — a wide clear zone through the middle where content sits.
+   Err generous: contours crossing behind body text is the single fastest way to make the page look cheap. */
+--tp-topo-mask:radial-gradient(120% 112% at 46% 44%,transparent 40%,rgba(0,0,0,.28) 70%,#000 100%);/* @kind other */
+/* the sheet — a fill plus the shadow at its own edges. Two stops, no more; a busy vignette looks printed wrong. */
+--tp-sheet:radial-gradient(135% 120% at 50% 38%,var(--paper-sand) 52%,var(--paper-sand-edge) 100%);/* @kind other */
+/* linework ink is WARM, not navy — these are printed marks on paper, not interface chrome.
+   Navy at any alpha reads as UI; warm taupe recedes into the sheet the way real print does.
+   The crosses sit lighter still: they are the quietest thing on the page. */
+--tp-mark:rgba(122,103,70,.38);
+--tp-cross:rgba(122,103,70,.3);
+--tp-tick:rgba(122,103,70,.4);/* ruler ticks on the ink rules */
+--tp-tick-live:rgba(24,159,218,.62);/* the measured run — cyan, the one annotation color */
+/* how far every decoration sits off the trim — crosses AND rules share it, so they always align.
+   Generous on purpose: decoration crowded against an edge reads as a UI border. */
+--tp-margin:24px;/* @kind spacing */
+--tp-dot:repeating-linear-gradient(180deg,var(--tp-mark) 0 1px,transparent 1px 3px);/* @kind other */
+--tp-rule-gap:24px;/* @kind spacing */
+}
+
+/* THE GROUND ------------------------------------------------------------------------------------
+   .terrain paints the sheet and owns both texture pseudo-elements, so content inside needs no wrapper.
+   Give it position + overflow:hidden yourself only if you are cropping something else. */
+.terrain{position:relative;background:var(--tp-mottle),var(--tp-sheet);background-blend-mode:multiply,normal;background-color:var(--paper-sand);color:var(--ink);overflow:hidden}
+.terrain>*{position:relative;z-index:1}
+.terrain::before,.terrain::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0}
+.terrain::before{background:var(--tp-grain-tile);opacity:var(--tp-grain);mix-blend-mode:multiply}
+.terrain::after{background:url('../assets/textures/topo-contours-wide.svg') 78% 18%/var(--tp-topo-scale) no-repeat;opacity:var(--tp-topo);
+  -webkit-mask-image:var(--tp-topo-mask);mask-image:var(--tp-topo-mask)}
+/* variants: which corner the contours drift in from. Pick per composition, never both. */
+.terrain.tp-tr::after{background-position:78% 18%}
+.terrain.tp-bl::after{background-position:16% 82%}
+/* the ripple cut: dune ripple instead of contour lines — for erg / coastal stages */
+.terrain.tp-ripple::after{background-image:url('../assets/textures/dune-ripple.svg')}
+/* the cracks cut — a ground texture, so it covers the whole sheet and drops the clear-zone mask */
+.terrain.tp-cracks::after{background:url('../assets/textures/cracks-terrain.png') 62% 40%/var(--tp-cracks-scale) no-repeat;opacity:var(--tp-cracks);-webkit-mask-image:none;mask-image:none}
+/* .tp-plain drops the linework entirely — dense pages keep the tooth and lose the map */
+.terrain.tp-plain::after{display:none}
+/* .on-cards — THE STRENGTH RULE, shared with Navy Ground and asked the same way: is there a word
+   touching this ground? A band whose content sits in CARDS has none — the card is opaque, so the
+   sheet only ever shows in the gutters and the margin, where the type-safe value reads as nothing at
+   all. So the cut goes up. If any word sits on the sheet, never.
+   The clear-zone mask stays either way: a mask is about WHERE, this is about HOW MUCH. */
+.terrain.on-cards::after{opacity:.8}
+.terrain.tp-cracks.on-cards::after{opacity:.22}
+
+/* SURVEY MARKS ----------------------------------------------------------------------------------
+   Plus marks, not corner brackets: registration crosses from a printed sheet. Set on the ground element. */
+.tp-marks>.tp-mark{position:absolute;width:13px;height:13px;z-index:1}
+.tp-mark::before,.tp-mark::after{content:'';position:absolute;background:var(--tp-cross)}
+.tp-mark::before{left:0;right:0;top:6px;height:1px}
+.tp-mark::after{top:0;bottom:0;left:6px;width:1px}
+.tp-mark.tl{top:var(--tp-margin);left:var(--tp-margin)}.tp-mark.tr{top:var(--tp-margin);right:var(--tp-margin)}
+.tp-mark.bl{bottom:var(--tp-margin);left:var(--tp-margin)}.tp-mark.br{bottom:var(--tp-margin);right:var(--tp-margin)}
+
+/* THE LINEWORK ------------------------------------------------------------------------------------
+   THE LAW: vertical lines are DOTTED, horizontal lines are SOLID. That asymmetry is the whole paper-map
+   feel — a dotted vertical reads as a fold or a graticule, a solid horizontal reads as a trim or a scale.
+   Never mix: a solid vertical looks like a table border, a dotted horizontal looks like a coupon.
+   Both primitives serve two roles: page margin rules AND interior section separators. Same line, same law.
+   Rules run BETWEEN the corner survey crosses — the crosses are their terminals, so don't add more.
+   The gap is built in and it is GENEROUS: --tp-rule-gap holds every line well clear of the cross, so a
+   caller can position a rule corner-to-corner and still get real air. These lines are not a frame —
+   they should read as an elegant fragment of a margin, never as a box around the content. When in doubt
+   make them shorter: a rule that nearly reaches its terminal is boxing the page in.
+   Widths are 13px to match .tp-mark, so the line lands on the cross centre. */
+
+/* Dotted vertical — left margin rule, or the separator between columns.
+   Fine dots, not dashes: 1px on, 2px off. A dash reads as a border; a dot reads as a graticule. */
+.tp-rule-v{position:absolute;width:13px;z-index:1;pointer-events:none}
+.tp-rule-v::before{content:'';position:absolute;left:6px;top:var(--tp-rule-gap);bottom:var(--tp-rule-gap);width:1px;background:var(--tp-dot)}
+/* ticks crossing it: a fine minor run with a longer major every fifth — a ruler, not a dashed border */
+.tp-rule-v::after{content:'';position:absolute;left:0;right:0;top:var(--tp-rule-gap);bottom:var(--tp-rule-gap);
+  background-image:repeating-linear-gradient(180deg,var(--tp-tick) 0 1px,transparent 1px 26px),repeating-linear-gradient(180deg,var(--tp-tick) 0 1px,transparent 1px 130px);
+  background-size:5px 100%,11px 100%;background-position:4px 0,1px 0;background-repeat:no-repeat}
+
+/* Solid horizontal — bottom trim rule, or the separator between sections */
+.tp-rule-h{position:absolute;height:13px;z-index:1;pointer-events:none}
+.tp-rule-h::before{content:'';position:absolute;left:var(--tp-rule-gap);right:var(--tp-rule-gap);top:6px;height:1px;background:var(--tp-mark)}
+/* the measured run — one cluster of cyan ticks at the trailing end, never ticks the whole width.
+   Ticks across the full span is graph paper; the cluster is a scale bar, and a scale bar is a map.
+   All ticks are ONE weight (1px). Height is what varies: a short minor every 11px, a tall major
+   every 44px landing on every fourth minor. Varying weight would read as a rendering error. */
+.tp-rule-h::after{content:'';position:absolute;right:var(--tp-rule-gap);top:6px;width:214px;height:12px;
+  background-image:repeating-linear-gradient(90deg,var(--tp-tick-live) 0 1px,transparent 1px 11px),repeating-linear-gradient(90deg,var(--tp-tick-live) 0 1px,transparent 1px 44px);
+  background-size:100% 5px,100% 12px;background-position:0 0,0 0;background-repeat:no-repeat}
+.tp-rule-h.plain::after{display:none}
+.tp-rule-h.lead::after{right:auto;left:var(--tp-rule-gap)}
+/* interior separators carry no scale bar — the measured run belongs to the page edge only */
+.tp-rule-h.sep::after,.tp-rule-v.sep::after{display:none}
+.tp-rule-v.sep::before{background:repeating-linear-gradient(180deg,var(--tp-mark) 0 1px,transparent 1px 4px)}

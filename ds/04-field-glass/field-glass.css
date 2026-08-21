@@ -1,0 +1,86 @@
+/* Field Glass — the instrument material. ✅ APPROVED CANON 2026-08-19 (buttons on glass still to be tuned).
+   The metaphor: the crystal of a navigation instrument. Smoked, anti-reflective glass set into a
+   machined housing, with an etched ring printed just inside the crystal edge (a watch's chapter ring).
+   NO outer border — the crystal edge is the tint change itself. Every inner line is etched and lit:
+   a gradient, brighter where the lamp catches it, fading where it doesn't (from the approved bar). */
+:root{
+/* the smoked crystal — tinted navy, never gray; deepens downward (dusk), never fades to clear */
+--fgi-tint-top:rgba(13,33,61,.36);--fgi-tint-bottom:rgba(12,20,32,.83);
+--fgi-blur:14px;/* @kind other */
+/* blur = the anti-reflective coating: content behind stays legible, dimmed */
+--fgi-light-catch:rgba(255,255,255,.07);
+/* instrument micro-labels on glass — pure white; hierarchy comes from size, not tint */
+--fgi-label:#FFFFFF;
+/* the etched ring — printed INSIDE the edge: a true 1px metal-gray line, cyan catching it here and there */
+--fgi-ring:rgba(200,204,208,.3);--fgi-ring-accent:rgba(24,159,218,.55);--fgi-ring-inset:6px;/* @kind spacing */
+/* etched separators — metal-silver, fading at both ends (never touching top or bottom) */
+--fgi-sep-metal:rgba(200,204,208,.2);
+/* radii — the screen cutout, not a soft blob. Concentric rule: inner = outer − inset.
+   ✅ web values from the approved hero panel; the curtain SVG measures 17.8 outer / ≈11 inset on air */
+--fgi-radius:var(--radius-crystal);--fgi-radius-ring:var(--radius-well);--fgi-radius-control:var(--radius-control);
+/* the backlit lamp — one cyan bloom per instrument, from a corner (✅ approved hero panel) */
+--fgi-bloom:linear-gradient(to left top,rgba(24,159,218,.18) 0%,rgba(24,159,218,0) 38%);/* @kind other */
+/* depth — the housing shadow (✅ approved hero panel) */
+--fgi-shadow:0 18px 44px rgba(0,0,0,.45);
+/* motion — the needle settles once, ~700ms (✅ heroSettle) */
+--fgi-settle:700ms cubic-bezier(.22,1,.36,1);/* @kind other */
+/* THE FROST TWIN's material — warm smoke under a bright rim (see .fgi--frost below for why every
+   number is what it is). Tokenized because cards were re-typing the gradient by hand. */
+--fgi-frost-smoke:linear-gradient(180deg,color-mix(in srgb,var(--desert-umber) 46%,transparent) 0%,color-mix(in srgb,var(--desert-umber) 58%,transparent) 62%,color-mix(in srgb,var(--desert-umber) 62%,transparent) 100%);/* @kind other */
+/* the warmth is --desert-umber, the warm desert family's darkest step, at three alphas */
+--fgi-frost-rim:rgba(255,255,255,.55);--fgi-frost-blur:18px;/* @kind other */
+/* the frame one layer out — the card box the plate sits in. .17 (navy's rim) vanishes on a photo */
+--fgi-frost-frame:rgba(255,255,255,.45);--fgi-frost-frame-hover:rgba(255,255,255,.92);
+}
+/* The instrument panel — no outer border; the etched ring is the only line */
+.fgi{position:relative;border-radius:var(--fgi-radius);background:var(--fgi-bloom),linear-gradient(135deg,var(--fgi-tint-top),var(--fgi-tint-bottom));backdrop-filter:blur(var(--fgi-blur)) saturate(1.1);-webkit-backdrop-filter:blur(var(--fgi-blur)) saturate(1.1);box-shadow:inset 0 1px 0 var(--fgi-light-catch),var(--fgi-shadow)}
+.fgi::before{content:'';position:absolute;inset:var(--fgi-ring-inset);border-radius:var(--fgi-radius-ring);border:1px solid var(--fgi-ring);box-shadow:0 0 10px rgba(24,159,218,.1),inset 0 0 9px rgba(24,159,218,.1);pointer-events:none}
+/* the cyan catch — the same ring, blue only where the light hits (masked to fade in and out) */
+.fgi::after{content:'';position:absolute;inset:var(--fgi-ring-inset);border-radius:var(--fgi-radius-ring);border:1px solid var(--fgi-ring-accent);pointer-events:none;-webkit-mask:linear-gradient(115deg,#000 0%,transparent 30%,transparent 62%,#000 94%);mask:linear-gradient(115deg,#000 0%,transparent 30%,transparent 62%,#000 94%)}
+/* THE FROST TWIN — the LIGHT-ground twin: same material thinking, inverted. Caption plates on
+   photography; cards on Terrain Paper only. Never mix the two twins in one view.
+   TYPE AND ICONS ARE ALWAYS WHITE, etched — a bright 1px frosted rim over a smoked body.
+   The rim is the frost; the smoke is what makes white type legal. A plate that is frost all the way
+   through composites to rgb(140–171) over real frames, where white lands at 3.4:1 and collapses to
+   ~1.1:1 over bright sky. Blur cannot rescue contrast — blur lowers detail, not luminance.
+   THE SMOKE IS WARM (34,26,20), NOT NAVY — over desert frames a navy scrim reads as a blue filter
+   laid on the photograph; a warm one reads as haze in the air, which is what the plate is pretending
+   to be. THE SMOKE IS ALSO A GRADIENT, light at the top and dense at the bottom, so the plate reads
+   far lighter than a flat scrim while the type still sits in the dense end. Measured against the
+   BRIGHTEST blurred pixel in the whole photo library (rgb 244,229,213): .46 at the top clears the
+   3:1 graphics floor for an icon (3.48), .58 at the title band clears text floor (4.88), .62 at the
+   bottom holds 5.5. Typical frames run 6–9:1. Never lighten past .46 at the top. */
+.fgi--frost{background:var(--fgi-frost-smoke);backdrop-filter:blur(var(--fgi-frost-blur)) saturate(1.05);-webkit-backdrop-filter:blur(var(--fgi-frost-blur)) saturate(1.05);box-shadow:inset 0 0 0 1px var(--fgi-frost-rim),0 8px 24px rgba(12,20,32,.22);color:var(--white)}
+.fgi--frost::before,.fgi--frost::after{display:none}
+/* icons on frost follow the type — white and etched, and they stand on their own. NO RINGS, EVER:
+   a circle around an icon reads as a button, and a card mark is not pressable. A crest is a position
+   (centered above the title), not a container. */
+.fgi--frost i,.fgi--frost svg{color:#fff;text-shadow:0 1px 1.5px rgba(6,14,26,.55)}
+/* THE FROST CARD — the frame one layer out: the photo box the plate sits at the foot of. This IS
+   Terrain's card (see 05/the-card.html), the twin of .rr-card: navy fills to night, this lifts a
+   warm haze, and the hover on both moves the RIM and nothing else — no transform, no shadow, ever.
+   The frame is white where navy's goes cyan, and .45 where navy's rests at .17, because .17 white
+   vanishes on a photograph. */
+.fgi-frost-card{position:relative;border:1px solid var(--fgi-frost-frame);border-radius:var(--radius-crystal);overflow:hidden;box-sizing:border-box;display:flex;align-items:flex-end;padding:14px;cursor:pointer;transition:border-color .2s ease}
+.fgi-frost-card:hover{border-color:var(--fgi-frost-frame-hover)}
+.fgi-frost-card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){.fgi-frost-card{transition:none}}
+.fgi-crest{display:grid;place-items:center;font-size:20px;line-height:1}
+/* Etched separators — scale marks: gradient-lit, fading before they reach top or bottom */
+.fgi-sep{align-self:stretch;width:1px;background:linear-gradient(180deg,transparent 14%,var(--fgi-sep-metal) 34%,var(--fgi-sep-metal) 66%,transparent 86%)}
+/* The inner well — the approved panel's inset structure: a 6px-padded .fgi wraps a well that glows from within */
+.fgi-well{position:relative;border-radius:9px;box-shadow:inset 0 0 28px rgba(24,159,218,.09),inset 0 1px 0 rgba(255,255,255,.07)}
+/* Grid-cell separator — the approved border-image pattern (use on grid cells instead of .fgi-sep) */
+.fgi-cell{border-right:1px solid transparent;border-image:linear-gradient(transparent 14%,var(--fgi-sep-metal) 34%,var(--fgi-sep-metal) 66%,transparent 86%) 1 / 1 / 0 stretch}
+.fgi-cell:last-child{border-right:none;border-image:none}
+/* Settle — the panel arrives once, needle-finding-north; still under reduced motion */
+@keyframes fgi-settle{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.fgi--settle{animation:fgi-settle var(--fgi-settle) both}
+@media (prefers-reduced-motion:reduce){.fgi--settle{animation:none}}
+/* Strata: the utility strip is the darkest, most opaque glass (overrides, not tokens) */
+.fgi--utility{border-radius:10px;background:linear-gradient(180deg,rgba(13,33,61,.78),rgba(12,20,32,.94))}
+.fgi--utility::before{border-radius:4px}
+
+.fg-tab{display:inline-block;background:linear-gradient(135deg,var(--fgi-tint-top),var(--fgi-tint-bottom));backdrop-filter:blur(var(--fgi-blur));border:1px solid var(--fgi-ring);border-bottom:none;color:var(--white);font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:6px 24px 5px 14px;border-radius:8px 0 0 0;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 100%,0 100%)}
+/* Field Glass panel — legacy alias; prefer the full .fgi recipe above (approved ✅) */
+.fg-panel{background:linear-gradient(135deg,var(--fgi-tint-top),var(--fgi-tint-bottom));backdrop-filter:blur(var(--fgi-blur));border:none;border-radius:var(--fgi-radius);box-shadow:inset 0 1px 0 var(--fgi-light-catch),var(--fgi-shadow)}

@@ -1,0 +1,6 @@
+/* ROADBOOK PAPER — Adopted ✅. The working page: it ships today in the live scoring tool.
+   THE CONTRACT: cool white, dense tabular data, hairline rules. Terrain Paper reads;
+   Roadbook Paper runs the numbers. Deliberately plain — no texture, no contours, no survey marks —
+   so density is legible. Anything decorative here is borrowed and must justify itself. */
+:root{--paper-cool:#F8FAFC;}
+.roadbook-paper{background:var(--paper-cool);color:var(--ink)}

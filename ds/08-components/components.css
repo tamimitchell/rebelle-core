@@ -1,0 +1,413 @@
+/* THE COMPONENT REGISTER — the single source of truth for how a Button, a Chip and a Card look.
+   It lives in CSS, not inside the .jsx, for two reasons:
+     1. Any card can wear the real appearance with plain classes — no React, no bundle. Cards
+        hand-rolled their own buttons and chips precisely because the recipe was locked inside a
+        component; that is how a system drifts from itself.
+     2. It loads with styles.css, so nothing waits on a bundle recompile.
+   Button.jsx and Chip.jsx emit exactly these class names and define no styles of their own.
+   Change an appearance HERE.
+
+   Semantic outlines are derived live with color-mix() from the ONE hex that owns each hue, so a
+   retuned semantic carries into its border without a second edit. Buttons act, chips report — the
+   four axes (type, shape, fill, icons) keep them from being mistaken for each other.
+
+   Hand-written markup mirrors the component API:
+     <button class="rr-btn rr-btn--primary rr-btn--md">Watch live</button>
+     <a class="rr-btn rr-btn--secondary rr-btn--sm rr-g-terrain" href="#">Guide</a>
+     <span class="rr-chip rr-chip--live"><i class="ti ti-broadcast"></i>Live</span>
+     <span class="rr-chip rr-cg-paper rr-chip--neutral">X-Cross</span>
+     <article class="rr-card rr-card--media"><img …><div class="rr-card__body">…</div></article> */
+
+/* ── CARD — the box on a dark ground. It works by going DARKER, not by lifting: the fill is
+   --navy-night, the last step of the ground's own dusk ramp, so a card is the ground at nightfall
+   and needs no shade under it to sit apart. There is no drop shadow anywhere in this component —
+   the separation is the fill going darker and one bright rim, which is why a grid of cards stays
+   quiet at any count. A shadow would make each one an object; this makes them a field.
+   The rim at .17 white is the loudest hairline in the system and that is correct: it is doing the
+   whole job of the edge. It reads as a lit edge rather than a border because it is bright ON a
+   near-black fill — the same 1px on the dusk ground above would look like a box.
+   Radius is --radius-crystal, the panel radius. A card IS a panel; it does not get a sixth step on
+   the scale for the sake of two pixels.
+   NO CARD IS DRAWN ON BARE PAPER. On Terrain and Roadbook a block of text is defined by rules and
+   margin, never by a box — a boxed card on sand is the fastest way to make a printed sheet look
+   like a web page. Terrain does get a card, but only over a photograph: the frost plate (05), which
+   is Field Glass inverted for a light ground. Paper cannot go darker than its ink, so where navy
+   fills to night the plate lifts a warm haze off the image instead. Same frame, opposite direction.
+   Cross-ground: .rr-card is Navy and Photo only, and on Photo it is opaque, never glass — Field
+   Glass owns translucency, and a glass card on a photo is two scrims arguing. Terrain's card is the
+   frost plate (.fgi-frost-card + .fgi--frost, in field-glass.css), which is not this component. ─────────────────────────────── */
+.rr-card{position:relative;box-sizing:border-box;background:var(--navy-night);border:1px solid rgba(255,255,255,.17);border-radius:var(--radius-crystal);color:var(--white);box-shadow:0 0 0 1px rgba(255,255,255,.02)}
+.rr-card__body{padding:var(--sp-16)}
+/* media card — the photo DISSOLVES into the card instead of stopping on it. Its own gradient runs
+   to --navy-night, the card's exact fill, so there is no seam and no divider to draw: the photo
+   becomes the body. A hard photo edge inside a rim reads as two stacked boxes; this reads as one
+   object that happens to start as an image. Aspect-ratio, never a fixed height — the fade does the
+   work that a measured 140px crop used to. */
+.rr-card--media{overflow:hidden}
+.rr-card__media{position:relative;display:block;background:center/cover no-repeat;aspect-ratio:16/10}
+.rr-card__media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,var(--navy-night) 100%)}
+.rr-card--media>img,.rr-card--media>picture>img{display:block;width:100%;height:auto;object-fit:cover}
+/* row — the same card at control scale, for a stack of selectable teams. A row stands at the 44px
+   hit floor, so --radius-crystal would round nearly a third of its height at each end and the box
+   would read as a lozenge instead of a line in a list. Same fill, same rim; only the corner moves. */
+.rr-card--row{border-radius:var(--radius-control)}
+.rr-card--row>.rr-card__body{padding:var(--sp-12) var(--sp-16)}
+/* interactive — hover moves the RIM and nothing else: the border goes cyan and the fill lifts by a
+   few percent. No transform, no shadow, no scale. A card that rises under the cursor is the house
+   style of every template on the internet, and it fights the whole premise of this component —
+   these boxes sit IN the ground, so lifting them off it is the one thing the hover must not do. */
+.rr-card--link{cursor:pointer;transition:border-color .2s ease,background .2s ease}
+.rr-card--link:hover{border-color:var(--cyan);background:color-mix(in srgb,var(--white) 4%,var(--navy-night))}
+/* lit — the one card that is yours or live. Cyan takes the rim and nothing else; a cyan FILL is the
+   primary button's signature, and the earned-cyan rule allows one per band, so a grid never has two. */
+.rr-card--lit{border-color:color-mix(in srgb,var(--cyan) 70%,transparent);box-shadow:0 0 0 1px rgba(24,159,218,.12),0 0 18px -6px color-mix(in srgb,var(--cyan) 45%,transparent)}
+.rr-card--lit.rr-card--link:hover{border-color:var(--cyan)}
+/* note — the annotation panel, and the exact INVERSE of the card: it sits ON the ground where the
+   card sits IN it. Fill goes up with a cyan wash instead of down to night, and the rim is cyan.
+   It also takes control radius, but for its own reason, not the row's: a note can be tall, so the
+   height argument does not apply — the softer corner is what keeps it from being read as content.
+   It carries an aside from the system — a tip, a state caveat, an editor's note — and never a
+   standing, a score or team data. Cyan is the annotation colour, which is exactly why information
+   may not wear it. */
+.rr-card--note{background:color-mix(in srgb,var(--cyan) 7%,var(--navy));border-color:color-mix(in srgb,var(--cyan) 45%,transparent);border-radius:var(--radius-control);box-shadow:none}
+.rr-card--note>.rr-card__body{padding:var(--sp-12) var(--sp-16);font-size:var(--fs-meta)}
+@media (prefers-reduced-motion:reduce){.rr-card--link{transition:none}}
+
+/* ── BUTTON — acts, never informs. Always a verb, never an icon beside the words. ───────────── */
+.rr-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-8);font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:var(--ls-label);border-radius:var(--radius-control);cursor:pointer;border:1px solid transparent;transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;text-decoration:none;white-space:nowrap;background:none;box-sizing:border-box;line-height:1}
+.rr-btn:active{transform:translateY(1px)}
+.rr-btn:disabled,.rr-btn[aria-disabled="true"]{opacity:.4;pointer-events:none}
+/* one scale step per size, vertical and horizontal. lg's 16px vertical is not cosmetic: at the
+   previous 14px it measured 42px tall and missed the 44px hit floor. It now clears at 46px. */
+.rr-btn--lg{font-size:var(--fs-button);padding:var(--sp-16) var(--sp-24)}
+.rr-btn--md{font-size:13px;padding:var(--sp-12) var(--sp-16)}
+.rr-btn--sm{font-size:12px;padding:var(--sp-8) var(--sp-12)}
+.rr-btn--primary{background:var(--cyan-shield);color:var(--navy)}
+.rr-btn--primary:hover{background:var(--cyan-lift)}
+.rr-btn--primary:active{background:var(--cyan-press);color:var(--white)}
+.rr-btn--secondary{border-color:var(--bc-border-strong);color:var(--white)}
+.rr-btn--secondary:hover{background:var(--bc-row-hover);border-color:var(--cyan-shield)}
+.rr-btn--ghost{border-color:var(--control-hairline);color:var(--white)}
+.rr-btn--ghost:hover{border-color:var(--white);background:rgba(255,255,255,.08)}
+/* DANGER — destructive only: withdraw, delete, clear. Uses --loss, NEVER --on-air: broadcast red
+   never leaves the air. There is deliberately no "caution" button — caution is a state, and states
+   are chips and banners. A button acts; if the action is risky the button says so, it does not warn. */
+.rr-btn--danger{background:var(--loss);color:var(--white)}
+.rr-btn--danger:hover{background:var(--loss-lift)}
+.rr-btn--danger:active{background:var(--loss-press)}
+.rr-btn--danger-outline{border-color:var(--loss);color:var(--loss-text-on-navy)}
+.rr-btn--danger-outline:hover{background:color-mix(in srgb,var(--loss) 14%,transparent);border-color:var(--loss-lift)}
+/* Photo Ground — outlines carry their own scrim so the floor holds over any image */
+.rr-g-photo.rr-btn--secondary,.rr-g-photo.rr-btn--ghost{background:rgba(8,17,32,.38);backdrop-filter:blur(6px)}
+.rr-g-photo.rr-btn--secondary:hover{background:rgba(8,17,32,.55)}
+.rr-g-photo.rr-btn--ghost:hover{background:rgba(8,17,32,.55);border-color:var(--white)}
+/* Terrain Paper — ink register: navy leads, cyan stays an annotation. Hover deepens, dusk-like */
+.rr-g-terrain.rr-btn--primary{background:var(--navy);color:var(--white)}
+.rr-g-terrain.rr-btn--primary:hover{background:var(--navy-lift)}
+.rr-g-terrain.rr-btn--primary:active{background:var(--navy-press);color:var(--white)}
+.rr-g-terrain.rr-btn--secondary{border-color:var(--navy);color:var(--navy)}
+.rr-g-terrain.rr-btn--secondary:hover{background:rgba(13,33,61,.08)}
+.rr-g-terrain.rr-btn--ghost{border-color:var(--control-hairline-on-paper);color:var(--navy)}
+.rr-g-terrain.rr-btn--ghost:hover{border-color:var(--navy);background:rgba(13,33,61,.06)}
+/* Cyan Ground — the enlist band. Cyan is the FIELD here, so the primary button inverts to night:
+   a cyan fill on cyan is invisible and a white fill on cyan is a hole. This is the only ground that
+   inverts rather than tunes, and it exists because the band itself is the earned cyan. */
+.rr-g-cyan.rr-btn--primary{background:var(--navy-night);color:var(--white)}
+.rr-g-cyan.rr-btn--primary:hover{background:var(--navy)}
+.rr-g-cyan.rr-btn--primary:active{background:#060B12;color:var(--white)}
+.rr-g-cyan.rr-btn--secondary,.rr-g-cyan.rr-btn--ghost{border-color:var(--navy-night);color:var(--navy-night)}
+.rr-g-cyan.rr-btn--secondary:hover,.rr-g-cyan.rr-btn--ghost:hover{background:rgba(12,20,32,.12);border-color:var(--navy-night)}
+/* Roadbook Paper — tool register: square 4px (the overlay radius), navy working outlines */
+.rr-g-roadbook{border-radius:var(--radius-tool)}
+.rr-g-roadbook.rr-btn--secondary{border-color:var(--navy);color:var(--navy)}
+.rr-g-roadbook.rr-btn--secondary:hover{background:rgba(13,33,61,.07)}
+.rr-g-roadbook.rr-btn--ghost{border-color:var(--control-hairline-on-paper);color:var(--navy)}
+.rr-g-roadbook.rr-btn--ghost:hover{border-color:var(--navy);background:rgba(13,33,61,.05)}
+/* danger on paper — the shipped red is drawn for navy and fails on sand, so paper takes the dark twin */
+.rr-g-terrain.rr-btn--danger,.rr-g-roadbook.rr-btn--danger{background:var(--loss-on-paper);color:var(--white)}
+.rr-g-terrain.rr-btn--danger:hover,.rr-g-roadbook.rr-btn--danger:hover{background:var(--loss-press-on-paper)}
+.rr-g-terrain.rr-btn--danger-outline,.rr-g-roadbook.rr-btn--danger-outline{border-color:var(--loss-on-paper);color:var(--loss-on-paper)}
+.rr-g-terrain.rr-btn--danger-outline:hover,.rr-g-roadbook.rr-btn--danger-outline:hover{background:color-mix(in srgb,var(--loss-on-paper) 8%,transparent)}
+@media (prefers-reduced-motion:reduce){.rr-btn{transition:none}}
+
+/* ── CHIP — reports, never acts. The inverse of the Button on every axis: mono not Oswald, pill not
+   radius-6, hairline or tint not solid fill, and it MAY carry one leading icon (a Button never does).
+   One size only — a chip that needs to be bigger is a heading. ───────────────────────────────── */
+.rr-chip{display:inline-flex;align-items:center;gap:var(--sp-6);font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:var(--sp-6) var(--sp-12);border-radius:999px;line-height:1;white-space:nowrap;box-sizing:border-box;border:1px solid transparent}
+.rr-chip>i{font-size:var(--icon-chip);line-height:1;flex:none}
+/* dark grounds — navy, photo, glass */
+.rr-chip--neutral{color:rgba(255,255,255,.88);border-color:var(--control-hairline)}
+.rr-chip--selected{background:var(--selected-wash);border-color:color-mix(in srgb,var(--cyan) 70%,transparent);color:var(--selected-text-on-navy)}
+.rr-chip--live{color:rgba(255,255,255,.92);border-color:color-mix(in srgb,var(--cyan) 75%,transparent)}
+.rr-chip--live>i{color:var(--cyan)}
+.rr-chip--gain{color:var(--gain-text-on-navy);border-color:color-mix(in srgb,var(--gain) 65%,transparent)}
+.rr-chip--gain>i{color:var(--gain)}
+.rr-chip--loss{color:var(--loss-text-on-navy);border-color:color-mix(in srgb,var(--loss) 80%,transparent)}
+.rr-chip--loss>i{color:var(--loss-text-on-navy)}
+.rr-chip--caution{color:var(--caution-text-on-navy);border-color:color-mix(in srgb,var(--caution) 80%,transparent)}
+.rr-chip--caution>i{color:var(--caution)}
+/* stale is deliberately colourless — a dashed hairline and the real age, per the field floor */
+.rr-chip--stale{color:var(--label-on-dark);border:1px dashed var(--control-hairline)}
+/* paper grounds — terrain, roadbook. Every semantic takes its dark twin; the shipped delta colours
+   were drawn for navy and fail on warm sand. Cyan never inks a glyph on sand (2.4:1) — the
+   cyan-coded label and glyph both take --label-cyan-on-paper. */
+.rr-cg-paper.rr-chip--neutral{color:var(--ink);border-color:var(--control-hairline-on-paper)}
+.rr-cg-paper.rr-chip--selected{background:var(--selected-wash-on-paper);border-color:color-mix(in srgb,var(--label-cyan-on-paper) 60%,transparent);color:var(--label-cyan-on-paper)}
+.rr-cg-paper.rr-chip--live{color:var(--ink);border-color:color-mix(in srgb,var(--label-cyan-on-paper) 55%,transparent)}
+.rr-cg-paper.rr-chip--live>i{color:var(--label-cyan-on-paper)}
+.rr-cg-paper.rr-chip--gain{color:var(--gain-on-paper);border-color:color-mix(in srgb,var(--gain-on-paper) 60%,transparent)}
+.rr-cg-paper.rr-chip--gain>i{color:var(--gain-on-paper)}
+.rr-cg-paper.rr-chip--loss{color:var(--loss-on-paper);border-color:color-mix(in srgb,var(--loss-on-paper) 65%,transparent)}
+.rr-cg-paper.rr-chip--loss>i{color:var(--loss-on-paper)}
+.rr-cg-paper.rr-chip--caution{background:var(--caution-wash);color:var(--caution-on-paper);border-color:color-mix(in srgb,var(--caution-on-paper) 45%,transparent)}
+.rr-cg-paper.rr-chip--caution>i{color:var(--caution-on-paper)}
+.rr-cg-paper.rr-chip--stale{color:var(--label-on-paper);border:1px dashed var(--control-hairline-on-paper)}
+
+/* ── LIST — FINAL. Four kinds, and choosing is mechanical: does the row have a noun? use its icon.
+   Does order matter? numerals. Neither? a disc. Is the row a state? the triad. There is no fifth
+   kind and no decorative variant. Nesting is one level only — a second level means the list wanted
+   to be two lists. Add .rr-cg-paper to a list (or any ancestor) for the paper register, the same
+   convention the chip uses. ─────────────────────────────────────────────────────────────────── */
+.rr-li{display:grid;gap:var(--sp-8);font-size:var(--fs-meta);line-height:1.45;margin-bottom:var(--sp-8)}
+.rr-li>p{margin:0;text-wrap:pretty}
+/* 01 · the default — a disc. Punctuation: quiet, round, NEVER cyan. */
+.rr-li--disc{grid-template-columns:var(--sp-16) 1fr}
+.rr-disc{width:5px;height:5px;border-radius:50%;background:var(--bullet-disc);margin:var(--sp-6) auto 0}
+.rr-cg-paper .rr-disc{background:var(--bullet-disc-on-paper)}
+/* 02 · numbered — mono cyan numerals, label leading, detail trailing. Only when order matters:
+   a numeral promises sequence, so it is a claim, not a decoration. */
+.rr-li--num{grid-template-columns:var(--sp-16) 1fr;line-height:1.4}
+.rr-num{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.06em;color:var(--cyan);padding-top:3px}
+.rr-cg-paper .rr-num{color:var(--label-cyan-on-paper)}
+.rr-li--num b{font-weight:600;color:var(--white)}
+.rr-li--num em{font-style:normal;color:var(--label-on-dark)}
+.rr-cg-paper .rr-li--num b{color:var(--ink)}
+.rr-cg-paper .rr-li--num em{color:var(--label-on-paper)}
+/* 03 · icon — the row's own noun. The commonest kind: Tabler carries the rally nouns, so most
+   lists name themselves and need no bullet at all. */
+.rr-li--icon{grid-template-columns:var(--icon-mark) 1fr;gap:var(--sp-12);align-items:baseline}
+.rr-li--icon>i{color:rgba(255,255,255,.82);transform:translateY(2px);font-size:var(--icon-inline);line-height:1;flex:none}
+.rr-cg-paper .rr-li--icon>i{color:rgba(13,33,61,.8)}
+.rr-li--icon b{font-family:var(--font-display);font-weight:600;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;display:block;margin-bottom:1px}
+/* 04 · status — THE CHECKPOINT ROW. One triad, circle-check → navigation → circle, and four cells:
+   the mark, the code, the state, the time. State reads before the words, and the row spends exactly
+   two colours: CLEARED green on a finished checkpoint, cyan on the one in progress. PENDING IS
+   SIMPLY NEITHER — never dimmed, because a row opacity drops every label inside it below floor. The
+   trailing time is only ever present on a logged row: a pending checkpoint has no time to state, and
+   inventing one would be the honesty rule broken in the smallest possible place. ───────────────── */
+.rr-li--status{grid-template-columns:var(--icon-inline) 40px 1fr auto;align-items:center;padding:5px 0;margin-bottom:0;border-bottom:1px solid rgba(255,255,255,.07)}
+.rr-li--status:last-of-type{border-bottom:none}
+.rr-li--status>i{font-size:var(--icon-inline);line-height:1;flex:none;color:var(--white-faint)}
+.rr-li--status .rr-id{font-family:var(--font-display);font-weight:600;font-size:11.5px;letter-spacing:.07em;color:var(--white-soft)}
+.rr-li--status .rr-st{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:var(--track-kicker);text-transform:uppercase;color:var(--label-on-dark)}
+.rr-li--status .rr-tm{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:.06em;color:var(--label-on-dark);white-space:nowrap}
+/* logged — the mark takes the accent, the state takes CLEARED */
+.rr-li--status.is-done>i{color:var(--cyan)}
+.rr-li--status.is-done .rr-id{color:var(--cyan)}
+.rr-li--status.is-done .rr-st{color:var(--gain-text-on-navy)}
+/* in progress — the one lit row, and only one per list */
+.rr-li--status.is-live>i{color:var(--cyan);text-shadow:0 0 6px color-mix(in srgb,var(--cyan) 50%,transparent)}
+.rr-li--status.is-live .rr-id,.rr-li--status.is-live .rr-st{color:var(--cyan)}
+.rr-cg-paper .rr-li--status{border-bottom-color:var(--hairline)}
+/* the pending mark on paper takes --ink-soft, NOT --ink-faint: faint is a hairline value and at
+   2.25:1 on sand the mark disappears. Unaccented is not the same as invisible — the dark side's
+   --white-faint clears 4.24:1, so the paper twin has to clear the 3:1 graphics floor too. */
+.rr-cg-paper .rr-li--status>i{color:var(--ink-soft)}
+.rr-cg-paper .rr-li--status .rr-id{color:var(--ink)}
+.rr-cg-paper .rr-li--status .rr-st,.rr-cg-paper .rr-li--status .rr-tm{color:var(--label-on-paper)}
+.rr-cg-paper .rr-li--status.is-done>i,.rr-cg-paper .rr-li--status.is-done .rr-id{color:var(--label-cyan-on-paper)}
+.rr-cg-paper .rr-li--status.is-done .rr-st{color:var(--gain-on-paper)}
+.rr-cg-paper .rr-li--status.is-live>i,.rr-cg-paper .rr-li--status.is-live .rr-id,.rr-cg-paper .rr-li--status.is-live .rr-st{color:var(--label-cyan-on-paper);text-shadow:none}
+
+/* ── SEPARATORS · THE SURVEY FAMILY ────────────────────────────────────────────────────
+   Three devices, and all three are CROSS-GROUND by nature — that is the whole point of them.
+   THE ROUTE RAIL reads a page as a route rather than a stack of bands: one continuous spine running
+   the full length of the page, passing THROUGH ground changes instead of stopping at them. It is two
+   lines in one — a continuous survey line saying the page is measured, and a dashed route trace over
+   it saying the page goes somewhere. Sections are marked on it with a waypoint. A ground separator
+   would end at the seam; a route does not. Add .on-paper to the segment crossing a light ground —
+   the rail changes ink, never weight. ──────────────────────────────────────────────────────────── 
+   THE TRAIL is one line and it is deliberately quiet: a fine dotted vertical, punctuated by a survey
+   X where the route was marked. It is Terrain Paper's linework carried across every ground — the same
+   dashes and the same registration cross (05-terrain-paper), at the same weight. Minimal is
+   the requirement, not a preference: the rail is chrome, so it stays below a hairline and never reads
+   as strongly as the content edges beside it. The X is rail ink, NEVER cyan — a survey mark records,
+   it does not report state; the waypoint is the only thing on the rail that takes the accent.
+   The shape is a MASK and the ink is a background-colour, which is what makes "the rail changes ink,
+   never weight" structural rather than a promise: there is exactly ONE shape and the two grounds differ
+   only in the colour behind it. A data URI cannot read a custom property, so any colour baked into
+   the SVG would silently drift from the token it copies — the mask carries relative weight in its
+   alpha (dashes at .59 of the X) and nothing else.
+   The line is ONE unbroken dotted trace and carries no mark of its own: the target is the survey mark,
+   and an X on the same line beside it says the same thing twice. The trace runs straight behind the
+   target's open rings — a checkpoint marks the route without interrupting it.
+   Positioning contract: the rail offsets itself, so its declared `left` is the line's centreline — a
+   page states where the route runs, not where a box starts. */
+/* the compass star — THE BRAND MARK, placed as artwork and NEVER recoloured. It is a two-tone mark:
+   a navy four-point star over a cyan compass ring and four cyan diagonal points. Tinting it (a CSS
+   mask, a filter, one flat colour) collapses the two tones into one and destroys the mark — so it
+   follows the same light/dark rule as the wordmark: two prepared variants, no third option.
+     .rr-star           → star-on-dark.png  · star knocks out white, cyan ring stays · Navy, On-Air
+     .rr-star.on-paper  → star-on-light.png · navy star + cyan ring · Terrain, Roadbook, frost
+   Aspect is the logo's own 0.842, so width and height always come as a pair — 20/24 inline, 26/31
+   lit. Four splayed points and four arcs around an open centre make it delicate: below ~18px the
+   arcs close up and it reads as a blob, so size up or leave it out.
+   (assets/logo/rebelle-star.svg and rebelle-star-blue.svg are empty shells; do not use them.) */
+.rr-star{flex:none;width:20px;height:24px;background:url(../assets/logo/star-on-dark.png) center/contain no-repeat}
+.rr-star.on-paper{background-image:url(../assets/logo/star-on-light.png)}
+.rr-star--lit{width:26px;height:31px;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--cyan) 55%,transparent))}
+/* the star rule — a heading's closing mark: the star anchors, the rule runs out and fades. It sits
+   UNDER a title and nowhere else; used as a divider between blocks it stops meaning "this heading". */
+.rr-star-rule{display:flex;align-items:center;gap:var(--sp-8)}
+.rr-star-rule>.ln{flex:1;height:1px;background:linear-gradient(90deg,var(--cyan),color-mix(in srgb,var(--cyan) 20%,transparent) 55%,transparent)}
+.rr-star-rule.on-paper>.ln{background:linear-gradient(90deg,var(--label-cyan-on-paper),color-mix(in srgb,var(--label-cyan-on-paper) 20%,transparent) 55%,transparent)}
+/* the star kicker — an eyebrow LED by the mark: star, one short fixed rule, then a mono label.
+   The star opens the line and the rule carries the eye into the words, so the label arrives already
+   attributed. It is the mirror of .rr-star-rule and the two are not interchangeable:
+     kicker     star → rule → LABEL    opens a block · labels what FOLLOWS · rule is fixed
+     star rule  star → rule fading out closes a block · finishes what PRECEDES it · rule flexes
+   Both take the accent nowhere: the rule is the label's own ink at 55%, because a kicker is an
+   attribution, not a claim. A kicker with no star is just a mono label — the star is what makes it
+   the brand's line, so never ship one without it. */
+.rr-kicker{display:flex;align-items:center;gap:var(--sp-12);font-family:var(--font-mono);font-size:var(--fs-mono-label);letter-spacing:var(--ls-label-wide);text-transform:uppercase;color:var(--white)}
+.rr-kicker>.ln{flex:none;width:56px;height:1px;background:currentColor;opacity:.55}
+.rr-kicker.on-paper{color:var(--ink)}
+
+/* ── THE NAV BAR — TWO DECKS, because the site has two questions to
+   answer at once: which property (Rally, U, Impact, Live) and where inside it.
+   (Not "the instrument bar" — that name belongs to the Field Glass hero panel, 04. This is chrome.) One deck forces those
+   into one row and the row becomes a list of nineteen things. Split, each deck gets its own register:
+     upper  82px · display 500 caps at --ls-nav · white · the properties · ACTIVE = 2px cyan underline
+     lower  --hit-min · body 13px sentence case · --label-on-dark · the current property's sections
+   Both decks stretch their anchors to full deck height. That is not tidiness: a nav link that measures
+   only its own line box is a 16px tap target, and the deck's height does not reach the link inside it.
+   The active mark is an UNDERLINE, never a pill or a fill: a pill on a nav item reads as a button, and
+   the whole point of nav is that it is not a button. Same 2px cyan as the broadcast header rule.
+   The bar is translucent and blurred so the hero runs under it — which is why its outer edge takes
+   --control-hairline (.34, an edge fighting a photograph) while the deck divider inside takes
+   --hairline-inverse (.14, an edge fighting nothing). Two different jobs, two different tokens.
+   The live dot does NOT pulse. An ambient animation in chrome is a claim the page cannot keep — the
+   dot means a broadcast is up, and it earns attention by being the only cyan in the row.
+   The bar sets no max-width: the page owns its container, the component owns its registers. ────── */
+.rr-nav{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,rgba(13,33,61,.86),rgba(12,20,32,.94));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--control-hairline)}
+.rr-nav__in{margin:0 auto;padding:0 var(--sp-24);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-24)}
+.rr-nav__deck{height:82px}
+.rr-nav__items{display:flex;align-self:stretch;align-items:stretch;gap:var(--sp-32);font-family:var(--font-display);font-weight:500;font-size:var(--fs-nav);letter-spacing:var(--ls-nav);text-transform:uppercase}
+.rr-nav__items>a{display:flex;align-items:center;gap:var(--sp-6);color:var(--white);text-decoration:none}
+.rr-nav__items>a:hover{color:var(--cyan)}
+.rr-nav__items>a[aria-current]{box-shadow:inset 0 -2px 0 var(--bc-border-strong)}
+.rr-nav__items>a>i{font-size:var(--icon-chip);opacity:.7}
+.rr-nav__sub{border-top:1px solid var(--hairline-inverse)}
+.rr-nav__sub>.rr-nav__in{min-height:var(--hit-min);justify-content:center;gap:var(--sp-32);font-family:var(--font-body);font-size:var(--fs-small)}
+/* the sub-deck's anchors stretch like the upper deck's, and the deck is --hit-min tall rather than
+   the 42px a desktop mock wants. Two pixels buys the floor: primary navigation is the last place to
+   ship a 16px tap target, and an anchor that only measures its own line box is exactly how one
+   happens — the height on the deck is not inherited by the link inside it. */
+.rr-nav__sub a{display:flex;align-items:center;align-self:stretch;color:var(--label-on-dark);text-decoration:none}
+.rr-nav__sub a:hover{color:var(--white)}
+/* the live dot — 6px, static, cyan. Used in nav and nowhere a chip would do the job better. */
+.rr-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);display:block;flex:none}
+
+/* ── THE TEXT LINK — the third action tier, and the quietest. Button fills, secondary outlines, this
+   one has no box at all: it is the "keep going" move at the end of a band (all 65 teams, all results,
+   the full archive) and it is always cyan on dark. It ALWAYS carries the arrow — without it the words
+   are a label, and with it they are a direction. Hover goes white and the arrow advances 3px, which is
+   the only place in the system where a hover moves type: the arrow is a vehicle, so it may. ─────── */
+.rr-link{display:inline-flex;align-items:center;gap:var(--sp-8);font-family:var(--font-display);font-weight:500;font-size:var(--fs-link);letter-spacing:var(--ls-label);text-transform:uppercase;color:var(--cyan);text-decoration:none;min-height:var(--hit-min);cursor:pointer}
+.rr-link>span:last-child{transition:transform .18s ease}
+.rr-link:hover{color:var(--white)}
+.rr-link:hover>span:last-child{transform:translateX(3px)}
+.rr-link.on-paper{color:var(--label-cyan-on-paper)}
+.rr-link.on-paper:hover{color:var(--ink)}
+
+/* ── FIELD — search boxes and form inputs, one recipe. The fill is a 6% white wash rather than a
+   darker well, because on Navy a darker input reads as a hole in the ground; a lift reads as glass
+   set into it. Focus takes the cyan rim and nothing else — no glow, no ring: an input that blooms
+   competes with the live signal.
+   Radius is --radius-control. It is a control; the scale already answered this.
+   min-height is --hit-min, which is the whole reason padding is stated in one step: a field measured
+   by padding alone lands wherever the font puts it, and on mobile that is usually 38px. ────────── */
+.rr-field{display:flex;align-items:center;gap:var(--sp-8);padding:0 var(--sp-12);min-height:var(--hit-min);box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid var(--control-hairline);border-radius:var(--radius-control);color:var(--white);font-family:var(--font-body);font-size:var(--fs-small)}
+.rr-field>i{font-size:var(--icon-inline);color:var(--white-faint);flex:none}
+.rr-field>input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--white);font:inherit;padding:var(--sp-12) 0}
+/* the placeholder is neither a label nor a value — it is the field's own prompt, and its ONE job is
+   to read as not-yet-filled. So it takes --white-soft against a --white value: the gap between them
+   is the signal. --label-on-dark (.78) is the label floor and lands close enough to white to look
+   like typed text, which is why a form of empty fields reads as a form already answered. */
+.rr-field>input::placeholder{color:var(--white-soft);opacity:1}
+.rr-field:focus-within{border-color:var(--cyan)}
+.rr-field.on-paper{background:rgba(13,33,61,.04);border-color:var(--control-hairline-on-paper);color:var(--ink)}
+.rr-field.on-paper>i{color:var(--ink-soft)}
+.rr-field.on-paper>input{color:var(--ink)}
+.rr-field.on-paper>input::placeholder{color:var(--ink-soft)}
+/* the signup row — name, email, verb. Never stacked on desktop: three boxes in a column read as a
+   form to fill out, one row reads as a single ask. The button is a real .rr-btn, not a fourth field. */
+.rr-signup{display:flex;gap:var(--sp-8);width:100%}
+.rr-signup>.rr-field{flex:1}
+.rr-signup>.rr-field--wide{flex:1.4}
+
+/* ── ICON BUTTON — the one sanctioned ring around an icon, and it is sanctioned because the thing IS
+   a button: follow, dismiss, expand. The no-rings law is about icons that only name something; a
+   circle there promises a press that never comes. Here the press is the point.
+   It is --hit-min across (44px), not the 36px a desktop mock wants: this lives in the corner of a
+   photo card, which is exactly where a thumb goes. .rr-iconbtn--sm drops to 36 for desktop-only
+   chrome and is the one place in the system knowingly under the floor. ─────────────────────────── */
+.rr-iconbtn{display:inline-flex;align-items:center;justify-content:center;width:var(--hit-min);height:var(--hit-min);border-radius:50%;background:rgba(12,20,32,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--control-hairline);color:var(--white);cursor:pointer;flex:none;padding:0;transition:border-color .2s ease,color .2s ease,background .2s ease}
+.rr-iconbtn>i{font-size:var(--icon-mark);line-height:1}
+.rr-iconbtn:hover{background:rgba(12,20,32,.8);border-color:var(--cyan);color:var(--cyan)}
+.rr-iconbtn[aria-pressed="true"]{color:var(--cyan);border-color:var(--cyan)}
+.rr-iconbtn--sm{width:36px;height:36px}
+.rr-iconbtn--sm>i{font-size:var(--icon-inline)}
+
+/* ── SECTION HEAD — the brand's typographic stack, and the order is fixed:
+     kicker    display 600 at --ls-kicker · says what this band IS · never a sentence
+     statement two lines, the SECOND in cyan · the second line is the turn, not a subtitle
+     raceline  the livery flash, docked under the statement
+   The two-line statement is the brand's sentence shape everywhere it speaks (Your teams. / Your
+   rally.) and it only works if the break is a rhetorical one — line one names, line two claims. Break
+   it for length instead and the cyan lands on a fragment that means nothing.
+   THE RACELINE UNDER A HEADING: the placement law (07-broadcast-on-air) says the raceline is a border
+   treatment docked on an edge. A statement's baseline IS an edge — that is the one non-ground dock,
+   and it is allowed because the shapes are the master's, unstretched. Never on Terrain Paper: paper
+   is drawn on, not painted. Never centred under a centred head either; livery runs, it does not
+   balance. ────────────────────────────────────────────────────────────────────────────────────── */
+.rr-sechead{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-12)}
+.rr-sechead>.k{font-family:var(--font-display);font-weight:600;font-size:var(--fs-kicker);letter-spacing:var(--ls-kicker);text-transform:uppercase;color:var(--white)}
+.rr-sechead>h2,.rr-sechead>h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:var(--fs-subsection);letter-spacing:var(--ls-display);text-transform:uppercase;line-height:var(--lh-display);color:var(--white)}
+.rr-sechead em{font-style:normal;display:block;color:var(--cyan)}
+.rr-sechead--center{align-items:center;text-align:center}
+.rr-sechead.on-paper>.k,.rr-sechead.on-paper>h2,.rr-sechead.on-paper>h1{color:var(--ink)}
+.rr-sechead.on-paper em{color:var(--label-cyan-on-paper)}
+/* the raceline — the master shapes at natural aspect (298:20), scaled by height only. Stretching it
+   is the one thing the placement law forbids outright, so width and height come as a pair. */
+.rr-raceline{display:block;flex:none;width:179px;height:12px;background:url(../assets/broadcast/raceline.svg) left center/auto 100% no-repeat}
+.rr-raceline--sm{width:134px;height:9px}
+.rr-raceline--lg{width:239px;height:16px}
+
+/* ── THE QUOTE — the editorial voice, and the ONE place the wordmark serif sets running type. It is a
+   whole band, never a pull-quote in a column: the star above, the words, the mono attribution, all
+   centred with air around them. The rules that keep it rare are what make it land — at most one per
+   page (11-type), and it belongs on paper, where a serif has stock to sit on.
+   The star is placed as artwork above the words, not as a container or a bullet, and it is the only
+   thing in the stack that is not type. Attribution is mono because it is data — team, role, record. */
+.rr-quote{display:flex;flex-direction:column;align-items:center;gap:var(--sp-24);text-align:center;margin:0}
+.rr-quote>blockquote{margin:0;font-family:var(--font-wordmark);font-weight:500;font-size:var(--fs-quote);line-height:var(--lh-quote);color:var(--ink);text-wrap:pretty}
+.rr-quote>cite{font-family:var(--font-mono);font-style:normal;font-size:var(--fs-mono-label);letter-spacing:var(--ls-label-wide);text-transform:uppercase;color:var(--label-on-paper)}
+.rr-quote>.rr-star{width:32px;height:38px}
+.rr-quote.on-dark>blockquote{color:var(--white)}
+.rr-quote.on-dark>cite{color:var(--label-on-dark)}
+
+/* ── THE ENLIST BAND — the recruiting bar, and the only surface where cyan is the GROUND. Every other
+   band spends one earned cyan on a signal; this one spends the whole field, once per page, on the one
+   ask the brand exists for. That inversion is the point: the page changes colour and the reader knows
+   this line is different from everything above it.
+   The skew is the livery, not decoration: the same jogged parallelogram as the raceline lug, run big
+   and clustered at the left, fading out rightward exactly as the master does. It is ONE gradient with
+   hard stops, so nothing is redrawn and nothing tiles.
+   The button inverts to night (.rr-g-cyan) — see the Button ground register above. ─────────────── */
+.rr-enlist{position:relative;overflow:hidden;background:linear-gradient(180deg,#1FA9E4,var(--cyan))}
+.rr-enlist::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(12,20,32,.17) 0 3.5%,transparent 3.5% 6.5%,rgba(12,20,32,.12) 6.5% 12%,transparent 12% 16%,rgba(12,20,32,.07) 16% 26%,transparent 26%)}
+.rr-enlist__in{position:relative;margin:0 auto;padding:var(--sp-32) var(--sp-24);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-24)}
+.rr-enlist__say{display:flex;flex-direction:column;gap:var(--sp-6)}
+.rr-enlist__say>b{font-family:var(--font-display);font-weight:600;font-size:var(--fs-feature);letter-spacing:var(--ls-title);text-transform:uppercase;line-height:var(--lh-snug);color:var(--navy-night)}
+.rr-enlist__say>span{font-family:var(--font-body);font-size:var(--fs-body);color:rgba(12,20,32,.85)}

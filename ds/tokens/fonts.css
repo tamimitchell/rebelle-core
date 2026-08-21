@@ -1,26 +1,5 @@
-/* ==========================================================================
-   Rebelle Rally — Fonts
-   THREE display registers, one system:
-   1. SERIF WORDMARK — Minion Pro (the real Rebelle wordmark face). Minion Pro
-      is not a webfont, so Cormorant Garamond loads as the closest free stand-in.
-      The engraved "REBELLE" of the arch, trailer wrap, and primary logo; the
-      brand's soul, leads editorial/hero surfaces.
-   2. CONDENSED DISPLAY (Oswald, Tungsten stand-in) — motorsport data face. Day
-      labels, standings, overlay graphics (the "DAY 5" broadcast register).
-   3. BODY/DATA — Inter (tabular) + IBM Plex Mono (timing) + Open Sans (magazine).
-   ⚠️ SUBSTITUTIONS: Minion Pro (wordmark) → Cormorant Garamond stand-in, and
-      Oswald → licensed Tungsten .otf. License Minion Pro + Tungsten .woff2 to
-      ship the real faces. Inter (body) and the rest are the real faces.
-   ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Open+Sans:wght@300;400;600;700&display=swap');
-
-/* Real Rebelle wordmark face. Drop the licensed file at assets/fonts/MinionPro.woff2
-   and it takes over; until then the token's Cormorant Garamond fallback renders. */
-@font-face {
-  font-family: "Minion Pro";
-  src: url("../assets/fonts/MinionPro.woff2") format("woff2");
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Webfonts — the Field Glass type stack (2026-08-18). Weights per spec: Oswald 500+600 only, Inter 400–600, Cormorant Garamond 500 (+italic), IBM Plex Mono 400. Open Sans / Arimo / Roboto / Open Sans Condensed are RETIRED. */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Inter:wght@400..600&family=Cormorant+Garamond:ital,wght@0,400..600;1,400..600&family=IBM+Plex+Mono&display=swap');
+/* Tungsten — the licensed display target, NOT web licensed. On-air / internal broadcast tooling only; the web uses Oswald. OTFs from the overlay codebase. */
+@font-face{font-family:'Tungsten';src:url('../assets/fonts/Tungsten-Semibold.otf') format('opentype');font-weight:500 600;font-style:normal;font-display:block}
+@font-face{font-family:'Tungsten';src:url('../assets/fonts/Tungsten-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:block}

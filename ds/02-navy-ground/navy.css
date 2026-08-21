@@ -1,0 +1,109 @@
+/* NAVY GROUND — the default ground: the desert at dusk.
+   Everything about this ground lives in this folder — its tokens, its classes, its cards.
+   THE CONTRACT: the gradient runs darker downward, never flat and never cold black. One earned
+   cyan per band. Photo Ground mirrors this language; it is not a vocabulary of its own. */
+:root{
+/* 🟡 derived — the dusk ramp. 🟡 anchors from grounds.md (05) */
+--navy-dusk:#0A1A31;--navy-night:#0C1420;
+--ground-navy:linear-gradient(180deg,var(--navy) 0%,var(--navy-night) 100%);
+
+/* ── THE PRINT — Navy's texture, the same idea as Terrain's one ground later in the day. Terrain
+   prints topo on paper; Navy watches the same land go dark. THREE CUTS, and a sheet takes exactly one.
+   MECHANICS MATCH TERRAIN PAPER: the print rides on a ::before, its strength is one opacity token, and
+   a mask shapes where it lives. The cuts began instead as baked-alpha layers on the ground itself,
+   which avoided a pseudo-element but made every adjustment a new file — doubling strength meant
+   layering the same sheet twice. One pseudo-element replaced all of it, and now the two grounds are
+   one mechanism rather than two.
+   ONE INK: every sheet is #2E8FB8 at full strength and the ground applies the alpha. The ink is not
+   ours — it is the trailer wrap's, where the mountain linework is drawn in steel blue on navy at full
+   strength as the hero graphic. The print is that same mark taken down to background strength.
+   THE FADE dissipates upward, always. A band's heading sits at its top and its content settles toward
+   the bottom, so the ground earns detail on the way down, and a texture that stops before the type
+   never has to be argued with. The mask is about WHERE; --navy-print is about HOW MUCH. Independent
+   on purpose. */
+--navy-print:.12;/* @kind other */
+--navy-print-strong:.22;/* @kind other */
+--navy-fade:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.28) 30%,rgba(0,0,0,.75) 62%,#000 100%);/* @kind other */
+
+/* ── WHAT MAKES A CUT — three laws, and they hold for all three.
+   A CUT IS A CHOSEN CROP, not an illustration. Each sheet is drawn far larger than any band; a cut
+   picks one window and zooms it.
+   EVERY SIZE IS A PERCENTAGE, so the picture is container-relative and a 200px swatch and a 1400px
+   band show the same crop. A pixel size silently re-crops at every width. Mountains is the one
+   exception and sizes on height — see below.
+   EVERY POSITION IS CHOSEN, never left at the origin: each cut names a window with even line spread
+   and no convergence knot. What ruins a texture is a spot brighter than everywhere else, so the test
+   for any re-crop is not "can I see the subject" but "is anywhere hotter than the rest", judged at
+   the aspect it will ship at — a window that looks calm at swatch aspect can frame a knot on a band.
+   Sizing on height makes that worse, because a wide band then sees far more of the sheet than a
+   swatch does. */
+
+/* 01 · CONTOURS — the shipped master, topo-terrain.svg, verbatim. Its viewBox is 1440x480, a BAND and
+   not a page, drawn to run the width of a section once — so it takes COVER, exactly as the site uses
+   it. Terrain's twin is 1600x1200 and takes a percentage, because a printed sheet IS a page and a
+   page is not cropped. Same family of marks, two sheets, because the two grounds are different
+   shapes. This is the default cut, and the one to reach for on a band of cards. */
+--navy-contours:url('../assets/textures/navy-contours.svg') center/cover no-repeat;/* @kind other */
+/* 02 · WAVES — weather rather than survey: open lines at one long wavelength, no closed loop and no
+   horizon, so they say nothing about where the ground is and can run under anything. */
+--navy-waves:url('../assets/textures/navy-waves.svg') 66% 34%/420% auto no-repeat;/* @kind other */
+/* 03 · MOUNTAINS — a HORIZON, which is a claim about the frame rather than a texture. So it appears
+   once per page, under the band that closes it: two horizons is two distances claimed at once. This
+   is the trailer's own graphic, so it quotes the livery most directly.
+   IT SIZES ON HEIGHT, alone among the cuts, because a range must be a fixed fraction of the band's
+   height or it is a stripe on a tall band and a wall on a short one — and peaks only exist at a big
+   vertical zoom. Sized to width, the whole 10708px range fits and the summits are a few pixels tall.
+   THE SHEET RUNS SPARSE AT THE TOP AND DENSE AT THE BOTTOM, which sets everything else. A window low
+   in it holds the summit line near the TOP of the band with solid hatch running off the bottom of the
+   frame: peaks up, slopes descending past the band edge. That — not stopping at the frame — is what
+   makes a horizon; what makes it read is that the ground continues below it. So the cut is NOT docked
+   to the bottom edge, which is only an apparent contradiction: docked there you get the sheet's
+   densest region, no summits, and a wall instead of a distance.
+   THE WINDOW IS THE WHOLE CONTROL, and at this zoom it is sharp — 62% puts the peaks across the top,
+   60% drops them toward the bottom of the frame, 66% is already past them into hatch. Four points is
+   the usable range and half a point is a visible move, so the value is measured, not nudged.
+   THE ONE LESSON WORTH KEEPING from arriving at it: scoring windows as KNOT / MEAN (brightest small
+   box over average ink) reliably kills bad crops, because every summit here sits exactly where its
+   construction lines converge. But pushed far it inverts — it penalises every summit, since a summit
+   IS a convergence, and its favourite windows are interior hatching with no mountain in them. What
+   actually distracts is a COMPACT bright spot; a summit whose ridges fan out wide is drawn, not blown
+   out. So: score to eliminate hot spots, then choose by eye among what survives. */
+--navy-mountains:url('../assets/textures/navy-mountains.svg') 93% 62%/auto 1725% no-repeat;/* @kind other */
+}
+.navy-ground,.navy-waves,.navy-mountains,.navy-flat{position:relative;background:var(--ground-navy);color:var(--white)}
+.navy-ground::before,.navy-waves::before,.navy-mountains::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;opacity:var(--navy-print);
+  -webkit-mask-image:var(--navy-fade);mask-image:var(--navy-fade)}
+.navy-ground::before{background:var(--navy-contours)}
+.navy-waves::before{background:var(--navy-waves)}
+/* mountains pair with a flat ground, never with a line cut: lines and a landmark together is texture
+   arguing with the subject. */
+.navy-mountains::before{background:var(--navy-mountains)}
+/* .navy-flat has no print at all — for a band already carrying a photo, a map, or dense instrument type */
+/* A positioned pseudo-element paints ABOVE non-positioned in-flow content, so the ground lifts its own
+   direct children rather than leaving every author to remember a z-index. One rule removes the whole
+   footgun: nested content inherits its parent's place in the stack, so only the top level needs it.
+   The cost is a position:relative that children did not ask for — predictable, and cheaper than a
+   print washing over a card. */
+.navy-ground>*,.navy-waves>*,.navy-mountains>*{position:relative;z-index:1}
+
+/* ── .on-cards — THE STRENGTH RULE, and it is a question about the band, not a taste dial.
+   Every strength here is set so texture stays under type. But a band whose content sits in CARDS
+   never has type on the ground: the card is opaque, so the print only ever shows in the gutters and
+   the margin. Held to the type-safe value there it reads as nothing at all, so the cut goes up.
+   Ask "is there a word touching this ground?" — if no, .on-cards. If yes, never.
+   Same rule, same name, on Terrain Paper. */
+.on-cards{--navy-print:var(--navy-print-strong)}
+
+/* ── .navy-band — a HARDER fade, for a band that opens with a full statement rather than a kicker.
+   The print starts lower and arrives faster, so a two-line display heading sits on clear ground. */
+.navy-band{--navy-fade:linear-gradient(180deg,transparent 0%,transparent 34%,rgba(0,0,0,.55) 68%,#000 100%);/* @kind other */}
+
+/* ── CROPS — alternate windows for the LINE cuts, SCOPED to them so the limit is structural rather
+   than a promise in a comment. A tall band, or two consecutive bands, land on the same arcs unless
+   told otherwise; the rule is just don't repeat the last one. Same sheet every time, only the window
+   moves, which keeps a long page from looking tiled while staying one continuous piece of ground.
+   Mountains is excluded twice over. These rules move background-position only, so on mountains they
+   would keep its measured zoom while discarding the position that zoom was chosen for — and a range
+   is a landmark, not weather: one page gets one, so there is never a second to differentiate from. */
+.navy-ground.navy-crop-b::before,.navy-waves.navy-crop-b::before{background-position:18% 74%}
+.navy-ground.navy-crop-c::before,.navy-waves.navy-crop-c::before{background-position:88% 8%}

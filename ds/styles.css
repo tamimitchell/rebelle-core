@@ -1,12 +1,20 @@
-/* ==========================================================================
-   Rebelle Rally Design System — global entry point
-   Consumers link this ONE file. It is an @import manifest only — no rules here.
-   Order: fonts first, then tokens (colors → type → spacing → borders → motion).
-   ========================================================================== */
-
-@import url("./tokens/fonts.css");
-@import url("./tokens/colors.css");
-@import url("./tokens/typography.css");
-@import url("./tokens/spacing.css");
-@import url("./tokens/borders.css");
-@import url("./tokens/motion.css");
+@import './tokens/fonts.css';
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/motion.css';
+@import './tokens/radii.css';
+@import './tokens/spacing.css';
+/* THE SIX GROUNDS — each ground owns its whole language in its own numbered folder, matching the
+   section numbers in readme.md: tokens, element classes, and cards together, nothing outside. */
+@import './02-navy-ground/navy.css';
+@import './03-photo-ground/photo.css';
+@import './04-field-glass/field-glass.css';
+@import './05-terrain-paper/terrain.css';
+@import './06-roadbook-paper/roadbook.css';
+@import './07-broadcast-on-air/on-air.css';
+/* THE COMPONENT REGISTER — button and chip appearance, wearable from plain HTML as well as from
+   Button.jsx / Chip.jsx, which emit these exact class names and define no styles of their own. */
+@import './08-components/components.css';
+/* PAGE-SCALE RECIPES — section heads, the accent channel, the texture fade. Separate from the
+   component register because none of it is discoverable at component size. */
+@import './17-documents/document.css';

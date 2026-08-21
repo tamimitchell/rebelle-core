@@ -1,0 +1,54 @@
+/* BROADCAST ON-AIR — the origin ground. ✅ values lifted verbatim from the live overlay codebase
+   (overlay/src/styles/design-system.ts). These are the shapes every other ground evolved from.
+   THE CONTRACT: panels are slightly transparent (≈80% fill) and NEVER blurred — the blur is what
+   separates Field Glass from air, and this ground predates it. Generously rounded (≈18px in the
+   approved SVGs). Red means on-air, and never leaves the air. No buttons: nothing here is clickable.
+   Lineage flows one way — rb-* on the OBS canvas only, fg-* on web and app. */
+:root{
+/* THE PANEL FILL 🟡 — opaque broadcast navy, the one colour this ground adds. Slightly cooler and
+   lighter than --navy so a panel separates from the video behind it without a border. Referenced by
+   .rb-tab here and by the On-Air column of 10-color/field-map.html; it was used in four places
+   before it was ever defined, which painted every one of them transparent. */
+--broadcast-navy:#0F223E;
+/* row tint system — cyan at 8/15/25% */
+--bc-row-odd:rgba(22,160,219,.08);--bc-row-hover:rgba(22,160,219,.15);--bc-row-highlight:rgba(22,160,219,.25);
+/* border/rule alphas — header underline .8, dividers .3, light .2 */
+--bc-border-strong:rgba(22,160,219,.8);--bc-border-mid:rgba(22,160,219,.3);--bc-border-light:rgba(22,160,219,.2);
+--bc-shadow-highlight:0 0 10px rgba(22,160,219,.3);
+--bc-radius:4px;--bc-row-h:35px;
+}
+
+/* The folder tab — the notch that holds a title or crest */
+.rb-tab{display:inline-block;background:var(--broadcast-navy);color:var(--white);font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:6px 24px 5px 14px;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 100%,0 100%)}
+
+/* Blue lines — header underline (strong), divider (mid), and the gradient rule that fades out */
+.rb-rule{border-bottom:2px solid var(--bc-border-strong)}
+.rb-divider{height:1px;background:var(--bc-border-mid)}
+.rb-grad-rule{height:2px;background:linear-gradient(90deg,var(--cyan-shield) 0%,rgba(22,160,219,.35) 55%,rgba(22,160,219,0) 100%)}
+.rb-grad-rule-center{height:1px;background:linear-gradient(90deg,rgba(22,160,219,0),var(--bc-border-strong),rgba(22,160,219,0))}
+
+/* Row tint system — odd rows 8%, hover 15%, highlight 25% */
+.rb-rows>*:nth-child(odd){background:var(--bc-row-odd)}
+.rb-rows>.is-highlight{background:var(--bc-row-highlight);box-shadow:var(--bc-shadow-highlight)}
+
+/* Difficulty bars — 7px ticks, cyan fill */
+.rb-difficulty{display:flex;gap:3px;height:7px}
+.rb-difficulty i{flex:1;background:var(--bc-border-light)}
+.rb-difficulty i.on{background:var(--cyan-shield)}
+
+/* THE RACELINE — the brand's livery stripe (canon: foundation 05, Navy Ground decoration).
+   ONE SOURCE: assets/broadcast/raceline.svg — the exact master shapes (lugs fading .8→2, connector jogs intact).
+   Never redraw it in CSS. PLACEMENT LAW: always a border treatment, flat by nature — docked on an edge of
+   Navy Ground or Roadbook Paper (grounds or cards), NEVER on Field Glass and NEVER on Terrain Paper.
+   Terrain Paper takes linework instead — dotted verticals, solid horizontals, survey crosses, scale bars
+   (elements/terrain-paper.css). Livery is vehicle language; paper is drawn on, not painted.
+   Lineage: FJ60 Land Cruiser body-side stripe package → 2025 curtain footer. */
+
+/* Twin pinstripe — rally-stripe pair: one full weight, one hairline echo */
+.rr-twin{position:relative;height:7px;border-top:2px solid var(--cyan-shield)}
+.rr-twin::after{content:'';position:absolute;top:4px;left:0;right:0;height:1px;background:rgba(22,160,219,.45)}
+
+/* Two-tone Tungsten title pair — white lead + cyan class */
+.rb-title-pair{display:flex;align-items:baseline;gap:.35em;font-family:var(--font-display);text-transform:uppercase;line-height:.85;color:var(--white)}
+.rb-title-pair b{font-weight:600}
+.rb-title-pair em{font-style:normal;font-weight:500;color:var(--cyan-shield);font-size:.6em}
