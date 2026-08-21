@@ -1,0 +1,12 @@
+/* THE RADIUS LADDER — cross-ground, four steps, concentric by rule. Named here because it is shared:
+   a Field Glass crystal, a Roadbook control and a broadcast row all draw from the same ladder.
+   CONCENTRIC RULE: an inner radius is its outer minus the inset — never two radii picked apart
+   (--fgi-radius 14 − --fgi-ring-inset 6 = --fgi-radius-ring 9). CUTOUTS, NOT BLOBS: the pill
+   (999px) belongs to chips alone and never to a panel. */
+:root{
+--radius-tool:4px;/* broadcast rows, Roadbook controls — the tightest register */
+--radius-control:6px;/* buttons and controls on every other ground */
+--radius-well:9px;/* etched ring, inner well — 14 minus the 6px ring inset, rounded */
+--radius-crystal:14px;/* the Field Glass panel — the screen cutout */
+--radius-pill:999px;/* chips only */
+}

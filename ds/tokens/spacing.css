@@ -1,28 +1,28 @@
-/* ==========================================================================
-   Rebelle Rally — Spacing tokens
-   20px base increment (the site's rhythm). Broadcast has its own tighter
-   dense scale for the 1080p overlay rows.
-   ========================================================================== */
+/* SPACE & SIZE — the scale, derived rather than invented. An audit of 77 files found 30 distinct
+   padding values and 26 distinct gaps: no scale at all, just every integer from 1 to 46. These eight
+   steps are the frequency peaks of that audit rounded onto one ramp, so adopting them moves most
+   existing values by 0–2px rather than redrawing the system.
+   THE NUMBER IS THE PIXEL VALUE. --sp-12 is 12px. No step index to translate, no base to remember —
+   the one naming choice that makes a spacing scale usable without a lookup table. */
+:root{
+--sp-4:4px;    /* glyph to label · hairline inset · the tightest legal gap */
+--sp-6:6px;    /* inside a chip · stacked mono lines */
+--sp-8:8px;    /* label to value · between rows in a list · button gap */
+--sp-12:12px;  /* row rhythm · icon-list indent · button vertical at md */
+--sp-16:16px;  /* between grouped blocks · button vertical at lg */
+--sp-24:24px;  /* THE GUTTER — card padding, band padding, page gutter */
+--sp-32:32px;  /* between bands and sections */
+--sp-48:48px;  /* page margins, and the largest separation the system uses */
+/* TWO RHYTHMS, ONE SCALE. 4–12 is micro: distances inside a single row, where the eye reads one
+   object. 16–48 is macro: distances between blocks, where the eye moves. Borrowing across the two —
+   a 24px gap inside a row, a 6px gap between blocks — is what makes a layout feel arbitrary even
+   when every value is on-scale. */
+--gutter:var(--sp-24);
 
-:root {
-  /* ---- Editorial / marketing spacing (20px base) ----------------------- */
-  --space-1: 20px;  /* base unit — default gap */
-  --space-2: 40px;  /* minor break — section padding */
-  --space-3: 50px;  /* medium break — CTA rhythm */
-  --space-4: 80px;  /* major section break */
-  --container-max: 1140px;
-  --container-wide: 1240px;
-
-  /* ---- Broadcast dense spacing (1080p overlay) ------------------------- */
-  --bc-space-xs: 3px;  /* hairline gaps inside dense rows */
-  --bc-space-sm: 4px;
-  --bc-space-md: 8px;  /* row horizontal padding */
-  --bc-space-lg: 16px; /* container padding */
-  --bc-space-xl: 20px; /* section padding */
-  --bc-space-xxl: 40px;
-  --bc-row-height: 30px; /* curtain team-row height */
-
-  /* ---- Broadcast canvas ------------------------------------------------ */
-  --bc-canvas-w: 1920px;
-  --bc-canvas-h: 1080px;
+/* SIZES — not spacing, and deliberately not on the spacing ramp: each of these is a measured
+   optical or ergonomic value that happens to be what it is. */
+--hit-min:44px;      /* the mobile hit-target floor — a FLOOR, not a size. Never ship below it. */
+--icon-inline:17px;  /* Tabler beside a label — optically matched to 11.5px body, not a round number */
+--icon-mark:20px;    /* a card's own mark, standing alone with no ring */
+--icon-chip:12px;    /* inside a chip, against 9px mono */
 }

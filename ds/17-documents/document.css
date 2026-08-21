@@ -1,0 +1,188 @@
+/* ============================================================
+   18 · DOCUMENTS — the laws that only appear at page scale.
+   🟡 derived — from the 2026 Content & VIP Cost Sheet build.
+
+   Nothing here is discoverable in a component card. A head reads
+   fine in isolation and still fails to tell you whether the list
+   below applies to you; a texture reads fine in a 700px specimen
+   and still collides with a footer on a full page. These are the
+   rules that only show up once a whole document exists.
+
+   Ground is set by ONE modifier: .on-paper. Accent is set by ONE
+   custom property: --section-accent. Nothing here hard-codes a hue.
+   ============================================================ */
+
+/* --- THE ACCENT CHANNEL -------------------------------------
+   A section declares its accent ONCE and every head, rule and
+   bullet disc inside it inherits. This is how a whole conditional
+   section gets marked without a left border: the accent travels
+   down the cascade instead of being drawn as an edge.
+   Cyan is the default because cyan is the measured/live voice.
+   Caution amber marks a section that is CONDITIONAL — an add-on,
+   a tier only some readers qualify for. A different claim, not a
+   louder one.
+
+   It is a data ATTRIBUTE, not a class modifier, because it is a
+   declaration about the section rather than a style applied to it:
+   data-section-accent="caution" says what the section is, and the
+   colours follow. The cyan default lives in tokens/colors.css, so
+   a section only declares what it CHANGES. */
+[data-section-accent].on-paper{--section-accent:var(--label-cyan-on-paper);--section-accent-rule:var(--label-cyan-on-paper)}
+[data-section-accent="caution"]{--section-accent:var(--caution-text-on-navy);--section-accent-rule:var(--caution);--bullet-disc:var(--caution-text-on-navy)}
+[data-section-accent="caution"].on-paper{--section-accent:var(--caution-on-paper);--section-accent-rule:var(--caution);--bullet-disc-on-paper:var(--caution-on-paper)}
+
+/* --- HEAD · opens a COLUMN, rule fades out -------------------
+   The rule measures the head's own width and stops. It is not
+   drawing a box and not reaching for the far margin. */
+.rr-doc-head{display:flex;align-items:center;gap:var(--sp-12);margin-bottom:2px}
+.rr-doc-head__t{margin:0;font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.11em;text-transform:uppercase;color:var(--section-accent,var(--cyan));white-space:nowrap}
+.rr-doc-head__ln{flex:1;height:1px;background:linear-gradient(90deg,var(--fgi-ring-accent),transparent)}
+.rr-doc-head.on-paper .rr-doc-head__ln{background:linear-gradient(90deg,var(--tp-mark),transparent)}
+
+/* --- BAND · opens a LIST, solid rule + qualifier -------------
+   Same head, a solid underline, and a right-aligned mono qualifier
+   that SCOPES the list — "PHOTO + VIDEO", "VIDEO ONLY", "DAYS 1-4".
+   The qualifier is the entire reason a band exists rather than a
+   head: it answers "does this apply to me?" once, at the top, so no
+   row below has to repeat it. A list whose scope is restated per
+   row is a list that was missing its band. */
+.rr-doc-band{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-12);padding-bottom:7px;margin-bottom:var(--sp-16);border-bottom:1px solid color-mix(in srgb,var(--section-accent-rule,var(--cyan)) 55%,transparent)}
+.rr-doc-band__t{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.11em;text-transform:uppercase;color:var(--section-accent,var(--cyan))}
+.rr-qual{font-family:var(--font-mono);font-size:var(--fs-mono-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--section-accent,var(--cyan));white-space:nowrap}
+/* SUB — a group head inside a list. One step down, and its rule
+   drops to the neutral separator: a subgroup is not a new claim. */
+.rr-doc-band--sub{padding-bottom:6px;margin-bottom:var(--sp-12);border-bottom-color:var(--fgi-sep-metal)}
+.rr-doc-band--sub .rr-doc-band__t{font-size:12.5px}
+.rr-doc-band--sub.on-paper{border-bottom-color:var(--hairline)}
+.rr-doc-band--sub .rr-qual{color:var(--label-on-dark)}
+.rr-doc-band--sub.on-paper .rr-qual{color:var(--label-on-paper)}
+
+/* --- FIGURE ROW ---------------------------------------------
+   A label and a figure on ONE baseline, with the description
+   hanging beneath both. Prices, specs, distances, split times —
+   any row where a name is answered by a number.
+
+   A sheet is not a table. A table asks you to scan a grid; a
+   figure row asks you to read a row, and lands in one pass. So
+   there is no column rule between label and figure: the shared
+   baseline IS the alignment, and a vertical rule would turn a row
+   you read into a grid you scan.
+
+   The figure is DISPLAY type, not mono — a number that answers a
+   question is a headline, not a readout. */
+.rr-fig-row{display:grid;grid-template-columns:1fr auto;column-gap:18px;align-items:baseline;padding:13px 0 11px;border-bottom:1px solid var(--fgi-sep-metal)}
+.rr-fig-row:last-child{border-bottom:0;padding-bottom:2px}
+.rr-fig-row__label{font-family:var(--font-display);font-weight:600;font-size:15.5px;letter-spacing:.05em;text-transform:uppercase;line-height:1.15}
+.rr-fig-row__fig{font-family:var(--font-display);font-weight:600;font-size:15.5px;line-height:1.15;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* tabular-nums is not optional: a stack of figures that does not align
+   on the comma reads as a list of unrelated numbers. */
+.rr-fig-row__note{grid-column:1/-1;margin:5px 0 0;font-size:12.5px;line-height:1.5;color:var(--label-on-dark);text-wrap:pretty}
+/* the figure's dependents — an asterisk and a unit are PUNCTUATION on a
+   number, so they drop to label ink and, for the unit, below its size.
+   Full size would make "/ day" look like part of the figure. */
+.rr-fig-row__ast{color:var(--label-on-dark)}
+.rr-fig-row__unit{font-size:13.5px;color:var(--label-on-dark)}
+/* a figure that is a WORD, not a number — "Duration dependent". It steps
+   down and desaturates: it is an answer, but it is not a figure. */
+.rr-fig-row__fig--text{font-size:14px;line-height:1.2;letter-spacing:.04em;text-transform:uppercase;color:var(--label-on-dark)}
+/* the label's chip sits with the LABEL, never with the figure */
+.rr-fig-row__labelwrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* FLAGGED — the row that is new, conditional, or upsold. It takes the
+   caution family on the LABEL and FIGURE only; the note stays in ordinary
+   label ink, because the exception is the offer, not the prose.
+   No left border: the flag is carried by type colour. */
+.rr-fig-row--flag .rr-fig-row__label,
+.rr-fig-row--flag .rr-fig-row__labelwrap>span,
+.rr-fig-row--flag .rr-fig-row__fig{color:var(--caution-text-on-navy)}
+.rr-fig-row--flag .rr-fig-row__ast{color:color-mix(in srgb,var(--caution-text-on-navy) 70%,transparent)}
+/* TIGHT — two dense columns in one panel. Same anatomy, one step down.
+   Use past roughly twelve rows on a page. */
+.rr-fig-row--tight{padding:11px 0 10px;column-gap:16px}
+.rr-fig-row--tight .rr-fig-row__label{font-size:14.5px;line-height:1.1}
+.rr-fig-row--tight .rr-fig-row__note{margin-top:4px;font-size:12px;line-height:1.45}
+/* PAPER — ink not white; the hairline ladder's --hairline rather than the
+   glass panel's etched separator; and the note gets a MEASURE, because
+   paper has no panel edge to stop the line. */
+.rr-fig-row.on-paper{border-bottom-color:var(--hairline)}
+.rr-fig-row.on-paper .rr-fig-row__label{font-size:16px}
+.rr-fig-row.on-paper .rr-fig-row__note{color:var(--ink-soft);max-width:56ch;font-size:13px}
+.rr-fig-row.on-paper .rr-fig-row__ast,
+.rr-fig-row.on-paper .rr-fig-row__unit,
+.rr-fig-row.on-paper .rr-fig-row__fig--text{color:var(--label-on-paper)}
+.rr-fig-row--flag.on-paper .rr-fig-row__label,
+.rr-fig-row--flag.on-paper .rr-fig-row__labelwrap>span,
+.rr-fig-row--flag.on-paper .rr-fig-row__fig{color:var(--caution-on-paper)}
+.rr-fig-row--flag.on-paper .rr-fig-row__ast{color:color-mix(in srgb,var(--caution-on-paper) 70%,transparent)}
+
+/* --- VERTICAL RULE ------------------------------------------
+   Splits a page into columns. SOLID on dark, and this is the one
+   place the hairline ladder's two halves differ in KIND rather than
+   value: at 1px on Navy a dotted vertical run stops reading as a
+   line and starts reading as noise — it shimmers. Dotted stays on
+   paper, where the tooth of the stock carries it. */
+.rr-vrule{width:1px;align-self:stretch;background:rgba(200,204,208,.17)}
+.rr-vrule.on-paper{background:var(--tp-mark)}
+
+/* --- DOCUMENT FOOTER ----------------------------------------
+   Closes a page: the asterisk's promise left, the rights or
+   licensing line right. Both are obligations, so both sit in label
+   ink — and only the instrument that GOVERNS them (the agreement's
+   name, the policy, the date it binds) comes up to full ink. A
+   footer where everything is equally quiet hides the one thing the
+   reader is actually agreeing to. */
+.rr-doc-foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--fgi-sep-metal);display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-24);font-size:11.5px;line-height:1.5;color:var(--label-on-dark)}
+.rr-doc-foot>:first-child{white-space:nowrap}
+.rr-doc-foot>:last-child{text-align:right}
+.rr-doc-foot b{font-weight:600;color:var(--white)}
+.rr-doc-foot.on-paper{border-top-color:var(--tp-mark);color:var(--label-on-paper)}
+.rr-doc-foot.on-paper b{color:var(--ink)}
+
+/* --- TEXTURE FADE -------------------------------------------
+   A texture that ENTERS from one corner and DISSIPATES down the
+   page, drawn by two masks composited to their intersection: a
+   diagonal that decides where it comes from, and a vertical that
+   decides where it gives up. One gradient can only do one job.
+
+   mask-composite:intersect needs -webkit-mask-composite:source-in
+   beside it — the prefixed keyword is a different word, and
+   omitting it drops WebKit to the union.
+
+   IT IS THE NAVY PRINT, on a page instead of a band — same sheet, same
+   ink, same 420% zoom, same --navy-print. See 02-navy-ground/navy.css.
+   EXACTLY ONE THING DIFFERS: THE MASK, because a band's fade dissipates
+   UPWARD, since
+   a band's heading sits at its top and its content settles toward the
+   bottom. A page is the other way round — masthead at the top, footer
+   at the bottom — so the print enters high and has to be gone before
+   the licensing line. Same law, inverted geometry.
+   THE SHEET IS THE CYAN ONE. assets/textures/wave-lines.svg is the same
+   drawing in white at hairline strokes; it was the default here for a
+   while and it prints a grey haze, not a print. One ink.
+   THE SIZE IS A PERCENTAGE, for the reason it is everywhere else: a
+   pixel size is deterministic on a fixed-width sheet but silently
+   re-crops in every specimen and every other page width, so the card
+   above stops agreeing with the template below.
+   POSITION STAYS INSIDE 0-100%. The image is ~4.2x the page at this
+   zoom, so any position in range still covers the full width; a value
+   past 100% slides it off until only a strip of the page can hold print
+   at all, whatever the mask says. Values like "right -520px" are a
+   holdover from the pixel era and read as off-frame here.
+   Override the stops; the defaults are the published cost-sheet
+   setting, already correct for a full-width page with a panel in the
+   upper two-thirds. */
+.rr-texture-fade{position:absolute;inset:0;pointer-events:none;
+  opacity:var(--tex-opacity,var(--navy-print));
+  background-image:var(--tex-src,url(../assets/textures/navy-waves.svg));background-repeat:no-repeat;
+  background-position:var(--tex-pos,62% 34%);
+  background-size:var(--tex-size,420% auto);
+  -webkit-mask-image:linear-gradient(var(--tex-in-angle,155deg),transparent var(--tex-in-from,14%),#000 var(--tex-in-to,52%)),
+    linear-gradient(180deg,#000 var(--tex-hold,46%),rgba(0,0,0,.16) var(--tex-mid,68%),transparent var(--tex-out,86%));
+  mask-image:linear-gradient(var(--tex-in-angle,155deg),transparent var(--tex-in-from,14%),#000 var(--tex-in-to,52%)),
+    linear-gradient(180deg,#000 var(--tex-hold,46%),rgba(0,0,0,.16) var(--tex-mid,68%),transparent var(--tex-out,86%));
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+/* ENTRY ONLY — comes in from a corner and runs to the edge without
+   fading. Use on a band, never on a full page: with nothing telling
+   it where to stop it arrives at the footer at full strength. */
+.rr-texture-fade--entry{-webkit-mask-image:linear-gradient(var(--tex-in-angle,155deg),transparent var(--tex-in-from,14%),#000 var(--tex-in-to,54%));
+  mask-image:linear-gradient(var(--tex-in-angle,155deg),transparent var(--tex-in-from,14%),#000 var(--tex-in-to,54%));
+  -webkit-mask-composite:source-over;mask-composite:add}

@@ -1,0 +1,1 @@
+Never use left-border accent design (a colored border-left edge on cards/panels) — the user calls it an AI-tell. When a panel needs a live/cyan accent, use the broadcast-authentic moves instead: the folder-tab notch, the 2px cyan header underline (--bc-border-strong), or the cyan top rule on Field Glass mega panels.

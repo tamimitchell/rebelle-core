@@ -1,0 +1,14 @@
+/* PHOTO GROUND — full-bleed photography under a DIRECTIONAL scrim; may deepen into Navy where the band ends.
+   THE CONTRACT: the photograph keeps ≥60% of itself clear (see scrim-law). A scrim is directional and
+   always reaches transparent at its far end — a flat wash over the whole frame is not a scrim, it is a tint.
+   Type and decoration follow NAVY GROUND: Photo Ground is Navy with a landscape behind it. */
+:root{
+/* 🟡 derived — one scrim per edge, each fading to nothing */
+--scrim-bottom:linear-gradient(180deg,transparent 40%,rgba(6,16,31,.55) 72%,var(--navy-night) 100%);/* @kind other */
+--scrim-left:linear-gradient(90deg,rgba(6,16,31,.72) 0%,rgba(6,16,31,.3) 44%,transparent 74%);/* @kind other */
+}
+.photo-ground{position:relative;color:var(--white);overflow:hidden}
+.photo-ground>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-ground>.scrim{position:absolute;inset:0;background:var(--scrim-bottom);pointer-events:none}
+.photo-ground>.scrim.from-left{background:var(--scrim-left)}
+.photo-ground>*:not(img):not(.scrim){position:relative}

@@ -1,95 +1,89 @@
-/* ==========================================================================
-   Rebelle Rally — Color tokens
-   Real values extracted 2026-06-26 from the broadcast graphics + live site.
-   Core (rr.*) is canonical. Desert + Field Glass (fg.*) are the elevation
-   layer sourced from real field imagery. Sponsor colors are lockup-only,
-   NEVER brand core. Status colors are semantic (red = on-air, cyan = active).
-   ========================================================================== */
+/* Rebelle Rally color tokens — the BRAND core only.
+   Ground-specific color lives WITH its ground (grounds/<ground>/<ground>.css): Navy's dusk ramp,
+   Terrain's sand and contour ink, Roadbook's cool white, On-Air's broadcast navy and row tints.
+   Foundation 07 (tokens) formalizes this; until then every value carries its honesty mark (brand-canon §1).
+   ◆ official · ✅ observed shipped · 🟡 derived (ours) */
+:root{
+/* ◆ official brand colors — Pantone 289 C / 299 C */
+--navy:#0D213D;--cyan:#189FDA;--cyan-shield:#16A0DB;--white:#FFFFFF;--black:#000000;
+/* ✅ observed semantic — deltas promoted to shipped overlay values (design-system.ts) */
+--on-air:#FF0000;/* red means on-air, broadcast only */
+--delta-up:#10B981;--delta-down:#DF1F26;/* ▲▼ position deltas — shipped */
+/* 🟡 SEMANTIC CHIP/STATE COLORS — each needs a DARK TWIN for paper grounds. The shipped delta colors
+   were drawn for navy and fail on warm sand (#10B981 → 2.4:1, #DF1F26 → 4.0:1), so paper gets its own.
+   Caution is the one genuinely new hue — warm amber, the gold already present in the mockups.
+   HARD LAW: --on-air (#FF0000) never appears in a chip, a state, or anywhere off the broadcast canvas.
+   Alert red is --loss, which is a different red and means "lost time / penalty", not "we are on air". */
+--gain:var(--delta-up);--gain-on-paper:#07684A;--gain-text-on-navy:#6EE7B7;
+/* alert red is NOT the delta red. --delta-down (#DF1F26) stays exactly as shipped for ▼ marks;
+   at fill size on navy it glows, so alert surfaces take a deeper, less saturated red. */
+--loss:#C9262C;--loss-on-paper:#9E1218;--loss-text-on-navy:#E29498;
+/* caution amber must READ as amber. On navy it goes bright — nothing else is warm there, so it owns
+   the hue. On paper brightness cannot come from the type (it would fail floor), so it comes from a
+   WASH: an amber tint carries the colour and dark amber type carries the contrast. */
+--caution:#FFC24D;--caution-text-on-navy:#FFD98A;
+--caution-wash:rgba(255,194,77,.34);--caution-on-paper:#6B4304;
+/* 🟡 SELECTED — the adopted selected state (candidate 02): a pale cyan wash under a cyan hairline.
+   Cyan may TINT a control but never FILL one — solid cyan is the primary button's signature and
+   reads as a button at any size, which is exactly why the filled chip failed. */
+--selected-wash:linear-gradient(180deg,rgba(24,159,218,.22),rgba(24,159,218,.1));/* @kind color */
+--selected-wash-on-paper:linear-gradient(180deg,rgba(24,159,218,.2),rgba(24,159,218,.08));/* @kind color */
+--selected-text-on-navy:#9FDCF7;
+/* 🟡 INTERACTION RAMP — hover and press for every fillable surface. Hover LIFTS on dark grounds and
+   DEEPENS on paper; press always deepens. Component-level, not ground-level: one ramp serves a
+   button on navy and the same button on sand. */
+--cyan-lift:#1DB9FF;--cyan-press:#0E7AA8;
+--navy-lift:#0A1A31;--navy-press:#0C1420;
+--loss-lift:#D8383E;--loss-press:#9E1218;--loss-press-on-paper:#840F14;
+/* --loss-press and --loss-on-paper hold the same value doing two different jobs — the dark-ground
+   press and the paper fill. Separate names so either can move without dragging the other. */
+/* 🟡 THE ROUTE RAIL — the page read as a route rather than a stack of bands. TWO LINES IN ONE: a
+   continuous survey line at  the trace says it goes somewhere. Both stay FAINTER than
+   --hairline — the rail is chrome about the page, not content in it. Only the waypoint's inner ring,
+   dot and numeral take the accent. */
 
-:root {
-  /* ---- Brand core ------------------------------------------------------ */
-  --rr-blue: #189fda;          /* Rebelle cyan — accent, active route, focus, position-up-in-UI */
-  --rr-blue-deep: #118899;     /* deeper teal — hover/pressed shade anchor */
-  --rr-navy: #0d213d;          /* brand ground — hero/overlay backgrounds */
-  --rr-navy-deep: #0c1420;     /* deepest navy — app body, atmospheric grounds */
-  --rr-navy-broadcast: #0f223e;/* the overlay's measured navy (header gradient base) */
-  --rr-white: #ffffff;
+--seam-dot:rgba(255,255,255,.3);--seam-dot-on-paper:color-mix(in srgb,var(--desert-taupe) 52%,transparent);
 
-  /* ---- Neutrals -------------------------------------------------------- */
-  --rr-paper: #f4f4f4;         /* neutral light background */
-  --rr-paper-warm: #f7f3ea;    /* warm paper — editorial/magazine ground */
-  --rr-gray-100: #e8e8e8;      /* light fills, dividers */
-  --rr-gray-400: #ababab;      /* mid neutral, muted text on light, disabled */
-  --rr-gray-navy: #515e73;     /* navy-tinted gray — secondary text/borders on navy */
-  --rr-text: #333333;          /* body text on light */
-  --rr-ink: #171720;           /* near-black — high-contrast headings */
-
-  /* ---- Desert (Field Glass terrain layer) ------------------------------ */
-  --rr-sand: #d8c3a0;          /* warm terrain ground */
-  --rr-sand-warm: #e8c49a;     /* peachier sand (graphics harvest) */
-  --rr-dust: #b89a78;          /* dry rules, shadows */
-  --rr-sage: #8b967a;          /* desert scrub / ecological note */
-  --rr-clay: #9e6f55;          /* warm terrain depth */
-  --rr-earth: #3e342a;         /* deep alluvial/umber ground */
-  --rr-pine: #3c4a36;          /* high-country evergreen */
-
-  /* ---- Field Glass instrument layer ------------------------------------ */
-  --rr-glass-frost: rgba(255, 255, 255, 0.68); /* light glass cards */
-  --rr-glass-navy: rgba(13, 33, 61, 0.78);      /* dark glass cards over terrain */
-  /* Field Glass surface gradients — glass gradients DEEPER top-to-bottom, never
-     fades to transparent. All pair with backdrop-filter: blur(14px).
-     Mega panel additionally gets a 2px --rr-blue bottom rule. */
-  --rr-glass-nav: linear-gradient(180deg, rgba(13, 33, 61, 0.64), rgba(13, 33, 61, 0.86)); /* @kind color */ /* nav bar */
-  --rr-glass-mega: linear-gradient(180deg, rgba(13, 33, 61, 0.86), rgba(12, 20, 32, 0.94)); /* @kind color */ /* mega panel */
-  --rr-glass-utility: linear-gradient(180deg, rgba(13, 33, 61, 0.78), rgba(12, 20, 32, 0.94)); /* @kind color */ /* top utility bar (darkest — the sand/mono strip) */
-  --rr-glass-blur: 14px;
-  --rr-line-topo: #2e8fb8;     /* decorative elevation-contour linework on navy (not a signal) */
-  --rr-sky-hi: #7fb0cc;        /* environmental sky ramp — high */
-  --rr-sky-lo: #2c6e93;        /* environmental sky ramp — low */
-  --rr-marker-flag: #e0552a;   /* warm field waypoint / recovery gear accent */
-  --rr-goldenhour-cream: #f2ddb4; /* editorial warm cream */
-  --rr-goldenhour-amber: #ffc04a; /* editorial warm amber (golden hour) */
-
-  /* ---- Compass metal ramp (evolving toward brass) ---------------------- */
-  --rr-metal-silver: #c8ccd0;  /* light instrument metal (chrome bezel) */
-  --rr-metal-pewter: #9da3ab;  /* mid brushed metal */
-  --rr-metal-gunmetal: #4a4e52;/* dark instrument metal */
-
-  /* ---- Sponsor (lockups ONLY, never brand core) ------------------------ */
-  --rr-sponsor-toyota: #eb0a1e;   /* Toyota red — TITLE SPONSOR */
-  --rr-sponsor-pirelli: #ec1e24;  /* Pirelli red — Scorpion Challenge */
-  --rr-sponsor-pennzoil: #fde100; /* Pennzoil yellow — Pennzoil Challenge */
-
-  /* ---- Status (semantic) ----------------------------------------------- */
-  --rr-status-live: #ff0000;     /* on-air / REC dot / LIVE pill */
-  --rr-status-up: #10b981;       /* position gained (green ▲) */
-  --rr-status-down: #df1f26;     /* position lost (red ▼) */
-
-  /* ---- Broadcast surface tints (cyan @ opacity over navy) -------------- */
-  --bc-row-odd: rgba(22, 160, 219, 0.08);
-  --bc-row-hover: rgba(22, 160, 219, 0.15);
-  --bc-row-highlight: rgba(22, 160, 219, 0.25);
-  --bc-row-even-dark: rgba(0, 0, 0, 0.15);
-  --bc-border: rgba(22, 160, 219, 0.8);
-  --bc-divider: rgba(22, 160, 219, 0.3);
-  --bc-divider-soft: rgba(22, 160, 219, 0.2);
-  --bc-header-tint: rgba(22, 160, 219, 0.1);
-  --bc-header-tint-soft: rgba(22, 160, 219, 0.05);
-  --bc-panel: rgba(52, 63, 82, 0.95);       /* info/badge panel fallback fill */
-  --bc-panel-divider: #5b6a7c;
-
-  /* ---- Semantic aliases ------------------------------------------------ */
-  --surface-page: var(--rr-navy-deep);
-  --surface-ground: var(--rr-navy);
-  --surface-card: var(--rr-white);
-  --surface-panel: var(--bc-panel);
-  --surface-paper: var(--rr-paper-warm);
-  --text-on-navy: var(--rr-white);
-  --text-on-navy-muted: rgba(255, 255, 255, 0.7);
-  --text-body: var(--rr-text);
-  --text-heading: var(--rr-ink);
-  --text-muted: var(--rr-gray-400);
-  --accent: var(--rr-blue);
-  --accent-hover: var(--rr-blue-deep);
-  --focus-ring: var(--rr-blue);
+/* 🟡 THE SECTION ACCENT CHANNEL — a document section declares its accent once and every head, rule
+   and bullet disc inside it inherits, which is how a whole conditional section gets marked without
+   drawing an edge. Cyan is the default because cyan is the measured/live voice; a section overrides
+   these two on itself (see 17-documents/document.css) rather than recolouring its parts. */
+--section-accent:#189FDA;--section-accent-rule:#189FDA;
+/* 🟡 THE LIST MARKS — settled. A disc by default, mono numerals when order matters. The disc is
+   PUNCTUATION and never takes cyan; a numeral is INFORMATION and always does. That contrast is the
+   entire distinction between the two kinds, so the colours are named apart rather than shared. */
+--bullet-disc:rgba(255,255,255,.62);--bullet-disc-on-paper:rgba(13,33,61,.6);
+/* 🟡 CONTROL HAIRLINE — the outline weight for chips and ghost buttons. Heavier than --hairline,
+   which draws rules and separators: a control has to look like an edge you could press. One value
+   for both components — they ran .34 and .35 before this token existed, which was drift. */
+--control-hairline:rgba(255,255,255,.34);--control-hairline-on-paper:rgba(13,33,61,.34);
+/* 🟡 derived — inks & hairlines, shared by every paper ground */
+--ink:#0D213D;--ink-soft:rgba(13,33,61,.64);--ink-faint:rgba(13,33,61,.38);
+--white-soft:rgba(255,255,255,.72);--white-faint:rgba(255,255,255,.42);
+--hairline:rgba(13,33,61,.14);--hairline-inverse:rgba(255,255,255,.14);
+/* 🟡 LABEL COLORS — the smallest-legible-label rule (field floor: ≥4.5:1 after every blur and scrim).
+   Mono and micro labels under 12px MUST use these. Never use --ink-faint / --white-faint as text:
+   those are HAIRLINE colors for rules, ticks, and survey marks, and they measure ~2.2:1 and ~4.0:1
+   as type — both below floor. Cyan is also not a label color on paper (#189FDA on warm sand is 2.4:1);
+   it may mark a label but not set it. Below 9px, go to --ink / --white outright. */
+--label-on-paper:rgba(13,33,61,.72);--label-on-dark:rgba(255,255,255,.78);
+--label-cyan-on-paper:#0A5C86;/* the one cyan that clears floor on sand — for cyan-coded labels */
+/* THE WARM PAIR — the alternative to cyan for a header+icon label. Cyan says live, measured,
+   instrument; the warm pair says editorial, field, human — sections about people, story, and
+   history rather than data. Same law either way: the icon takes its header's exact colour.
+   Never both accents in one band; a band picks cyan or warm and holds it. */
+--label-tan-on-dark:var(--desert-dune);/* 11.9:1 on navy — desert tan, the compass-rose warmth */
+--label-brown-on-paper:var(--desert-ink);/* 6.8:1 on sand — sepia field ink, the warm pair's paper twin */
+/* 🟡 THE WARM DESERT FAMILY — one ramp, lightest to darkest. This was already load-bearing in three
+   folders under four unrelated names before it was ever named: the Terrain sheet, the warm accent,
+   the contour ink and frost's smoke are all steps of it. Naming it is what lets a warm value be
+   PICKED rather than re-typed, and it is why the two label tokens above now alias instead of
+   restating a hex. Anchored on the photography: bleached bone, sand, dune shadow, rock, printed
+   topo, sepia ink, warm shade.
+   ONLY TWO STEPS SET TYPE — dune on dark and ink on sand. The rest are surfaces, linework and smoke;
+   a mid step like rock fills, textures or draws, but never carries a label. */
+--desert-bone:#F5F0E6;--desert-sand:#EDE5D6;--desert-dune:#DFCBA8;--desert-rock:#A88F6A;
+--desert-taupe:#7A6746;--desert-ink:#5E4930;--desert-umber:#221A14;
+/* semantic aliases 🟡 */
+--signal-live:var(--cyan);--text-on-navy:var(--white);--text-on-paper:var(--ink);
 }

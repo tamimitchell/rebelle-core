@@ -7,7 +7,8 @@ produced the approved Field Glass demo.
 
 | Project | URL |
 |---|---|
-| **Design system (canonical — `ds/` is its export)** | https://claude.ai/design/p/4a29d0b6-616d-4dab-81e1-e7917a18c636?via=share |
+| **Design system (canonical — `ds/` is its export)** | https://claude.ai/design/p/b992548a-8479-40e9-bbce-4bd98128a675?via=share ("Rebelle Rally · Field Glass", the 2026-08 from-scratch rebuild) |
+| Old design system (superseded 2026-08-21; `ds/` history ≤462df28 is its export) | https://claude.ai/design/p/4a29d0b6-616d-4dab-81e1-e7917a18c636?via=share |
 | Rebelle site design (Home/Team/People pages) | https://claude.ai/design/p/9813cb27-070b-4f63-b438-c993f18f9a29 |
 | Rally storytelling experience (Rally Live) | https://claude.ai/design/p/394e50f1-9798-45af-ab07-ff32efc01ba8 |
 
