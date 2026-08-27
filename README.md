@@ -7,9 +7,10 @@ Everything that must mean the same thing across site, studio, and the apps.
 
 - `src/schemas.ts` — Zod content schemas (Team, Dispatch, DayStanding). Zod is the
   source of truth: types via `z.infer<>`, never separate interfaces.
-- `ds/` — the committed **Claude Design export** (tokens + component bundle).
-  This is a snapshot of the canonical design system:
-  https://claude.ai/design/p/4a29d0b6-616d-4dab-81e1-e7917a18c636?via=share
+- `ds/` — the committed **Claude Design export**: the CSS layer plus the assets
+  that CSS references. This is a snapshot of the canonical design system,
+  "Rebelle Rally · Field Glass":
+  https://claude.ai/design/p/b992548a-8479-40e9-bbce-4bd98128a675?via=share
   Never hand-edit — re-import and replace.
 - `dist/` — generated outputs, committed so consumers need no build step:
   `tokens.css` (site/studio) and `RebelleTokens.swift` (ios-app).
