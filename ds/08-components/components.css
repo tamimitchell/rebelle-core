@@ -56,7 +56,7 @@
    few percent. No transform, no shadow, no scale. A card that rises under the cursor is the house
    style of every template on the internet, and it fights the whole premise of this component —
    these boxes sit IN the ground, so lifting them off it is the one thing the hover must not do. */
-.rr-card--link{cursor:pointer;transition:border-color .2s ease,background .2s ease}
+.rr-card--link{cursor:pointer;text-decoration:none;transition:border-color .2s ease,background .2s ease}
 .rr-card--link:hover{border-color:var(--cyan);background:color-mix(in srgb,var(--white) 4%,var(--navy-night))}
 /* lit — the one card that is yours or live. Cyan takes the rim and nothing else; a cyan FILL is the
    primary button's signature, and the earned-cyan rule allows one per band, so a grid never has two. */
@@ -352,7 +352,7 @@
    It is --hit-min across (44px), not the 36px a desktop mock wants: this lives in the corner of a
    photo card, which is exactly where a thumb goes. .rr-iconbtn--sm drops to 36 for desktop-only
    chrome and is the one place in the system knowingly under the floor. ─────────────────────────── */
-.rr-iconbtn{display:inline-flex;align-items:center;justify-content:center;width:var(--hit-min);height:var(--hit-min);border-radius:50%;background:rgba(12,20,32,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--control-hairline);color:var(--white);cursor:pointer;flex:none;padding:0;transition:border-color .2s ease,color .2s ease,background .2s ease}
+.rr-iconbtn{display:inline-flex;align-items:center;justify-content:center;width:var(--hit-min);height:var(--hit-min);border-radius:50%;background:rgba(12,20,32,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--control-hairline);color:var(--white);cursor:pointer;text-decoration:none;flex:none;padding:0;transition:border-color .2s ease,color .2s ease,background .2s ease}
 .rr-iconbtn>i{font-size:var(--icon-mark);line-height:1}
 .rr-iconbtn:hover{background:rgba(12,20,32,.8);border-color:var(--cyan);color:var(--cyan)}
 .rr-iconbtn[aria-pressed="true"]{color:var(--cyan);border-color:var(--cyan)}
