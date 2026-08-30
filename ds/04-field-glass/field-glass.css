@@ -61,7 +61,7 @@
    warm haze, and the hover on both moves the RIM and nothing else — no transform, no shadow, ever.
    The frame is white where navy's goes cyan, and .45 where navy's rests at .17, because .17 white
    vanishes on a photograph. */
-.fgi-frost-card{position:relative;border:1px solid var(--fgi-frost-frame);border-radius:var(--radius-crystal);overflow:hidden;box-sizing:border-box;display:flex;align-items:flex-end;padding:14px;cursor:pointer;transition:border-color .2s ease}
+.fgi-frost-card{position:relative;border:1px solid var(--fgi-frost-frame);border-radius:var(--radius-crystal);overflow:hidden;box-sizing:border-box;display:flex;align-items:flex-end;padding:14px;cursor:pointer;text-decoration:none;transition:border-color .2s ease}
 .fgi-frost-card:hover{border-color:var(--fgi-frost-frame-hover)}
 .fgi-frost-card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){.fgi-frost-card{transition:none}}
