@@ -7,12 +7,33 @@
     ".": "./src/index.ts",
     "./schemas": "./src/schemas.ts",
     "./tokens.css": "./dist/tokens.css",
-    "./system.css": "./dist/system.css"
+    "./system.css": "./dist/system.css",
+    "./team-results": "./src/team-results.ts",
+    "./team-results-a2ui": "./src/team-results-a2ui.ts",
+    "./ui/team-results": "./src/ui/team-results.tsx",
+    "./ui/team-results.css": "./src/ui/team-results.css",
+    "./ui/team-results-surface": "./src/ui/team-results-surface.tsx",
+    "./team-results-catalog.json": "./dist/team-results-catalog.json"
   },
   "scripts": {
-    "build:tokens": "node scripts/build-tokens.mjs"
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "build:catalog": "node --experimental-strip-types scripts/build-catalog.ts"
   },
   "dependencies": {
     "zod": "^3.24.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
+    "zod-to-json-schema": "3.25.2"
   }
 }

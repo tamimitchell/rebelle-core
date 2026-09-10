@@ -30,3 +30,26 @@ Web (site/studio):
 iOS: drop `dist/RebelleTokens.swift` into the Xcode project for now; a proper
 `Package.swift` (SwiftPM) gets added when ios-app starts. Android: a Compose
 color output gets added to the codegen when android-app starts.
+
+## Shared team results
+
+`@rebelle/core/team-results` owns the validated view model. `ui/team-results`
+provides its React/Preact-compatible presentation without fetching or authority.
+`team-results-a2ui` and `ui/team-results-surface` implement a deliberately bounded
+[A2UI v0.9.1](https://a2ui.org/specification/v0.9.1-a2ui/) catalog: one `root`
+`TeamResults`, binding `/teamResults`, whole-value data updates, and `select_day`.
+The component emits the selected year/team/day as action context. Hosts validate
+that action and resolve the data source; generated UI cannot name a URL or tool.
+This is not a general basic-catalog renderer or an agent inference service.
+
+Public adapters supply only delivered records (`published` or historical `replay`).
+Studio supplies `studio` evidence, including the saved record and revision. Each
+host must reject the other source kind. The source label never means a saved
+Studio score has been published. Day points are the supplied official total;
+checkpoint totals do not reconstruct penalties or sporting decisions.
+
+`pnpm build:catalog` generates `dist/team-results-catalog.json` from the same Zod
+validators. Commit the generated catalog with contract changes. `pnpm test`
+checks lifecycle, validation, cutoff and scoring semantics. New catalog semantics
+require a new catalog ID. The optional React peer is needed only by UI consumers;
+Preact consumers use their normal React compatibility alias.
