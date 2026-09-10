@@ -1,0 +1,46 @@
+{
+  "schema_version": "2",
+  "release_id": "3f1c2b6e-8a2d-4c7e-9f0b-5d6e7a8b9c0d",
+  "channel_key": "rebelle.home",
+  "built_at": "2026-10-10T21:10:00Z",
+  "pages": [],
+  "placements": [
+    {
+      "slot": "site:home-feature",
+      "story": {
+        "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+        "version_id": "9b2c1e4a-3d5f-4b6a-8c7d-2e1f0a9b8c7d",
+        "headline": "Day 3: Desert Sage opens a forty-point lead",
+        "summary": "Three competition days in, #129 has strung together the cleanest run of the field and pulled clear of a tight chase for second.",
+        "as_of": "2026-10-10T14:02:00-07:00",
+        "telling": [
+          {
+            "component": "Paragraph",
+            "content": {
+              "text": "The dunes decided it. Where most of the field lost points hunting the last blue checkpoint before the marathon stage, Desert Sage found it on the first pass and carried a clean sheet into camp."
+            }
+          },
+          {
+            "component": "Standings",
+            "content": {
+              "caption": "4x4 overall after Day 3",
+              "rows": [
+                { "position": 1, "team_number": "129", "name": "Desert Sage", "points": 1188 },
+                { "position": 2, "team_number": "106", "name": "High Country", "points": 1148 },
+                { "position": 3, "team_number": "143", "name": "Dune Runners", "points": 1141 },
+                { "position": 4, "team_number": "216", "name": "Second Wind", "points": 1097 },
+                { "position": 5, "team_number": "111", "name": "Wild Grace", "points": 1090 }
+              ]
+            }
+          },
+          {
+            "component": "Paragraph",
+            "content": {
+              "text": "Second through fifth are inside fifty points of each other with the enduro still to come, which is closer than the top of the table has been at this point in any of the last three years."
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

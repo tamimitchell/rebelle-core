@@ -19,6 +19,12 @@ Rules:
   pinned before 462df28 must migrate names when they bump.
 - **Schemas are Zod** — types via `z.infer<>`, never separate interfaces.
   Schema changes ripple to site/studio/apps: bump consumers deliberately.
+- **The release artifact's `schema_version` is a literal, and it bumps with the
+  shape.** Consumers parse strictly, so a key added under an unchanged number
+  turns every published release into a contract violation. `"2"` added
+  `placements` (stories in slots, `src/story.ts`); removing `pages` is the next.
+  A story component is a three-repo contract: this renderer, the studio's
+  hand-mirrored write gate, and `test/fixtures/release-placements.json`.
 - **The scoring contract is `api/v1/results.php`** — measured, not assumed
   (2026-08-01). `api/standings.php` and `api/daily_scores.php` still respond and
   need no params, which makes them an easy wrong turn: they ignore `?rally=`/

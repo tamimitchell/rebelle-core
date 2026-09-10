@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      react:
+        specifier: ^18.0.0 || ^19.0.0
+        version: 19.3.0
       zod:
         specifier: ^3.24.0
         version: 3.25.76
@@ -44,6 +47,10 @@ packages:
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
 
+  react@19.3.0:
+    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
+    engines: {node: '>=0.10.0'}
+
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
@@ -74,6 +81,8 @@ snapshots:
   fast-uri@3.1.7: {}
 
   json-schema-traverse@1.0.0: {}
+
+  react@19.3.0: {}
 
   require-from-string@2.0.2: {}
 
