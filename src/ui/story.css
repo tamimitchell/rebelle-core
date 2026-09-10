@@ -1,0 +1,18 @@
+/* The story renderer's own classes, on tokens alone — the `team-results.css`
+ * rule — so a story reads the same with or without `system.css` around it.
+ * Colour is inherited from the host's ground on purpose; only the team
+ * numbers and the hairlines take a stance, and both are readable on paper and
+ * on navy. */
+.rr-story { max-width: var(--measure-article); font: var(--fw-regular) var(--fs-article)/var(--lh-reading) var(--font-body); color: inherit; }
+.rr-story__head { display: flex; flex-direction: column; gap: var(--sp-12); margin: 0 0 var(--sp-24); }
+.rr-story__headline { margin: 0; font: var(--fw-semibold) var(--fs-feature)/var(--lh-display) var(--font-display); letter-spacing: var(--ls-display); text-transform: uppercase; text-wrap: balance; }
+.rr-story__standfirst { margin: 0; font-size: var(--fs-article-lead); line-height: var(--lh-body); text-wrap: pretty; }
+.rr-story__as-of { margin: 0; font: var(--fw-regular) var(--fs-mono-label)/var(--lh-body) var(--font-mono); letter-spacing: var(--ls-label-wide); text-transform: uppercase; opacity: .72; }
+.rr-story__paragraph { margin: 0 0 var(--sp-16); text-wrap: pretty; }
+.rr-story__standings { width: 100%; margin: var(--sp-8) 0 var(--sp-24); border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.rr-story__standings caption { text-align: left; caption-side: top; padding-block: 0 var(--sp-8); font: var(--fw-semibold) var(--fs-kicker)/var(--lh-body) var(--font-display); letter-spacing: var(--ls-kicker); text-transform: uppercase; }
+.rr-story__standings th { text-align: left; padding: var(--sp-6) var(--sp-8); font: var(--fw-regular) var(--fs-meta)/var(--lh-body) var(--font-mono); letter-spacing: var(--ls-label); text-transform: uppercase; opacity: .72; border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
+.rr-story__standings td { padding: var(--sp-8); border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); vertical-align: baseline; }
+.rr-story__standings th:first-child, .rr-story__standings td:first-child { width: 3.5rem; }
+.rr-story__standings th:last-child, .rr-story__standings td:last-child { text-align: right; font: var(--fw-semibold) var(--fs-data-lg)/var(--lh-tight) var(--font-display); }
+.rr-story__team-number { font: var(--fw-semibold) var(--fs-name)/var(--lh-body) var(--font-display); letter-spacing: var(--ls-name); color: var(--cyan); margin-right: var(--sp-4); }

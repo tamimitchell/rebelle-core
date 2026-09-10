@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { StoryPlacementSchema } from './story.ts';
 
 /**
  * ── SCORING API: `api/v1/results.php` IS THE CONTRACT ─────────────────────
@@ -233,8 +234,10 @@ export type Dispatch = z.infer<typeof DispatchSchema>;
 // ── Studio release artifact ────────────────────────────────────────────────
 
 // The studio writes the artifact; every reader takes this shape from core so a
-// new section kind is a deliberate cross-repo contract change rather than an
-// untyped surprise at the site's network boundary.
+// new section kind or placement shape is a deliberate cross-repo contract
+// change rather than an untyped surprise at the site's network boundary. Pages
+// are on their way out (studio #275: a page is code); placements — stories in
+// slots, see `story.ts` — are what a release carries from here.
 export const SectionModeSchema = z.enum(['pre-rally', 'live', 'post-rally']);
 export type SectionMode = z.infer<typeof SectionModeSchema>;
 
@@ -298,15 +301,36 @@ export const ReleasePageSchema = z
   .strict();
 export type ReleasePage = z.infer<typeof ReleasePageSchema>;
 
+/**
+ * The artifact's own version, bumped whenever its shape changes, and read by
+ * every consumer as a literal: a reader that parses strictly cannot tell two
+ * shapes apart under one number, so a required key added under an unchanged
+ * `"1"` would have turned every published release into a contract violation.
+ * `"2"` added `placements` (studio #283); removing `pages` (studio #275 quest
+ * 4) is the next bump.
+ */
+export const RELEASE_ARTIFACT_VERSION = '2';
+
 export const ReleaseArtifactSchema = z
   .object({
-    schema_version: z.string().min(1),
+    schema_version: z.literal(RELEASE_ARTIFACT_VERSION),
     release_id: z.string().uuid(),
     channel_key: z.string().min(1),
     built_at: z.string().datetime({ offset: true }),
     pages: z.array(ReleasePageSchema),
+    /** Every story standing in a slot, ordered by slot name. */
+    placements: z.array(StoryPlacementSchema),
   })
-  .strict();
+  .strict()
+  // A slot holds one story. The studio refuses a second at approve and fails
+  // a build that finds two anyway; a reader that met a duplicate would have to
+  // pick, and picking is a lie about what was published.
+  .superRefine((artifact, context) => {
+    const slots = artifact.placements.map(({ slot }) => slot);
+    if (new Set(slots).size !== slots.length) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ['placements'], message: 'a slot holds one story' });
+    }
+  });
 export type ReleaseArtifact = z.infer<typeof ReleaseArtifactSchema>;
 
 // The first fast-lane contract. It is intentionally separate from a release
