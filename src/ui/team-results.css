@@ -1,0 +1,21 @@
+.rr-team-results { color: var(--white); background: var(--navy); padding: var(--sp-16); border: 1px solid color-mix(in srgb, var(--cyan) 45%, transparent); border-radius: var(--sp-8); font: 400 var(--fs-body)/var(--lh-body) var(--font-body); }
+.rr-team-results__header { display: flex; align-items: start; justify-content: space-between; gap: var(--sp-12); }
+.rr-team-results__header h3 { margin: 0; color: var(--selected-text-on-navy); font: 600 var(--fs-card-title)/var(--lh-tight) var(--font-display); }
+.rr-team-results__header p { margin: var(--sp-6) 0 0; }
+.rr-team-results__day { display: flex; flex-direction: column; flex: none; font-size: var(--fs-meta); gap: var(--sp-4); }
+.rr-team-results__day select { min-height: var(--hit-min); color: var(--white); background: var(--navy-night); border: 1px solid var(--cyan); border-radius: var(--sp-4); padding: var(--sp-8); font: inherit; font-size: var(--fs-lead); }
+.rr-team-results__source { font-size: var(--fs-meta); color: color-mix(in srgb, var(--white) 75%, transparent); margin: var(--sp-12) 0; overflow-wrap: anywhere; }
+.rr-team-results__source time { font-size: var(--fs-meta); }
+.rr-team-results__total { margin: var(--sp-16) 0; }
+.rr-team-results__total strong { font: 600 var(--fs-data-xl)/var(--lh-tight) var(--font-display); margin-left: var(--sp-8); }
+.rr-team-results summary { cursor: pointer; min-height: var(--hit-min); padding-block: var(--sp-8); color: var(--selected-text-on-navy); }
+.rr-team-results :is(select, summary):focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.rr-team-results__checkpoints ul { margin: 0; padding: 0; list-style: none; max-height: 22rem; overflow: auto; }
+.rr-team-results__checkpoints li { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: baseline; gap: var(--sp-8); padding-block: var(--sp-6); border-top: 1px solid color-mix(in srgb, var(--white) 18%, transparent); font-size: var(--fs-meta); }
+.rr-team-results__checkpoints li span:last-child { text-align: right; }
+.rr-team-results__counted { color: var(--gain-text-on-navy); }
+.rr-team-results__excluded { color: var(--caution-text-on-navy); }
+.rr-team-results__history { display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-16); font-size: var(--fs-meta); }
+.rr-team-results__history strong { color: var(--selected-text-on-navy); margin-left: var(--sp-4); }
+.rr-team-results__evidence dl { font-size: var(--fs-meta); overflow-wrap: anywhere; }
+.rr-team-results__evidence dd { margin: 0 0 var(--sp-8); }
