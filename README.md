@@ -5,8 +5,11 @@ Everything that must mean the same thing across site, studio, and the apps.
 
 ## What's here
 
-- `src/schemas.ts` — Zod content schemas (Team, Dispatch, DayStanding). Zod is the
-  source of truth: types via `z.infer<>`, never separate interfaces.
+- `src/schemas.ts` — Zod content schemas (Team, Dispatch, DayStanding) and the
+  studio's release artifact. Zod is the source of truth: types via `z.infer<>`,
+  never separate interfaces.
+- `src/story.ts` and `ui/story` — a story: the studio's composed piece for one
+  slot on a surface, and the one renderer every surface wears (below).
 - `ds/` — the committed **Claude Design export**: the CSS layer plus the assets
   that CSS references. This is a snapshot of the canonical design system,
   "Rebelle Rally · Field Glass":
@@ -53,3 +56,25 @@ validators. Commit the generated catalog with contract changes. `pnpm test`
 checks lifecycle, validation, cutoff and scoring semantics. New catalog semantics
 require a new catalog ID. The optional React peer is needed only by UI consumers;
 Preact consumers use their normal React compatibility alias.
+
+## Stories
+
+`@rebelle/core/story` owns the story document (studio #275, #283): a headline,
+a standfirst, the moment it is a snapshot *as of*, and a telling — an ordered
+list of catalog components, each `{component, content}`. v1 has two,
+`Paragraph` and `Standings`. A story is data all the way down: no markup, no
+styles, no links in prose. `ui/story` is the trusted renderer, React/Preact-
+compatible, and inherits its colour from whatever ground the host stands it on;
+the host owns position and layout. `ui/story.css` stands on tokens alone, the
+`team-results.css` rule, so a story reads the same with or without `system.css`.
+
+A release carries stories as `placements: [{slot, story}]` on
+`ReleaseArtifactSchema`; a slot is `surface:name`, one story per slot, and the
+artifact's `schema_version` is a literal that bumps whenever its shape does.
+`test/fixtures/release-placements.json` is the cross-repo contract: the studio's
+build emits it, the site's slot reader parses it, and `pnpm test` pins it here.
+
+Adding a component is a contract change for every renderer and for the studio's
+write gate, which mirrors these shapes by hand. An A2UI adapter and catalog for
+stories follow the team-results pattern when a host needs one; until then the
+document is written so that step is mechanical.
