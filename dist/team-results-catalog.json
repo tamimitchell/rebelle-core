@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:rebelle:a2ui:team-results:1",
+  "catalogId": "urn:rebelle:a2ui:team-results:1",
+  "title": "Rebelle team results",
+  "description": "Bounded A2UI v0.9.1 catalog: one root TeamResults bound to /teamResults. No functions or other components. The day input resolves its event context using the chosen day; the host fetches and acknowledges the selection. No URL, tool name or HTML may be supplied. Unique days/checkpoints and the cutoff are also checked by the runtime validator.",
+  "components": {
+    "TeamResults": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "root"
+        },
+        "component": {
+          "type": "string",
+          "const": "TeamResults"
+        },
+        "results": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/teamResults"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "onSelectDay": {
+          "type": "object",
+          "properties": {
+            "event": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "const": "select_day"
+                },
+                "context": {
+                  "type": "object",
+                  "properties": {
+                    "rally_year": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "const": "/teamResults/rally_year"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "team_number": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "const": "/teamResults/team_number"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "day": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "const": "/teamResults/day"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "rally_year",
+                    "team_number",
+                    "day"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "name",
+                "context"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "event"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "results",
+        "onSelectDay"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "functions": [],
+  "$defs": {
+    "anyComponent": {
+      "$ref": "#/components/TeamResults"
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "anyFunction": false,
+    "TeamResultsData": {
+      "type": "object",
+      "properties": {
+        "rally_year": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 9999
+        },
+        "team_number": {
+          "type": "string",
+          "pattern": "^\\d{1,4}$"
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31
+        },
+        "schema_version": {
+          "type": "string",
+          "const": "1"
+        },
+        "driver": {
+          "type": "string"
+        },
+        "navigator": {
+          "type": "string"
+        },
+        "available_days": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 31
+          },
+          "maxItems": 32
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "published",
+                "replay",
+                "studio"
+              ]
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "kind",
+            "at"
+          ],
+          "additionalProperties": false
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "day": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 31
+              },
+              "points": {
+                "type": "integer"
+              },
+              "max_points": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "ranked": {
+                "type": "boolean"
+              },
+              "checkpoints": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
+                    "points": {
+                      "type": "integer"
+                    },
+                    "max_points": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "validity": {
+                      "type": "number",
+                      "enum": [
+                        -1,
+                        0,
+                        1,
+                        2
+                      ]
+                    },
+                    "suffix": {
+                      "type": "string",
+                      "maxLength": 16
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "label",
+                    "points",
+                    "max_points",
+                    "validity",
+                    "suffix"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 200
+              },
+              "record_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "revision": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "day",
+              "points",
+              "max_points",
+              "ranked",
+              "checkpoints",
+              "record_id",
+              "revision"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "rally_year",
+        "team_number",
+        "day",
+        "schema_version",
+        "driver",
+        "navigator",
+        "available_days",
+        "source",
+        "results"
+      ],
+      "additionalProperties": false
+    },
+    "TeamResultsAction": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "v0.9.1"
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "const": "select_day"
+            },
+            "surfaceId": {
+              "type": "string",
+              "const": "team-results"
+            },
+            "sourceComponentId": {
+              "type": "string",
+              "const": "root"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "context": {
+              "type": "object",
+              "properties": {
+                "rally_year": {
+                  "type": "integer",
+                  "minimum": 2000,
+                  "maximum": 9999
+                },
+                "team_number": {
+                  "type": "string",
+                  "pattern": "^\\d{1,4}$"
+                },
+                "day": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 31
+                }
+              },
+              "required": [
+                "rally_year",
+                "team_number",
+                "day"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "name",
+            "surfaceId",
+            "sourceComponentId",
+            "timestamp",
+            "context"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "action"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
