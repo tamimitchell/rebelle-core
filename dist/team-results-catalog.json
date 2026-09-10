@@ -1,6 +1,10 @@
 {
-  "$ref": "#/definitions/TeamResults",
-  "definitions": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:rebelle:a2ui:team-results:1",
+  "catalogId": "urn:rebelle:a2ui:team-results:1",
+  "title": "Rebelle team results",
+  "description": "Bounded A2UI v0.9.1 catalog: one root TeamResults bound to /teamResults. No functions or other components. The day input resolves its event context using the chosen day; the host fetches and acknowledges the selection. No URL, tool name or HTML may be supplied. Unique days/checkpoints and the cutoff are also checked by the runtime validator.",
+  "components": {
     "TeamResults": {
       "type": "object",
       "properties": {
@@ -34,10 +38,61 @@
                 "name": {
                   "type": "string",
                   "const": "select_day"
+                },
+                "context": {
+                  "type": "object",
+                  "properties": {
+                    "rally_year": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "const": "/teamResults/rally_year"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "team_number": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "const": "/teamResults/team_number"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "day": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "const": "/teamResults/day"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "rally_year",
+                    "team_number",
+                    "day"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [
-                "name"
+                "name",
+                "context"
               ],
               "additionalProperties": false
             }
@@ -55,7 +110,18 @@
         "onSelectDay"
       ],
       "additionalProperties": false
+    }
+  },
+  "functions": [],
+  "$defs": {
+    "anyComponent": {
+      "$ref": "#/components/TeamResults"
     },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "anyFunction": false,
     "TeamResultsData": {
       "type": "object",
       "properties": {
@@ -216,8 +282,7 @@
         "source",
         "results"
       ],
-      "additionalProperties": false,
-      "$schema": "http://json-schema.org/draft-07/schema#"
+      "additionalProperties": false
     },
     "TeamResultsAction": {
       "type": "object",
@@ -285,13 +350,7 @@
         "version",
         "action"
       ],
-      "additionalProperties": false,
-      "$schema": "http://json-schema.org/draft-07/schema#"
+      "additionalProperties": false
     }
-  },
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "urn:rebelle:a2ui:team-results:1",
-  "catalogId": "urn:rebelle:a2ui:team-results:1",
-  "title": "Rebelle team results",
-  "description": "Bounded A2UI v0.9.1 catalog: one root TeamResults component bound to /teamResults. No functions or other components. Day selection emits select_day with rally_year, team_number and the chosen day; the host resolves data and authority."
+  }
 }

@@ -48,5 +48,5 @@ test('rejects future scores, repeated days/checkpoints, and preserves late green
 test('published catalog has the runtime identity and data/action definitions', () => {
   const catalog = JSON.parse(readFileSync(new URL('../dist/team-results-catalog.json', import.meta.url), 'utf8'));
   assert.equal(catalog.catalogId, TEAM_RESULTS_CATALOG); assert.equal(catalog.$id, TEAM_RESULTS_CATALOG);
-  assert(catalog.definitions.TeamResultsData); assert(catalog.definitions.TeamResultsAction);
+  assert(catalog.$defs.TeamResultsData); assert(catalog.$defs.TeamResultsAction);
 });

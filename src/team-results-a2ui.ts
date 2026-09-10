@@ -7,7 +7,7 @@ export const TEAM_RESULTS_VERSION = 'v0.9.1';
 export const TeamResultsComponentSchema = z.object({
   id: z.literal('root'), component: z.literal('TeamResults'),
   results: z.object({ path: z.literal('/teamResults') }).strict(),
-  onSelectDay: z.object({ event: z.object({ name: z.literal('select_day') }).strict() }).strict(),
+  onSelectDay: z.object({ event: z.object({ name: z.literal('select_day'), context: z.object({ rally_year: z.object({ path: z.literal('/teamResults/rally_year') }).strict(), team_number: z.object({ path: z.literal('/teamResults/team_number') }).strict(), day: z.object({ path: z.literal('/teamResults/day') }).strict() }).strict() }).strict() }).strict(),
 }).strict();
 const envelope = { version: z.literal(TEAM_RESULTS_VERSION) };
 const surfaceId = z.literal(TEAM_RESULTS_SURFACE);
@@ -47,7 +47,7 @@ export function teamResultsMessages(input: TeamResults): TeamResultsMessage[] {
   const results = TeamResultsSchema.parse(input);
   return [
     { version: TEAM_RESULTS_VERSION, createSurface: { surfaceId: TEAM_RESULTS_SURFACE, catalogId: TEAM_RESULTS_CATALOG } },
-    { version: TEAM_RESULTS_VERSION, updateComponents: { surfaceId: TEAM_RESULTS_SURFACE, components: [{ id: 'root', component: 'TeamResults', results: { path: '/teamResults' }, onSelectDay: { event: { name: 'select_day' } } }] } },
+    { version: TEAM_RESULTS_VERSION, updateComponents: { surfaceId: TEAM_RESULTS_SURFACE, components: [{ id: 'root', component: 'TeamResults', results: { path: '/teamResults' }, onSelectDay: { event: { name: 'select_day', context: { rally_year: { path: '/teamResults/rally_year' }, team_number: { path: '/teamResults/team_number' }, day: { path: '/teamResults/day' } } } } }] } },
     { version: TEAM_RESULTS_VERSION, updateDataModel: { surfaceId: TEAM_RESULTS_SURFACE, path: '/teamResults', value: results } },
   ];
 }

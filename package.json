@@ -32,6 +32,8 @@
     }
   },
   "devDependencies": {
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
     "zod-to-json-schema": "3.25.2"
   }
 }
