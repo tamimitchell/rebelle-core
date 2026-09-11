@@ -1,5 +1,4 @@
-import MarkdownIt from 'markdown-it';
-import type Token from 'markdown-it/lib/token.mjs';
+import MarkdownIt, { type MarkdownIt as Parser, type Token } from 'markdown-it';
 
 /** The stored dialect. Editor adapters consume this tree, never their own parser. */
 export const PROSE_HEADINGS = [3, 4] as const;
@@ -24,7 +23,7 @@ export function proseLinkAllowed(value: string): boolean {
 }
 
 /** A fresh parser prevents an editor or host from mutating another host's rules. */
-export function createProseParser(onInvalidLink?: (href: string) => void): MarkdownIt {
+export function createProseParser(onInvalidLink?: (href: string) => void): Parser {
   const options = { html: false, breaks: false, linkify: false, typographer: false, maxNesting: 100 };
   const parser = new MarkdownIt('zero', options);
   parser.enable([...PROSE_RULES]);
@@ -56,7 +55,7 @@ function inlines(tokens: Token[]): Inline[] {
         case 'em_open': result.push({ type: 'emphasis', children: read('em_close') }); break;
         case 'link_open': {
           const title = token.attrGet('title');
-          result.push({ type: 'link', href: token.attrGet('href')!, ...(title === null ? {} : { title }), children: read('link_close') });
+          result.push({ type: 'link', href: String(token.attrGet('href')), ...(title === null ? {} : { title: String(title) }), children: read('link_close') });
           break;
         }
         default: throw new Error(`Unsupported prose token: ${token.type}`);

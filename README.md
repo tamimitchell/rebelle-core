@@ -130,8 +130,7 @@ alt text, galleries, preformatted text and posts exceeding the story limit.
 Rails invokes this bundled Node 22 validator with one bounded JSON array of
 Markdown strings on stdin; stdout is one nullable error per string. It needs no
 installed Node dependencies at execution time. The bundle test compares it with
-the reader parser. Consumers of this package's TypeScript need its Markdown
-module declarations, so those are a production dependency.
+the reader parser. The parser package ships its own TypeScript declarations for consumers.
 
 The release envelope remains version 3: no envelope key or existing component
 changes. This additive catalog still requires compatible readers on both site
