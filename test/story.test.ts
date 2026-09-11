@@ -21,7 +21,8 @@ test('the shared fixture is a release artifact carrying one story in one slot', 
 });
 
 test('an artifact under the previous version or with an unknown key is refused, not read partially', () => {
-  assert(!ReleaseArtifactSchema.safeParse({ ...artifact, schema_version: '1' }).success);
+  assert(!ReleaseArtifactSchema.safeParse({ ...artifact, schema_version: '2' }).success);
+  assert(!ReleaseArtifactSchema.safeParse({ ...artifact, pages: [] }).success, 'pages left the artifact with studio #275');
   const { placements: _placements, ...withoutPlacements } = artifact;
   assert(!ReleaseArtifactSchema.safeParse(withoutPlacements).success);
   assert(!ReleaseArtifactSchema.safeParse({ ...artifact, extra: true }).success);
