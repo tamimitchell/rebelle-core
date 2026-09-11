@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { classes, classesIn, isUnscoped, selectors, tokens, uncommented } from '../src/stylesheet.ts';
+import { classes, classesIn, isUnscoped, rules, selectors, tokens, uncommented } from '../src/stylesheet.ts';
 
 const sheet = uncommented(`
   /* .commented-out { } */
@@ -24,6 +24,11 @@ test('reads selectors past strings, url() braces, at-rule preludes and keyframe 
 test('names every class a selector carries, exclusions included, and none from a string', () => {
   assert.deepEqual(classes(sheet), ['terrain', 'rr-btn', 'rr-btn--primary', 'muted', 'fgi', 'k']);
   assert.deepEqual(classesIn('a:not(.rr-btn):hover'), ['rr-btn']);
+});
+
+test('a rule begins where its prelude does, not at the whitespace before it', () => {
+  const css = '.a { }\n\n  .b { }';
+  assert.deepEqual(rules(css).map((rule) => [rule.prelude, css.slice(rule.from, rule.to)]), [['.a', '.a { }'], ['.b', '.b { }']]);
 });
 
 test('an unscoped selector carries neither a class nor an id outside a :not()', () => {
