@@ -13,6 +13,8 @@
 .rr-story__standings caption { text-align: left; caption-side: top; padding-block: 0 var(--sp-8); font: var(--fw-semibold) var(--fs-kicker)/var(--lh-body) var(--font-display); letter-spacing: var(--ls-kicker); text-transform: uppercase; }
 .rr-story__standings th { text-align: left; padding: var(--sp-6) var(--sp-8); font: var(--fw-regular) var(--fs-meta)/var(--lh-body) var(--font-mono); letter-spacing: var(--ls-label); text-transform: uppercase; opacity: .72; border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
 .rr-story__standings td { padding: var(--sp-8); border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent); vertical-align: baseline; }
-.rr-story__standings th:first-child, .rr-story__standings td:first-child { width: 3.5rem; }
-.rr-story__standings th:last-child, .rr-story__standings td:last-child { text-align: right; font: var(--fw-semibold) var(--fs-data-lg)/var(--lh-tight) var(--font-display); }
-.rr-story__team-number { font: var(--fw-semibold) var(--fs-name)/var(--lh-body) var(--font-display); letter-spacing: var(--ls-name); color: var(--cyan); margin-right: var(--sp-4); }
+.rr-story__standings th:nth-child(2), .rr-story__standings td:nth-child(2) { width: 100%; }
+.rr-story__standings th:last-child, .rr-story__standings td:last-child { text-align: right; }
+.rr-story__standings td:first-child, .rr-story__standings td:last-child { white-space: nowrap; }
+.rr-story__standings td:last-child { font: var(--fw-semibold) var(--fs-data-lg)/var(--lh-tight) var(--font-display); }
+.rr-story__team-number { font: var(--fw-semibold) var(--fs-name)/var(--lh-body) var(--font-display); letter-spacing: var(--ls-name); color: var(--cyan); margin-right: var(--sp-4); white-space: nowrap; }
