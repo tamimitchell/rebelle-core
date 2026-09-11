@@ -91,7 +91,7 @@ write gate, which mirrors these shapes by hand.
 `story-a2ui` and `ui/story-surface` are the story's A2UI face, on the
 team-results pattern: one `root` `Story` binding `/storyView`, whose value is
 the story document beside where it stands (`draft`, the exploration it is read
-through, its `slot`). A viewer has no actions — approve, publish and send stay
+through, its `slot` by key and in the studio's own words). A viewer has no actions — approve, publish and send stay
 gates in the studio — so the catalog declares none. `pnpm build:catalog`
 generates `dist/story-catalog.json` beside the team-results one; both are
 linked against the official v0.9.1 schemas by `pnpm test`.

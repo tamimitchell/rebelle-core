@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { SlotNameSchema, StorySchema, type Story } from './story.ts';
 
+/** Text the studio wrote: never blank, never longer than its field can carry. */
+const text = (max: number) => z.string().max(max).regex(/\S/, 'must not be blank');
+
 /**
  * The A2UI face of a story (studio #283 quest 2b), beside the domain the way
  * `team-results-a2ui.ts` stands beside team results (Decided #125). One root
@@ -14,14 +17,15 @@ export const STORY_VERSION = 'v0.9.1';
 
 /**
  * Where the story stands when it is shown: a draft nobody has approved, read
- * through the exploration named, or the Library's own. The site never sees
- * this — it draws only what a release carries.
+ * through the exploration named, or the Library's own; and the slot it names,
+ * by key and in the studio's own words, so a viewer can say where on the site
+ * it goes. The site never sees this — it draws only what a release carries.
  */
 export const StoryStandingSchema = z
   .object({
     draft: z.boolean(),
-    exploration: z.string().max(200).nullable(),
-    slot: SlotNameSchema.nullable(),
+    exploration: text(200).nullable(),
+    slot: z.object({ key: SlotNameSchema, label: text(200) }).strict().nullable(),
   })
   .strict();
 export type StoryStanding = z.infer<typeof StoryStandingSchema>;

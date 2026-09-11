@@ -27,7 +27,7 @@ test('story wire messages and catalog link against the official v0.9.1 schemas',
   ajv.addSchema(json('../dist/story-catalog.json'), 'https://a2ui.org/specification/v0_9/catalog.json');
   const server = ajv.compile(json('./protocol/v0.9.1/server.json'));
   const { id: _id, version_id: _versionId, ...story } = json('./fixtures/release-placements.json').placements[0].story;
-  const messages = storyMessages({ story, standing: { draft: true, exploration: 'rally week', slot: 'site:home-feature' } });
+  const messages = storyMessages({ story, standing: { draft: true, exploration: 'rally week', slot: { key: 'site:home-feature', label: 'Home page, after the follow band' } } });
   for (const message of messages) assert(server(message), JSON.stringify(server.errors));
   const invalid = structuredClone(messages[1]);
   if ('updateComponents' in invalid) (invalid.updateComponents.components[0] as any).component = 'HTML';

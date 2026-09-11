@@ -5,7 +5,7 @@ import { STORY_CATALOG, STORY_VERSION, applyStoryMessages, emptyStorySurface, st
 
 const artifact = JSON.parse(readFileSync(new URL('./fixtures/release-placements.json', import.meta.url), 'utf8'));
 const { id: _id, version_id: _versionId, ...story } = artifact.placements[0].story;
-const draft: StoryStanding = { draft: true, exploration: 'rally week', slot: 'site:home-feature' };
+const draft: StoryStanding = { draft: true, exploration: 'rally week', slot: { key: 'site:home-feature', label: 'Home page, after the follow band' } };
 const canon: StoryStanding = { draft: false, exploration: null, slot: null };
 
 test('a story view round-trips through the bounded surface', () => {
@@ -30,7 +30,9 @@ test('refuses unknown catalogs, components, bindings, versions and stories atomi
     (m) => { m[2].version = 'v1.0.0'; },
     (m) => { m[2].updateDataModel.value.story.telling = [{ component: 'Html', content: { text: '<b>' } }]; },
     (m) => { m[2].updateDataModel.value.story.telling = []; },
-    (m) => { m[2].updateDataModel.value.standing.slot = 'not a slot'; },
+    (m) => { m[2].updateDataModel.value.standing.slot = 'site:home-feature'; },
+    (m) => { m[2].updateDataModel.value.standing.slot = { key: 'not a slot', label: 'Home page' }; },
+    (m) => { m[2].updateDataModel.value.standing.slot = { key: 'site:home-feature', label: ' ' }; },
     (m) => { m[2].updateDataModel.value.standing.action = 'approve'; },
     (m) => { m[2].updateDataModel.value.onClick = 'approve'; },
   ];
