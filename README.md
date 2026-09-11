@@ -86,6 +86,12 @@ artifact's `schema_version` is a literal that bumps whenever its shape does.
 build emits it, the site's slot reader parses it, and `pnpm test` pins it here.
 
 Adding a component is a contract change for every renderer and for the studio's
-write gate, which mirrors these shapes by hand. An A2UI adapter and catalog for
-stories follow the team-results pattern when a host needs one; until then the
-document is written so that step is mechanical.
+write gate, which mirrors these shapes by hand.
+
+`story-a2ui` and `ui/story-surface` are the story's A2UI face, on the
+team-results pattern: one `root` `Story` binding `/storyView`, whose value is
+the story document beside where it stands (`draft`, the exploration it is read
+through, its `slot` by key and in the studio's own words). A viewer has no actions — approve, publish and send stay
+gates in the studio — so the catalog declares none. `pnpm build:catalog`
+generates `dist/story-catalog.json` beside the team-results one; both are
+linked against the official v0.9.1 schemas by `pnpm test`.
