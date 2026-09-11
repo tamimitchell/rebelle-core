@@ -1,9 +1,8 @@
 {
-  "schema_version": "2",
+  "schema_version": "3",
   "release_id": "3f1c2b6e-8a2d-4c7e-9f0b-5d6e7a8b9c0d",
   "channel_key": "rebelle.home",
   "built_at": "2026-10-10T21:10:00Z",
-  "pages": [],
   "placements": [
     {
       "slot": "site:home-feature",
