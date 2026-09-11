@@ -5381,7 +5381,7 @@ function parseProse(markdown) {
 
 // src/prose-validator.ts
 var input = JSON.parse(readFileSync(0, "utf8"));
-if (!Array.isArray(input) || input.length > 12 || input.some((value) => typeof value !== "string" || value.length > 12e3)) {
+if (!Array.isArray(input) || input.length > 60 || input.some((value) => typeof value !== "string" || value.length > 12e3)) {
   throw new Error("Invalid prose validation request");
 }
 var errors = input.map((markdown) => {
