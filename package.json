@@ -21,7 +21,8 @@
     "./ui/story.css": "./src/ui/story.css",
     "./ui/story-surface": "./src/ui/story-surface.tsx",
     "./team-results-catalog.json": "./dist/team-results-catalog.json",
-    "./story-catalog.json": "./dist/story-catalog.json"
+    "./story-catalog.json": "./dist/story-catalog.json",
+    "./voice.md": "./voice.md"
   },
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",
