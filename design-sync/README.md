@@ -31,3 +31,12 @@ produced the approved Field Glass demo.
 - Google Fonts registered by token CSS may need a font-loading shim when deployed
   (see prototype `support.js` tail).
 - Full substitution history: `../../prototype/README.md`.
+
+## The voice cards
+
+`12-voice/` is the seven **12 · Voice** cards of the design system, copied verbatim
+from the project on 2026-09-11. Cards stay out of `ds/` (the CSS import), so this is
+their one committed snapshot; their `../styles.css` link is the project's own layout
+and does not resolve here. `../voice.md` is the hand-written distillation consumers
+read; when a card changes in the project, replace the snapshot and re-read the
+distillation against it.

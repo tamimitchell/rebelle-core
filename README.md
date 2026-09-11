@@ -15,6 +15,11 @@ Everything that must mean the same thing across site, studio, and the apps.
   "Rebelle Rally · Field Glass":
   https://claude.ai/design/p/b992548a-8479-40e9-bbce-4bd98128a675?via=share
   Never hand-edit — re-import and replace.
+- `voice.md` — how the rally talks: the two voices, the creed, how copy is
+  built, what it never writes, display grammar, writing to partners.
+  Distilled by hand from the design system's **12 · Voice** cards, whose
+  snapshot is `design-sync/12-voice/`. Exported as `@rebelle/core/voice.md`
+  for anything that hands a writer or a model the brief.
 - `dist/` — generated outputs, committed so consumers need no build step:
   `tokens.css` (site/studio) and `RebelleTokens.swift` (ios-app).
 - `scripts/build-tokens.mjs` — the codegen. Run `pnpm build:tokens` after any
