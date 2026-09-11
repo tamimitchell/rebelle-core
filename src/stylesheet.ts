@@ -21,7 +21,7 @@ export interface Rule {
   prelude: string;
   /** The preludes of the blocks still open around this one, outermost first. */
   enclosing: string[];
-  /** Offsets into the text handed in, so a caller can point at the rule as written. */
+  /** Offsets into the text handed in — `from` is the prelude's first character — so a caller can point at the rule as written. */
   from: number;
   to: number;
 }
@@ -59,7 +59,8 @@ export function rules(css: string): Rule[] {
     } else if (char === '(' && css.slice(Math.max(index - 3, 0), index).toLowerCase() === 'url') {
       index = endOfParenthesis(css, index);
     } else if (char === '{') {
-      open.push([css.slice(start, index).trim(), start]);
+      const prelude = css.slice(start, index);
+      open.push([prelude.trim(), start + (prelude.length - prelude.trimStart().length)]);
       start = index + 1;
     } else if (char === '}') {
       const opened = open.pop();
