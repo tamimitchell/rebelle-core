@@ -1,4 +1,6 @@
-import { asOfLabel, type Story, type StoryComponent } from '../story.ts';
+import * as React from 'react';
+import { parseProse, type Inline, type ProseDocument } from '../prose.ts';
+import { asOfLabel, filmUrls, type Story, type StoryComponent } from '../story.ts';
 
 type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['content'];
 
@@ -10,7 +12,9 @@ type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['con
  * the host stands it on and sets only type and spacing, because the host owns
  * position and layout (studio #275 Decided 1). Styles live in `story.css`.
  */
-export function StoryView({ story }: { story: Story }) {
+export type StoryMedia = { imageUrl?: (id: string, width: number) => string | undefined; embedFilms?: boolean };
+
+export function StoryView({ story, media = {} }: { story: Story; media?: StoryMedia }) {
   return (
     <article className="rr-story">
       <header className="rr-story__head">
@@ -21,18 +25,35 @@ export function StoryView({ story }: { story: Story }) {
         </p>
       </header>
       {story.telling.map((part, index) => (
-        <StoryPart key={index} part={part} />
+        <StoryPart key={index} part={part} media={media} />
       ))}
     </article>
   );
 }
 
-function StoryPart({ part }: { part: StoryComponent }) {
+export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: StoryMedia }) {
   switch (part.component) {
     case 'Paragraph':
       return <p className="rr-story__paragraph">{part.content.text}</p>;
     case 'Standings':
       return <Standings content={part.content} />;
+    case 'Prose':
+      return <div className="rr-story__prose"><ProseBlocks document={parseProse(part.content.markdown)} /></div>;
+    case 'Quote':
+      return <figure className="rr-story__quote"><blockquote><p>{part.content.text}</p></blockquote><figcaption>{part.content.attribution}</figcaption></figure>;
+    case 'Figure': {
+      const { image_id, alt, caption } = part.content;
+      const imageUrl = media.imageUrl ?? ((id: string, width: number) => `/images/${id}/${width}`);
+      const src = imageUrl(image_id.toLowerCase(), 960);
+      return <figure className="rr-story__figure">{src ? <img src={src} alt={alt} loading="lazy" /> : <p role="status">Image unavailable: {alt}</p>}{caption && <figcaption>{caption}</figcaption>}</figure>;
+    }
+    case 'Film': {
+      const urls = filmUrls(part.content);
+      return <figure className="rr-story__film">
+        {media.embedFilms && <iframe src={urls.embed} title={part.content.title} loading="lazy" allow="fullscreen; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />}
+        <figcaption><a href={urls.watch}>{part.content.title} — watch on YouTube</a></figcaption>
+      </figure>;
+    }
   }
 }
 
@@ -60,4 +81,29 @@ function Standings({ content }: { content: StandingsContent }) {
       </tbody>
     </table>
   );
+}
+
+function ProseInline({ nodes }: { nodes: Inline[] }) {
+  return nodes.map((node, index) => {
+    switch (node.type) {
+      case 'text': return node.text;
+      case 'break': return <br key={index} />;
+      case 'strong': return <strong key={index}><ProseInline nodes={node.children} /></strong>;
+      case 'emphasis': return <em key={index}><ProseInline nodes={node.children} /></em>;
+      case 'link': return <a key={index} href={node.href} title={node.title}><ProseInline nodes={node.children} /></a>;
+    }
+  });
+}
+
+export function ProseBlocks({ document }: { document: ProseDocument }) {
+  return document.map((block, index) => {
+    switch (block.type) {
+      case 'paragraph': return <p key={index}><ProseInline nodes={block.children} /></p>;
+      case 'heading': return React.createElement(`h${block.level}`, { key: index }, <ProseInline nodes={block.children} />);
+      case 'list': {
+        const items = block.items.map((item, itemIndex) => <li key={itemIndex}><ProseBlocks document={item} /></li>);
+        return block.ordered ? <ol key={index} start={block.start}>{items}</ol> : <ul key={index}>{items}</ul>;
+      }
+    }
+  });
 }

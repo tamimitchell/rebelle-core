@@ -3,7 +3,7 @@
   "$id": "urn:rebelle:a2ui:story:1",
   "catalogId": "urn:rebelle:a2ui:story:1",
   "title": "Rebelle story",
-  "description": "Bounded A2UI v0.9.1 catalog: one root Story bound to /storyView, a read-only view of a story document and where it stands. No functions, actions or other components; the story is drawn by the shared renderer, and nothing in it is HTML, a URL or a tool name.",
+  "description": "Bounded A2UI v0.9.1 catalog: one root Story bound to /storyView, a read-only view of a story document and where it stands. No functions, actions or other components; the story is drawn by the shared renderer, and authored HTML is literal. Markdown heading and link rules are additionally checked by the shared prose parser.",
   "components": {
     "Story": {
       "type": "object",
@@ -152,6 +152,144 @@
                         },
                         "required": [
                           "rows"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Prose"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "markdown": {
+                            "type": "string",
+                            "maxLength": 12000,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "markdown"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Quote"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string",
+                            "maxLength": 2000,
+                            "pattern": "\\S"
+                          },
+                          "attribution": {
+                            "type": "string",
+                            "maxLength": 200,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "text",
+                          "attribution"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Figure"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "image_id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "alt": {
+                            "type": "string",
+                            "maxLength": 1000,
+                            "pattern": "\\S"
+                          },
+                          "caption": {
+                            "type": "string",
+                            "maxLength": 1000,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "image_id",
+                          "alt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Film"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "const": "youtube"
+                          },
+                          "video_id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{11}$"
+                          },
+                          "title": {
+                            "type": "string",
+                            "maxLength": 200,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "video_id",
+                          "title"
                         ],
                         "additionalProperties": false
                       }

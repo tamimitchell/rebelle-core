@@ -28,7 +28,7 @@ write('team-results', {
 write('story', {
   $id: STORY_CATALOG, catalogId: STORY_CATALOG,
   title: 'Rebelle story',
-  description: 'Bounded A2UI v0.9.1 catalog: one root Story bound to /storyView, a read-only view of a story document and where it stands. No functions, actions or other components; the story is drawn by the shared renderer, and nothing in it is HTML, a URL or a tool name.',
+  description: 'Bounded A2UI v0.9.1 catalog: one root Story bound to /storyView, a read-only view of a story document and where it stands. No functions, actions or other components; the story is drawn by the shared renderer, and authored HTML is literal. Markdown heading and link rules are additionally checked by the shared prose parser.',
   components: { Story: schema(StoryComponentBindingSchema) }, functions: [],
   $defs: {
     anyComponent: { $ref: '#/components/Story' },
