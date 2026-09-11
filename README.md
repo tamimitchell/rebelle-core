@@ -100,3 +100,40 @@ through, its `slot` by key and in the studio's own words). A viewer has no actio
 gates in the studio — so the catalog declares none. `pnpm build:catalog`
 generates `dist/story-catalog.json` beside the team-results one; both are
 linked against the official v0.9.1 schemas by `pnpm test`.
+
+## Composed prose and material (studio #293, quest 1)
+
+`Paragraph` keeps its original literal text. `Prose` adds `{markdown}` with
+paragraphs, H3/H4 headings beneath the story's H2 headline, bold, italic, links,
+nested ordered/unordered lists and explicit hard breaks. `prose.ts` owns the
+markdown-it configuration, internal tree and canonical serializer. Raw HTML
+is literal; code, embedded images and blockquotes are not prose nodes. Quotes,
+photographs and films use their own telling entries:
+
+- `Quote`: `{text, attribution}`, both plain text.
+- `Figure`: `{image_id, alt, caption?}`, with required descriptive alt text and
+  a plain-text caption. Hosts supply image URLs; the site defaults to the
+  existing `/images/<id>/960` route. URLs are not authored Figure fields.
+- `Film`: `{provider: "youtube", video_id, title}`. The ID is exactly eleven
+  letters, digits, underscores or hyphens. The renderer constructs the address;
+  hosts opt into embedding, and every host retains a titled watch link.
+- `Standings` remains a fixed snapshot with its existing shape.
+
+Link validation allows absolute HTTP(S) and mailto destinations and refuses
+credentials, controls, relative addresses and other schemes. The parser also
+refuses headings that compete with the host hierarchy. Unsupported imported
+WordPress formatting must be reported by the converter before any replacement.
+The studio's eight-post source audit documents concrete cases, including missing
+alt text, galleries, preformatted text and posts exceeding the story limit.
+
+`pnpm build:catalog` regenerates both catalogs and `dist/prose-validator.mjs`.
+Rails invokes this bundled Node 22 validator with one bounded JSON array of
+Markdown strings on stdin; stdout is one nullable error per string. It needs no
+installed Node dependencies at execution time. The bundle test compares it with
+the reader parser. Consumers of this package's TypeScript need its Markdown
+module declarations, so those are a production dependency.
+
+The release envelope remains version 3: no envelope key or existing component
+changes. This additive catalog still requires compatible readers on both site
+Workers before publishing new components. Old Paragraph content is never
+reinterpreted. Studio stories stamp payload schema 2 for the expanded catalog.

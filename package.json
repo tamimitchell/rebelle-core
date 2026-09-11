@@ -21,17 +21,21 @@
     "./ui/story.css": "./src/ui/story.css",
     "./ui/story-surface": "./src/ui/story-surface.tsx",
     "./team-results-catalog.json": "./dist/team-results-catalog.json",
+    "./prose": "./src/prose.ts",
     "./story-catalog.json": "./dist/story-catalog.json",
     "./voice.md": "./voice.md"
   },
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",
     "build:register": "node --experimental-strip-types scripts/build-register.ts",
-    "test": "node --experimental-strip-types --test test/*.test.ts",
-    "build:catalog": "node --experimental-strip-types scripts/build-catalog.ts"
+    "test": "node --experimental-strip-types --test test/*.test.ts && node --import tsx --test test/*.test.tsx",
+    "build:catalog": "node --experimental-strip-types scripts/build-catalog.ts && node scripts/build-prose-validator.mjs",
+    "check": "tsc"
   },
   "dependencies": {
-    "zod": "^3.24.0"
+    "markdown-it": "14.1.0",
+    "zod": "^3.24.0",
+    "@types/markdown-it": "14.1.2"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
@@ -42,8 +46,14 @@
     }
   },
   "devDependencies": {
+    "@types/react": "19.2.18",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
+    "esbuild": "0.25.10",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "tsx": "4.20.5",
+    "typescript": "7.0.2",
     "zod-to-json-schema": "3.25.2"
   }
 }

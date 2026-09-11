@@ -1,12 +1,13 @@
 import { z } from 'zod';
+import { parseProse } from './prose.ts';
 
 /**
  * ── A STORY ────────────────────────────────────────────────────────────────
  *
  * The studio's composed, timely piece for one slot on a surface (studio #275,
  * #283): a bounded composition of catalog components over records, frozen as
- * of a stated time. It is data all the way down — nothing in a story is
- * markup, and `ui/story.tsx` is the one trusted renderer every surface wears.
+ * of a stated time. Prose carries a closed Markdown subset; raw HTML remains
+ * literal. `ui/story.tsx` is the one trusted renderer every surface wears.
  * A host executes nothing and styles nothing an author wrote.
  */
 
@@ -23,7 +24,7 @@ export const SlotNameSchema = z
   .regex(/^[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$/, 'a slot is written surface:name');
 export type SlotName = z.infer<typeof SlotNameSchema>;
 
-// ── The catalog, v1: two components ─────────────────────────────────────────
+// ── The composed catalog ─────────────────────────────────────────
 // Each entry is `{component, content}`. Adding a component is a contract
 // change for every renderer and for the studio's write gate, which mirrors
 // these shapes by hand; bump consumers deliberately.
@@ -51,9 +52,38 @@ export const StandingsContentSchema = z
   })
   .strict();
 
+/** Formatted prose is additive: Paragraph above remains literal forever. */
+export const ProseContentSchema = z.object({
+  markdown: text(12000).superRefine((value, context) => {
+    try { parseProse(value); }
+    catch (error) { context.addIssue({ code: 'custom', message: error instanceof Error ? error.message : 'Unsupported prose' }); }
+  }),
+}).strict();
+export const QuoteContentSchema = z.object({
+  text: text(2000), attribution: text(200),
+}).strict();
+export const FigureContentSchema = z.object({
+  image_id: z.string().uuid(), alt: text(1000), caption: text(1000).optional(),
+}).strict();
+export const FilmContentSchema = z.object({
+  provider: z.literal('youtube'), video_id: z.string().regex(/^[A-Za-z0-9_-]{11}$/), title: text(200),
+}).strict();
+export type FigureContent = z.infer<typeof FigureContentSchema>;
+export type FilmContent = z.infer<typeof FilmContentSchema>;
+
+/** URLs are constructed by trusted code from a closed provider and identifier. */
+export function filmUrls(value: FilmContent) {
+  const film = FilmContentSchema.parse(value);
+  return { watch: `https://www.youtube.com/watch?v=${film.video_id}`, embed: `https://www.youtube-nocookie.com/embed/${film.video_id}` };
+}
+
 export const StoryComponentSchema = z.discriminatedUnion('component', [
   z.object({ component: z.literal('Paragraph'), content: ParagraphContentSchema }).strict(),
   z.object({ component: z.literal('Standings'), content: StandingsContentSchema }).strict(),
+  z.object({ component: z.literal('Prose'), content: ProseContentSchema }).strict(),
+  z.object({ component: z.literal('Quote'), content: QuoteContentSchema }).strict(),
+  z.object({ component: z.literal('Figure'), content: FigureContentSchema }).strict(),
+  z.object({ component: z.literal('Film'), content: FilmContentSchema }).strict(),
 ]);
 export type StoryComponent = z.infer<typeof StoryComponentSchema>;
 
