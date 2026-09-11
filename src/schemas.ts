@@ -233,91 +233,32 @@ export type Dispatch = z.infer<typeof DispatchSchema>;
 
 // ── Studio release artifact ────────────────────────────────────────────────
 
-// The studio writes the artifact; every reader takes this shape from core so a
-// new section kind or placement shape is a deliberate cross-repo contract
-// change rather than an untyped surprise at the site's network boundary. Pages
-// are on their way out (studio #275: a page is code); placements — stories in
-// slots, see `story.ts` — are what a release carries from here.
-export const SectionModeSchema = z.enum(['pre-rally', 'live', 'post-rally']);
-export type SectionMode = z.infer<typeof SectionModeSchema>;
-
-export const CraftedSectionSchema = z
-  .object({
-    type: z.literal('crafted'),
-    modes: z.array(SectionModeSchema).min(1),
-    content: z
-      .object({
-        format: z.literal('html'),
-        html: z.string().min(1),
-        source_note: z.string().min(1).optional(),
-      })
-      .strict(),
-  })
-  .strict();
-export type CraftedSection = z.infer<typeof CraftedSectionSchema>;
-
-// These shapes predate crafted fragments. Keep them parseable while existing
-// releases remain current, but do not give the site a second renderer for
-// them: only `crafted` becomes a home-page surface.
-export const LegacySectionTypeSchema = z.enum([
-  'hero-live',
-  'hero-countdown',
-  'basics',
-  'follow-the-field-standings',
-  'follow-the-field-spotlight',
-  'quote',
-  'register-bar',
-  'from-the-field',
-  'train-and-impact',
-  'partners',
-  'newsletter',
-]);
-
-export const LegacySectionSchema = z
-  .object({
-    type: LegacySectionTypeSchema,
-    modes: z.array(SectionModeSchema).min(1),
-    content: z.record(z.unknown()),
-  })
-  .strict();
-
-export const ReleaseSectionSchema = z.discriminatedUnion('type', [
-  CraftedSectionSchema,
-  LegacySectionSchema,
-]);
-export type ReleaseSection = z.infer<typeof ReleaseSectionSchema>;
-
-export const ReleasePageSchema = z
-  .object({
-    page: z
-      .object({
-        slug: z.string().min(1),
-        title: z.string().min(1),
-        mode: SectionModeSchema,
-      })
-      .strict(),
-    sections: z.array(ReleaseSectionSchema),
-  })
-  .strict();
-export type ReleasePage = z.infer<typeof ReleasePageSchema>;
+/**
+ * The rally clock's three states, which every surface branches on: the hero,
+ * the follow band and the nav's live marker all read it, and none may say the
+ * rally is on unless it is.
+ */
+export const RallyModeSchema = z.enum(['pre-rally', 'live', 'post-rally']);
+export type RallyMode = z.infer<typeof RallyModeSchema>;
 
 /**
  * The artifact's own version, bumped whenever its shape changes, and read by
  * every consumer as a literal: a reader that parses strictly cannot tell two
  * shapes apart under one number, so a required key added under an unchanged
- * `"1"` would have turned every published release into a contract violation.
- * `"2"` added `placements` (studio #283); removing `pages` (studio #275 quest
- * 4) is the next bump.
+ * number would turn every published release into a contract violation.
+ * `"3"` is placements alone — a page is code in the site (studio #275).
  */
-export const RELEASE_ARTIFACT_VERSION = '2';
+export const RELEASE_ARTIFACT_VERSION = '3';
 
+// The studio writes the artifact; every reader takes this shape from core so
+// a placement shape change is a deliberate cross-repo contract change rather
+// than an untyped surprise at the site's network boundary.
 export const ReleaseArtifactSchema = z
   .object({
     schema_version: z.literal(RELEASE_ARTIFACT_VERSION),
     release_id: z.string().uuid(),
     channel_key: z.string().min(1),
     built_at: z.string().datetime({ offset: true }),
-    pages: z.array(ReleasePageSchema),
     /** Every story standing in a slot, ordered by slot name. */
     placements: z.array(StoryPlacementSchema),
   })

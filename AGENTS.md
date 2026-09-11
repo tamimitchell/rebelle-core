@@ -21,8 +21,9 @@ Rules:
   Schema changes ripple to site/studio/apps: bump consumers deliberately.
 - **The release artifact's `schema_version` is a literal, and it bumps with the
   shape.** Consumers parse strictly, so a key added under an unchanged number
-  turns every published release into a contract violation. `"2"` added
-  `placements` (stories in slots, `src/story.ts`); removing `pages` is the next.
+  turns every published release into a contract violation. `"3"` is
+  placements alone (stories in slots, `src/story.ts`); a page is code in the
+  site, never data in the artifact (studio #275).
   A story component is a three-repo contract: this renderer, the studio's
   hand-mirrored write gate, and `test/fixtures/release-placements.json`.
 - **The scoring contract is `api/v1/results.php`** — measured, not assumed
