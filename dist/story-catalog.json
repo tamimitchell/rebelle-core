@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:rebelle:a2ui:story:1",
+  "catalogId": "urn:rebelle:a2ui:story:1",
+  "title": "Rebelle story",
+  "description": "Bounded A2UI v0.9.1 catalog: one root Story bound to /storyView, a read-only view of a story document and where it stands. No functions, actions or other components; the story is drawn by the shared renderer, and nothing in it is HTML, a URL or a tool name.",
+  "components": {
+    "Story": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "root"
+        },
+        "component": {
+          "type": "string",
+          "const": "Story"
+        },
+        "view": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/storyView"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "view"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "functions": [],
+  "$defs": {
+    "anyComponent": {
+      "$ref": "#/components/Story"
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "anyFunction": false,
+    "StoryViewData": {
+      "type": "object",
+      "properties": {
+        "story": {
+          "type": "object",
+          "properties": {
+            "headline": {
+              "type": "string",
+              "maxLength": 200,
+              "pattern": "\\S"
+            },
+            "summary": {
+              "type": "string",
+              "maxLength": 600,
+              "pattern": "\\S"
+            },
+            "as_of": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "telling": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Paragraph"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string",
+                            "maxLength": 2000,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "text"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Standings"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "caption": {
+                            "type": "string",
+                            "maxLength": 200,
+                            "pattern": "\\S"
+                          },
+                          "rows": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "position": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 999
+                                },
+                                "team_number": {
+                                  "type": "string",
+                                  "pattern": "^\\d{1,4}$"
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 120,
+                                  "pattern": "\\S"
+                                },
+                                "points": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "position",
+                                "team_number",
+                                "name",
+                                "points"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1,
+                            "maxItems": 10
+                          }
+                        },
+                        "required": [
+                          "rows"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 12
+            }
+          },
+          "required": [
+            "headline",
+            "summary",
+            "as_of",
+            "telling"
+          ],
+          "additionalProperties": false
+        },
+        "standing": {
+          "type": "object",
+          "properties": {
+            "draft": {
+              "type": "boolean"
+            },
+            "exploration": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200,
+                  "pattern": "\\S"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "slot": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+                    },
+                    "label": {
+                      "type": "string",
+                      "maxLength": 200,
+                      "pattern": "\\S"
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "label"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "draft",
+            "exploration",
+            "slot"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "story",
+        "standing"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
