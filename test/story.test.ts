@@ -16,8 +16,8 @@ test('the shared fixture is a release artifact carrying one story in one slot', 
   assert.equal(parsed.schema_version, RELEASE_ARTIFACT_VERSION);
   assert.equal(parsed.placements.length, 1);
   assert.equal(parsed.placements[0].slot, 'site:home-feature');
-  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph']);
-  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings']);
+  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Film']);
+  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Film']);
 });
 
 test('an artifact under the previous version or with an unknown key is refused, not read partially', () => {

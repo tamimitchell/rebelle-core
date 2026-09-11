@@ -24,11 +24,36 @@
             "content": {
               "caption": "4x4 overall after Day 3",
               "rows": [
-                { "position": 1, "team_number": "129", "name": "Desert Sage", "points": 1188 },
-                { "position": 2, "team_number": "106", "name": "High Country", "points": 1148 },
-                { "position": 3, "team_number": "143", "name": "Dune Runners", "points": 1141 },
-                { "position": 4, "team_number": "216", "name": "Second Wind", "points": 1097 },
-                { "position": 5, "team_number": "111", "name": "Wild Grace", "points": 1090 }
+                {
+                  "position": 1,
+                  "team_number": "129",
+                  "name": "Desert Sage",
+                  "points": 1188
+                },
+                {
+                  "position": 2,
+                  "team_number": "106",
+                  "name": "High Country",
+                  "points": 1148
+                },
+                {
+                  "position": 3,
+                  "team_number": "143",
+                  "name": "Dune Runners",
+                  "points": 1141
+                },
+                {
+                  "position": 4,
+                  "team_number": "216",
+                  "name": "Second Wind",
+                  "points": 1097
+                },
+                {
+                  "position": 5,
+                  "team_number": "111",
+                  "name": "Wild Grace",
+                  "points": 1090
+                }
               ]
             }
           },
@@ -36,6 +61,35 @@
             "component": "Paragraph",
             "content": {
               "text": "Second through fifth are inside fifty points of each other with the enduro still to come, which is closer than the top of the table has been at this point in any of the last three years."
+            }
+          },
+          {
+            "component": "Prose",
+            "content": {
+              "markdown": "### A measured lead\n\nThe **leaders** held their *line*. Read the [results](https://rebellerally.com/live).\n\n- First pass\n  - Keep the heading\n- Back to camp"
+            }
+          },
+          {
+            "component": "Quote",
+            "content": {
+              "text": "We kept our heading.",
+              "attribution": "Illustrative crew quote"
+            }
+          },
+          {
+            "component": "Figure",
+            "content": {
+              "image_id": "3e681f08-5d9b-4f23-b369-a1f873686cca",
+              "alt": "A rally vehicle crossing pale dunes.",
+              "caption": "Illustrative photograph, not live rally evidence."
+            }
+          },
+          {
+            "component": "Film",
+            "content": {
+              "provider": "youtube",
+              "video_id": "k4FNP7tL1Xg",
+              "title": "Lexus webcast"
             }
           }
         ]
