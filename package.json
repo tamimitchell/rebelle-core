@@ -23,7 +23,8 @@
     "./team-results-catalog.json": "./dist/team-results-catalog.json",
     "./prose": "./src/prose.ts",
     "./story-catalog.json": "./dist/story-catalog.json",
-    "./voice.md": "./voice.md"
+    "./voice.md": "./voice.md",
+    "./ui/post": "./src/ui/post.tsx"
   },
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",
