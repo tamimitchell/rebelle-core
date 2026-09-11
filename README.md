@@ -57,6 +57,17 @@ checks lifecycle, validation, cutoff and scoring semantics. New catalog semantic
 require a new catalog ID. The optional React peer is needed only by UI consumers;
 Preact consumers use their normal React compatibility alias.
 
+## The register
+
+`@rebelle/core/register.json` is generated from `dist/system.css` by
+`scripts/build-register.ts` (run by `pnpm build:tokens`): every class the
+design system defines and every custom property it sets, with each value. It
+is the one list of what a design-system class *is*, for a consumer's lint to
+hold its own code against — no consumer parses core's CSS itself.
+`@rebelle/core/stylesheet` is the reader that produced it, so a consumer's own
+sheets are read the same way. `pnpm test` fails if the committed register lags
+the stylesheet.
+
 ## Stories
 
 `@rebelle/core/story` owns the story document (studio #275, #283): a headline,

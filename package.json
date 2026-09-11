@@ -9,6 +9,8 @@
     "./story": "./src/story.ts",
     "./tokens.css": "./dist/tokens.css",
     "./system.css": "./dist/system.css",
+    "./register.json": "./dist/register.json",
+    "./stylesheet": "./src/stylesheet.ts",
     "./team-results": "./src/team-results.ts",
     "./team-results-a2ui": "./src/team-results-a2ui.ts",
     "./ui/team-results": "./src/ui/team-results.tsx",
@@ -19,7 +21,8 @@
     "./team-results-catalog.json": "./dist/team-results-catalog.json"
   },
   "scripts": {
-    "build:tokens": "node scripts/build-tokens.mjs",
+    "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",
+    "build:register": "node --experimental-strip-types scripts/build-register.ts",
     "test": "node --experimental-strip-types --test test/*.test.ts",
     "build:catalog": "node --experimental-strip-types scripts/build-catalog.ts"
   },
