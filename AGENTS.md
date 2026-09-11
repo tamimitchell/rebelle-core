@@ -17,6 +17,11 @@ Rules:
   surface imports). ⚠️ The 0.2.0 import renamed the token vocabulary
   (`--rr-*`/`--accent`/`--space-*` → `--navy`/`--cyan`/`--sp-*`…): consumers
   pinned before 462df28 must migrate names when they bump.
+- **`dist/register.json` is generated with the tokens** (`pnpm build:tokens`):
+  every class `system.css` defines and every custom property it sets. It is the
+  source of component identity a consumer's design-system lint reads (studio
+  #275 quest 3); `src/stylesheet.ts` is the reader, exported as
+  `@rebelle/core/stylesheet`. A stale committed register fails `pnpm test`.
 - **Schemas are Zod** — types via `z.infer<>`, never separate interfaces.
   Schema changes ripple to site/studio/apps: bump consumers deliberately.
 - **The release artifact's `schema_version` is a literal, and it bumps with the
