@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseProse, serializeProse, escapeProseText, proseLinkAllowed } from '../src/prose.ts';
-import { StoryComponentSchema, filmUrls } from '../src/story.ts';
+import { StoryComponentSchema } from '../src/story.ts';
 
 for (const source of [
   '### The day\n\nSeveral **bold** and *italic* words, with [a link](https://example.com/a?b=c "Title").\n\n#### A detail\n\nAnother paragraph.',
@@ -30,12 +30,4 @@ test('web and email destinations are explicit; execution and credential URLs ref
 
 test('headings cannot compete with the host and story headline', () => {
   for (const level of [1, 2, 5, 6]) assert.throws(() => parseProse(`${'#'.repeat(level)} Heading`), /H3 or H4/);
-});
-
-test('Film constructs addresses only from a declared provider and ID', () => {
-  const film = { provider: 'youtube' as const, video_id: 'k4FNP7tL1Xg', title: 'Lexus webcast' };
-  assert.equal(filmUrls(film).embed, 'https://www.youtube-nocookie.com/embed/k4FNP7tL1Xg');
-  for (const content of [{ ...film, provider: 'unknown' }, { ...film, video_id: '../arbitrary' }, { ...film, src: 'https://example.com' }]) {
-    assert.equal(StoryComponentSchema.safeParse({ component: 'Film', content }).success, false);
-  }
 });

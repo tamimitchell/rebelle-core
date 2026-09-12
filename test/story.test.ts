@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ReleaseArtifactSchema, RELEASE_ARTIFACT_VERSION } from '../src/schemas.ts';
-import { STORY_COMPONENTS, SlotNameSchema, StorySchema, StoryPlacementSchema, asOfLabel } from '../src/story.ts';
+import { STORY_COMPONENTS, SlotNameSchema, StoryComponentSchema, StorySchema, StoryPlacementSchema, asOfLabel, durationLabel, videoUrls } from '../src/story.ts';
 
 // The cross-repo contract: the studio's build emits it, the site's slot reader
 // parses it, and this file is the copy every consumer pins.
@@ -16,8 +16,8 @@ test('the shared fixture is a release artifact carrying one story in one slot', 
   assert.equal(parsed.schema_version, RELEASE_ARTIFACT_VERSION);
   assert.equal(parsed.placements.length, 1);
   assert.equal(parsed.placements[0].slot, 'site:home-feature');
-  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Film']);
-  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Film']);
+  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Video', 'Video']);
+  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Video']);
 });
 
 test('an artifact under the previous version or with an unknown key is refused, not read partially', () => {
@@ -63,6 +63,36 @@ test('a placement pins the object and the version the release froze', () => {
   assert(!StoryPlacementSchema.safeParse({ ...placement, story: { ...placement.story, version_id: 'latest' } }).success);
   for (const slot of ['site:home-feature', 'app:today', 'site:teams-feature']) assert(SlotNameSchema.safeParse(slot).success, slot);
   for (const slot of ['site:', 'Site:Home', 'site:home_feature', 'home-feature', 'site::home']) assert(!SlotNameSchema.safeParse(slot).success, slot);
+});
+
+test('a video\'s id is held to its provider\'s shape, and an address is built only from that validated pair', () => {
+  const youtube = { provider: 'youtube' as const, video_id: 'k4FNP7tL1Xg', title: 'Lexus webcast' };
+  const hosted = { provider: 'hosted' as const, video_id: '5A0D8F2E-6B3C-4E1A-9F7D-2C4B6A8E0D1F', title: 'Day 3 course flyover', duration: 81 };
+  const accepts = (content: unknown) => StoryComponentSchema.safeParse({ component: 'Video', content }).success;
+  assert(accepts(youtube));
+  assert(accepts(hosted));
+  assert(accepts({ ...youtube, duration: 3600 }));
+  assert.deepEqual(videoUrls(youtube), { provider: 'youtube', watch: 'https://www.youtube.com/watch?v=k4FNP7tL1Xg', embed: 'https://www.youtube-nocookie.com/embed/k4FNP7tL1Xg' });
+  assert.deepEqual(videoUrls(hosted), { provider: 'hosted', source: '/videos/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f', poster: '/videos/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f/poster' });
+  const refused = [
+    // Each provider's id shape refuses the other's, and anything else that is eleven characters or UUID-shaped.
+    { ...youtube, video_id: hosted.video_id }, { ...hosted, video_id: youtube.video_id },
+    { ...youtube, video_id: 'k4FNP7tL1X' }, { ...youtube, video_id: 'k4FNP7tL1Xgg' }, { ...youtube, video_id: 'k4FNP7 L1Xg' }, { ...youtube, video_id: '../arbitrary' },
+    { ...hosted, video_id: '5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1' }, { ...hosted, video_id: '../5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f' },
+    { ...youtube, provider: 'vimeo' }, { ...youtube, provider: undefined }, { ...youtube, src: 'https://example.com' },
+    { ...youtube, duration: 0 }, { ...youtube, duration: 1.5 }, { ...youtube, duration: 86401 },
+  ];
+  for (const content of refused) {
+    assert.equal(accepts(content), false, JSON.stringify(content));
+    assert.throws(() => videoUrls(content as never), JSON.stringify(content));
+  }
+  assert.equal(StoryComponentSchema.safeParse({ component: 'Film', content: youtube }).success, false, 'Film is gone, not aliased');
+});
+
+test('a duration reads as a clock', () => {
+  assert.equal(durationLabel(81), '1:21');
+  assert.equal(durationLabel(5), '0:05');
+  assert.equal(durationLabel(3723), '1:02:03');
 });
 
 test('the as-of label reads the story\'s own offset and never the reader\'s zone', () => {
