@@ -157,7 +157,7 @@ const feedRecord = <Payload extends z.ZodTypeAny>(payload: Payload) =>
 
 /**
  * The live document's key carries its rally year; a closed day's archive is
- * the same document under the live key plus `.day<n>` (studio Decided #139).
+ * the same document under the live key plus `.day<n>` (studio Decided #140).
  */
 const DISPATCH_FEED_KEY = /^rebelle_live\.dispatches\.(\d{4})(?:\.day([0-8]))?$/;
 
@@ -167,7 +167,7 @@ export const dispatchArchiveKey = (rallyYear: number, day: number): string => `r
 /**
  * One live document per rally year, its key carrying the year, holding the
  * day that is live (studio Decided #135), and one archive per closed day
- * under the archive key, holding that day (Decided #139) — one shape, so a
+ * under the archive key, holding that day (Decided #140) — one shape, so a
  * reader parses both with it. `day` is what the shell reads as the live day;
  * a document without one is a contract failure, not a day to guess from the
  * records. The studio refuses a record from another day at send; the replay
