@@ -39,5 +39,5 @@ test('a hosted video is a player at the host\'s address, the site\'s own route b
   assert.match(elsewhere, /src="https:\/\/media.example.com\/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f.mp4" poster="https:\/\/media.example.com\/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f.jpg"/);
   const none = renderToStaticMarkup(<StoryPart part={part} media={{ videoUrl: () => undefined, embedVideos: true }} />);
   assert.doesNotMatch(none, /<video/);
-  assert.match(none, /<p role="status">Video unavailable: Day 3 &quot;course&quot; flyover<\/p>/);
+  assert.match(none, /<p role="status">Video unavailable<\/p><figcaption>Day 3 &quot;course&quot; flyover<\/figcaption>/);
 });

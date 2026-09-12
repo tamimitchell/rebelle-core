@@ -68,7 +68,7 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
       }
       const hosted = media.videoUrl ? media.videoUrl(part.content.video_id.toLowerCase()) : urls;
       return <figure className="rr-story__video">
-        {hosted ? <video controls preload="metadata" src={hosted.source} poster={hosted.poster} aria-label={title} /> : <p role="status">Video unavailable: {title}</p>}
+        {hosted ? <video controls preload="metadata" src={hosted.source} poster={hosted.poster} aria-label={title} /> : <p role="status">Video unavailable</p>}
         <figcaption>{title}{length}</figcaption>
       </figure>;
     }
