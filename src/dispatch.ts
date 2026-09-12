@@ -156,17 +156,28 @@ const feedRecord = <Payload extends z.ZodTypeAny>(payload: Payload) =>
     .strict();
 
 /**
+ * The live document's key carries its rally year; a closed day's archive is
+ * the same document under the live key plus `.day<n>` (studio Decided #140).
+ */
+const DISPATCH_FEED_KEY = /^rebelle_live\.dispatches\.(\d{4})(?:\.day([0-8]))?$/;
+
+/** A closed day's archive key, as the studio derives it. */
+export const dispatchArchiveKey = (rallyYear: number, day: number): string => `rebelle_live.dispatches.${rallyYear}.day${day}`;
+
+/**
  * One live document per rally year, its key carrying the year, holding the
- * day that is live (studio Decided #135). `day` is what the shell reads as
- * the live day; a document without one is a contract failure, not a day to
- * guess from the records. The studio refuses a record from another day at
- * send; the replay fixtures still hold a whole rally in one document, so the
- * shape does not refuse that here.
+ * day that is live (studio Decided #135), and one archive per closed day
+ * under the archive key, holding that day (Decided #140) — one shape, so a
+ * reader parses both with it. `day` is what the shell reads as the live day;
+ * a document without one is a contract failure, not a day to guess from the
+ * records. The studio refuses a record from another day at send; the replay
+ * fixtures still hold a whole rally in one document, so the shape does not
+ * refuse that here.
  */
 export const DispatchesFeedDocumentSchema = z
   .object({
     contract_version: z.literal('1'),
-    feed_key: z.string().regex(/^rebelle_live\.dispatches\.\d{4}$/, 'the dispatch feed key carries its rally year'),
+    feed_key: z.string().regex(DISPATCH_FEED_KEY, 'the dispatch feed key carries its rally year, and an archive its day'),
     record_type_key: z.literal('rebelle_live.dispatch'),
     record_schema_version: z.literal('2'),
     sent_at: z.string().datetime({ offset: true }),
@@ -176,8 +187,12 @@ export const DispatchesFeedDocumentSchema = z
   })
   .strict()
   .superRefine((document, context) => {
-    if (!document.feed_key.endsWith(`.${document.rally_year}`)) {
+    const [, year, day] = DISPATCH_FEED_KEY.exec(document.feed_key) ?? [];
+    if (Number(year) !== document.rally_year) {
       context.addIssue({ code: z.ZodIssueCode.custom, path: ['feed_key'], message: 'the feed key names a different year than the document' });
+    }
+    if (day !== undefined && Number(day) !== document.day) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ['feed_key'], message: 'the archive key names a different day than the document' });
     }
   });
 export type DispatchesFeedDocument = z.infer<typeof DispatchesFeedDocumentSchema>;
