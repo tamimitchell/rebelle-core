@@ -65,16 +65,35 @@ export const QuoteContentSchema = z.object({
 export const FigureContentSchema = z.object({
   image_id: z.string().uuid(), alt: text(1000), caption: text(1000).optional(),
 }).strict();
-export const FilmContentSchema = z.object({
-  provider: z.literal('youtube'), video_id: z.string().regex(/^[A-Za-z0-9_-]{11}$/), title: text(200),
-}).strict();
 export type FigureContent = z.infer<typeof FigureContentSchema>;
-export type FilmContent = z.infer<typeof FilmContentSchema>;
 
-/** URLs are constructed by trusted code from a closed provider and identifier. */
-export function filmUrls(value: FilmContent) {
-  const film = FilmContentSchema.parse(value);
-  return { watch: `https://www.youtube.com/watch?v=${film.video_id}`, embed: `https://www.youtube-nocookie.com/embed/${film.video_id}` };
+/**
+ * A video, by provider: a YouTube clip, or one the site hosts from the
+ * studio's media (studio #306). The id's shape and the address template are
+ * both chosen by the provider, so nothing but a validated pair ever becomes
+ * part of a URL. `duration` is whole seconds, as a dispatch's video carries it.
+ */
+const video = { title: text(200), duration: z.number().int().min(1).max(86400).optional() };
+export const VideoContentSchema = z.discriminatedUnion('provider', [
+  z.object({ provider: z.literal('youtube'), video_id: z.string().regex(/^[A-Za-z0-9_-]{11}$/), ...video }).strict(),
+  z.object({ provider: z.literal('hosted'), video_id: z.string().uuid(), ...video }).strict(),
+]);
+export type VideoContent = z.infer<typeof VideoContentSchema>;
+export type VideoUrls =
+  | { provider: 'youtube'; watch: string; embed: string }
+  | { provider: 'hosted'; source: string; poster: string };
+
+/** One template per provider; a hosted video's default is the site's own route, which a host may stand its own in for. */
+export function videoUrls(value: VideoContent): VideoUrls {
+  const parsed = VideoContentSchema.parse(value);
+  switch (parsed.provider) {
+    case 'youtube':
+      return { provider: 'youtube', watch: `https://www.youtube.com/watch?v=${parsed.video_id}`, embed: `https://www.youtube-nocookie.com/embed/${parsed.video_id}` };
+    case 'hosted': {
+      const id = parsed.video_id.toLowerCase();
+      return { provider: 'hosted', source: `/videos/${id}`, poster: `/videos/${id}/poster` };
+    }
+  }
 }
 
 export const StoryComponentSchema = z.discriminatedUnion('component', [
@@ -83,7 +102,7 @@ export const StoryComponentSchema = z.discriminatedUnion('component', [
   z.object({ component: z.literal('Prose'), content: ProseContentSchema }).strict(),
   z.object({ component: z.literal('Quote'), content: QuoteContentSchema }).strict(),
   z.object({ component: z.literal('Figure'), content: FigureContentSchema }).strict(),
-  z.object({ component: z.literal('Film'), content: FilmContentSchema }).strict(),
+  z.object({ component: z.literal('Video'), content: VideoContentSchema }).strict(),
 ]);
 export type StoryComponent = z.infer<typeof StoryComponentSchema>;
 
@@ -133,4 +152,14 @@ export function asOfLabel(asOf: string): string {
   if (!match) return asOf;
   const [, year, month, day, hour, minute] = match;
   return `${Number(day)} ${MONTHS[Number(month) - 1]} ${year}, ${hour}:${minute}`;
+}
+
+/** A video's length as a clock reads it: 81 seconds is "1:21", an hour and more "1:02:03". */
+export function durationLabel(seconds: number): string {
+  const whole = Math.max(0, Math.floor(seconds));
+  const pad = (value: number) => String(value).padStart(2, '0');
+  const hours = Math.floor(whole / 3600);
+  const minutes = Math.floor((whole % 3600) / 60);
+  const rest = whole % 60;
+  return hours > 0 ? `${hours}:${pad(minutes)}:${pad(rest)}` : `${minutes}:${pad(rest)}`;
 }

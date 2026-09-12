@@ -267,31 +267,69 @@
                     "properties": {
                       "component": {
                         "type": "string",
-                        "const": "Film"
+                        "const": "Video"
                       },
                       "content": {
-                        "type": "object",
-                        "properties": {
-                          "provider": {
-                            "type": "string",
-                            "const": "youtube"
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "provider": {
+                                "type": "string",
+                                "const": "youtube"
+                              },
+                              "video_id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{11}$"
+                              },
+                              "title": {
+                                "type": "string",
+                                "maxLength": 200,
+                                "pattern": "\\S"
+                              },
+                              "duration": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 86400
+                              }
+                            },
+                            "required": [
+                              "provider",
+                              "video_id",
+                              "title"
+                            ],
+                            "additionalProperties": false
                           },
-                          "video_id": {
-                            "type": "string",
-                            "pattern": "^[A-Za-z0-9_-]{11}$"
-                          },
-                          "title": {
-                            "type": "string",
-                            "maxLength": 200,
-                            "pattern": "\\S"
+                          {
+                            "type": "object",
+                            "properties": {
+                              "provider": {
+                                "type": "string",
+                                "const": "hosted"
+                              },
+                              "video_id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "title": {
+                                "type": "string",
+                                "maxLength": 200,
+                                "pattern": "\\S"
+                              },
+                              "duration": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 86400
+                              }
+                            },
+                            "required": [
+                              "provider",
+                              "video_id",
+                              "title"
+                            ],
+                            "additionalProperties": false
                           }
-                        },
-                        "required": [
-                          "provider",
-                          "video_id",
-                          "title"
-                        ],
-                        "additionalProperties": false
+                        ]
                       }
                     },
                     "required": [
