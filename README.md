@@ -143,3 +143,24 @@ The release envelope remains version 3: no envelope key or existing component
 changes. This additive catalog still requires compatible readers on both site
 Workers before publishing new components. Old Paragraph content is never
 reinterpreted. Studio stories stamp payload schema 2 for the expanded catalog.
+
+## Operational dispatches
+
+`dispatch` owns the schema-2 dispatch/feed contract moved from the Live page;
+`ui/dispatch` and `ui/dispatch.css` own its reader and sponsor badges. These are
+operational records, separate from story/post tellings. The Studio writer
+fixture is copied into `test/fixtures/dispatches.json` for the shared contract.
+Import `system.css` as well as the dispatch stylesheet for chips/cards.
+
+`parseDispatchDraft` fills omitted nullable fields at the preview boundary;
+the public feed remains strict. Keep authored payloads unchanged when saving.
+Hosts own panel/team navigation, opening photos, recap jumps and story expansion.
+A private preview supplies `photoUrl`; returning null shows the credit with an
+unavailable state and never falls back to fetching the stored URL. Failed image
+loads use the same state. Authorship is validated as data and never rendered.
+
+The shared row shows quote attribution, recap labels, video title/duration and
+an explicit placeholder for an unassigned clip. A YouTube clip has a watch link;
+hosted playback and delivery of a referenced story remain consumer integration
+work. The story action enables only when its host supplies an approved story.
+Studio expands that story with the existing `StoryView`, at its known version.
