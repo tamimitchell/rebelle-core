@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, SPONSOR_LOCKUPS, SponsorSchema, parseDispatchDraft } from '../src/dispatch.ts';
+import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
 import { DispatchView } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
@@ -22,6 +22,16 @@ test('the Studio schema-2 writer fixture draws all six operational kinds', () =>
   assert.ok(recap.includes('The plot twist'));
   assert.ok(recap.includes('OPEN · THE STORY'));
   assert.ok(recap.includes('ALL TEAMS IN CAMP'));
+});
+test('a closed day\'s archive parses with the live document\'s shape, and its key has to name the document\'s day', () => {
+  assert.equal(dispatchArchiveKey(2026, 3), 'rebelle_live.dispatches.2026.day3');
+  const archive = { ...fixture, feed_key: dispatchArchiveKey(2026, fixture.day) };
+  assert.equal(DispatchesFeedDocumentSchema.safeParse(archive).success, true);
+  assert.equal(DispatchesFeedDocumentSchema.safeParse({ ...archive, day: fixture.day === 0 ? 1 : 0 }).success, false);
+  assert.equal(DispatchesFeedDocumentSchema.safeParse({ ...fixture, feed_key: 'rebelle_live.dispatches.2025' }).success, false);
+  for (const key of ['rebelle_live.dispatches.2026.day9', 'rebelle_live.dispatches.2026.day03', 'rebelle_live.dispatches.2026.day', 'rebelle_live.dispatches.day3']) {
+    assert.equal(DispatchesFeedDocumentSchema.safeParse({ ...fixture, feed_key: key }).success, false, key);
+  }
 });
 test('nullable fields normalize at the draft boundary, while the wire stays strict', () => {
   const minimal = { posted_at:'2026-09-12T12:00:00Z', source:'hq', kind:'update', text:'Fixture', day:0, authorship:'human' };
