@@ -10,5 +10,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src/prose.ts", "src/story.ts", "src/ui/story.tsx"]
+  "include": [
+    "src/prose.ts",
+    "src/story.ts",
+    "src/ui/story.tsx",
+    "src/dispatch.ts",
+    "src/ui/dispatch.tsx",
+    "src/ui/post.tsx"
+  ]
 }

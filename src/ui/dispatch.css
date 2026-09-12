@@ -1,0 +1,374 @@
+.live-entry {
+  padding: 24px 26px 27px;
+  border-bottom: 1px solid color-mix(in srgb, var(--white) 6%, transparent);
+}
+
+/* A partner's dispatch is a card in its brand, not a row. */
+.live-entry--partner {
+  margin: 14px 18px;
+  padding: 14px 16px 16px;
+  border: 1px solid color-mix(in srgb, var(--live-brand) 45%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--live-brand) 5%, transparent);
+}
+
+.live-entry__meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.live-entry__partner {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  color: color-mix(in srgb, var(--white) 50%, transparent);
+}
+
+.live-entry__time {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--white) 62%, transparent);
+}
+
+.live-entry__panel-link {
+  margin-left: auto;
+  min-height: 32px;
+  padding: 0 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: color-mix(in srgb, var(--cyan) 90%, transparent);
+}
+
+.live-entry__panel-link:hover {
+  color: var(--cyan-lift);
+}
+
+.live-entry__text {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--white) 88%, transparent);
+  text-wrap: pretty;
+}
+
+.live-entry__text--quote {
+  max-width: 58ch;
+  font-size: 15px;
+  line-height: 1.65;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--desert-dune);
+}
+
+.live-entry__photos {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+  border-radius: var(--radius-crystal);
+  overflow: hidden;
+}
+
+.live-entry__photo {
+  position: relative;
+  flex: 1;
+  aspect-ratio: 4 / 3;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--navy);
+  cursor: zoom-in;
+}
+
+.live-entry__photo:only-child {
+  aspect-ratio: 16 / 10;
+}
+
+.live-entry__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.live-entry__caption {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 7px 0 0;
+}
+
+.live-entry__media {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  color: var(--cyan);
+}
+
+.live-entry__credit {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--white) 62%, transparent);
+}
+
+.live-entry__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  min-height: 32px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.live-entry__link:hover {
+  color: var(--cyan-lift);
+}
+
+.live-entry__teams {
+  display: flex;
+  gap: 6px;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+
+.live-entry__team-chip {
+  position: relative;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+.live-entry__team-chip:hover {
+  color: var(--white);
+  border-color: color-mix(in srgb, var(--cyan) 70%, transparent);
+  background: color-mix(in srgb, var(--cyan) 14%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--cyan) 55%, transparent);
+}
+
+.live-entry__team-chip::after {
+  content: '';
+  position: absolute;
+  inset: -11px -4px;
+}
+
+
+/* ── the stat-card widget ─────────────────────────────────────────────── */
+
+.live-widget {
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.live-widget__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 0;
+}
+
+.live-widget__kicker {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  color: var(--cyan);
+}
+
+.live-widget__tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.15em;
+  color: color-mix(in srgb, var(--white) 62%, transparent);
+}
+
+.live-widget__title {
+  margin: 0;
+  padding: 4px 16px 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
+.live-widget__stats {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px 14px;
+}
+
+.live-widget__stat {
+  flex: 1;
+  background: color-mix(in srgb, var(--white) 6%, transparent);
+  border-radius: var(--radius-control);
+  padding: 8px 10px;
+}
+
+.live-widget__stat-label {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 8.5px;
+  letter-spacing: 0.15em;
+  color: color-mix(in srgb, var(--cyan) 90%, transparent);
+}
+
+.live-widget__stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--white);
+  margin-top: 3px;
+}
+
+.live-widget__photo {
+  position: relative;
+  display: block;
+  width: calc(100% - 24px);
+  margin: 0 12px 12px;
+  padding: 0;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--radius-well);
+  overflow: hidden;
+  background-color: var(--navy);
+  cursor: zoom-in;
+}
+
+.live-widget__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── sponsor lockups — brand colors, contained, never recolored ───────── */
+
+/* One class per brand names its two colors; the lockup and the card a
+ * partner's dispatch sits on both read them. The values are the brands'
+ * own, which no token carries. */
+.live-brand--pirelli { --live-brand: #ffd200; --live-brand-ink: #d52b1e; }
+.live-brand--bilstein { --live-brand: #f7d117; --live-brand-ink: #003087; }
+.live-brand--iridium { --live-brand: var(--white); --live-brand-ink: var(--navy); }
+.live-brand--jiffy-lube { --live-brand: #c8102e; --live-brand-ink: var(--white); }
+.live-brand--stryten { --live-brand: #00843d; --live-brand-ink: var(--white); }
+.live-brand--synchrony { --live-brand: #fbc600; --live-brand-ink: #3b3c43; }
+.live-brand--baja-designs { --live-brand: #f04e23; --live-brand-ink: var(--white); }
+.live-brand--yeti { --live-brand: #e8e9ea; --live-brand-ink: #24272a; }
+.live-brand--pennzoil { --live-brand: #ffd100; --live-brand-ink: #b31942; }
+
+.live-lockup {
+  display: inline-block;
+  border-radius: var(--radius-tool);
+  padding: 4px 12px;
+  line-height: 1;
+  background-color: var(--live-brand);
+  color: var(--live-brand-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.live-lockup.live-brand--pirelli { letter-spacing: 0.14em; }
+.live-lockup.live-brand--bilstein { font-size: 12.5px; letter-spacing: 0.08em; font-style: italic; }
+.live-lockup.live-brand--yeti { letter-spacing: 0.14em; }
+.live-lockup.live-brand--baja-designs { letter-spacing: 0.08em; }
+
+.live-lockup.live-brand--iridium {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  letter-spacing: 0;
+  text-transform: lowercase;
+  border-radius: 5px;
+  padding: 4px 13px;
+}
+
+.live-lockup.live-brand--synchrony {
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+}
+
+.live-lockup--strip {
+  font-size: 10.5px;
+  padding: 4px 10px;
+}
+
+.live-lockup--strip.live-brand--bilstein { font-size: 10.5px; letter-spacing: 0.06em; }
+.live-lockup--strip.live-brand--iridium { font-size: 11.5px; }
+
+
+@media (max-width: 759px) {
+  .live-entry {
+    padding: 16px 16px 18px;
+  }
+
+  .live-entry--partner {
+    margin: 10px;
+    padding: 12px 12px 13px;
+  }
+
+  .live-entry__text {
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin-top: 7px;
+  }
+
+  .live-entry__text--quote {
+    font-size: 13.5px;
+    margin-top: 8px;
+  }
+
+  .live-entry__panel-link,
+  .live-entry__link {
+    min-height: 44px;
+  }
+
+  .live-widget__title {
+    font-size: 21px;
+  }
+
+  .live-widget__stats {
+    flex-wrap: wrap;
+  }
+
+}
+
+.live-entry { overflow-wrap: anywhere; }
+.live-entry button:disabled { cursor: default; }
+.live-entry__text { white-space: pre-wrap; }
+.live-entry__attribution, .live-entry__moments { font-family: var(--font-body); font-size: 13px; color: var(--desert-dune); }
+.live-entry__video { padding: 12px 16px; }
+.live-entry__video .live-widget__title { padding: 0; }
+.live-entry__missing { display: block; padding: 16px; color: var(--white); font-family: var(--font-body); }
+.live-entry__team-chip { background: transparent; }
+.live-entry__moments button { border: 0; background: transparent; text-align: left; }
+.live-entry__link:disabled { color: var(--white-soft); }
+button.live-entry__link { border: 0; background: transparent; padding: 0; cursor: pointer; }
+
+.live-chip--warm {
+  color: var(--desert-dune);
+  border-color: color-mix(in srgb, var(--desert-dune) 55%, transparent);
+}
