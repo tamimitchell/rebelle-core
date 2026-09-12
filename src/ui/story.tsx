@@ -1,8 +1,19 @@
 import * as React from 'react';
 import { parseProse, type Inline, type ProseDocument } from '../prose.ts';
-import { asOfLabel, filmUrls, type Story, type StoryComponent } from '../story.ts';
+import { asOfLabel, durationLabel, videoUrls, type Story, type StoryComponent } from '../story.ts';
 
 type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['content'];
+
+/**
+ * What the host supplies: where a photograph or a hosted video is served —
+ * `undefined` from either draws the placeholder rather than a broken address —
+ * and whether a YouTube player may be framed, which an MCP host cannot.
+ */
+export type StoryMedia = {
+  imageUrl?: (id: string, width: number) => string | undefined;
+  videoUrl?: (id: string) => { source: string; poster: string } | undefined;
+  embedVideos?: boolean;
+};
 
 /**
  * The story renderer — trusted code, worn by every surface that shows a story:
@@ -12,8 +23,6 @@ type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['con
  * the host stands it on and sets only type and spacing, because the host owns
  * position and layout (studio #275 Decided 1). Styles live in `story.css`.
  */
-export type StoryMedia = { imageUrl?: (id: string, width: number) => string | undefined; embedFilms?: boolean };
-
 export function StoryView({ story, media = {} }: { story: Story; media?: StoryMedia }) {
   return (
     <article className="rr-story">
@@ -47,11 +56,20 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
       const src = imageUrl(image_id.toLowerCase(), 960);
       return <figure className="rr-story__figure">{src ? <img src={src} alt={alt} loading="lazy" /> : <p role="status">Image unavailable: {alt}</p>}{caption && <figcaption>{caption}</figcaption>}</figure>;
     }
-    case 'Film': {
-      const urls = filmUrls(part.content);
-      return <figure className="rr-story__film">
-        {media.embedFilms && <iframe src={urls.embed} title={part.content.title} loading="lazy" allow="fullscreen; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />}
-        <figcaption><a href={urls.watch}>{part.content.title} — watch on YouTube</a></figcaption>
+    case 'Video': {
+      const { title, duration } = part.content;
+      const urls = videoUrls(part.content);
+      const length = duration === undefined ? null : <span className="rr-story__duration"> · {durationLabel(duration)}</span>;
+      if (urls.provider === 'youtube') {
+        return <figure className="rr-story__video">
+          {media.embedVideos && <iframe src={urls.embed} title={title} loading="lazy" allow="fullscreen; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />}
+          <figcaption><a href={urls.watch}>{title} — watch on YouTube</a>{length}</figcaption>
+        </figure>;
+      }
+      const hosted = media.videoUrl ? media.videoUrl(part.content.video_id.toLowerCase()) : urls;
+      return <figure className="rr-story__video">
+        {hosted ? <video controls preload="metadata" src={hosted.source} poster={hosted.poster} aria-label={title} /> : <p role="status">Video unavailable</p>}
+        <figcaption>{title}{length}</figcaption>
       </figure>;
     }
   }

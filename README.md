@@ -108,15 +108,22 @@ paragraphs, H3/H4 headings beneath the story's H2 headline, bold, italic, links,
 nested ordered/unordered lists and explicit hard breaks. `prose.ts` owns the
 markdown-it configuration, internal tree and canonical serializer. Raw HTML
 is literal; code, embedded images and blockquotes are not prose nodes. Quotes,
-photographs and films use their own telling entries:
+photographs and videos use their own telling entries:
 
 - `Quote`: `{text, attribution}`, both plain text.
 - `Figure`: `{image_id, alt, caption?}`, with required descriptive alt text and
   a plain-text caption. Hosts supply image URLs; the site defaults to the
   existing `/images/<id>/960` route. URLs are not authored Figure fields.
-- `Film`: `{provider: "youtube", video_id, title}`. The ID is exactly eleven
-  letters, digits, underscores or hyphens. The renderer constructs the address;
-  hosts opt into embedding, and every host retains a titled watch link.
+- `Video`: `{provider, video_id, title, duration?}` with `provider` `youtube`
+  or `hosted` (studio #306). The provider chooses the id's shape — eleven
+  letters, digits, underscores or hyphens for YouTube; the studio media file's
+  UUID when hosted — and the address template, so `videoUrls` never
+  interpolates anything but a validated pair. YouTube: hosts opt into
+  embedding with `embedVideos`, and every host keeps a titled watch link.
+  Hosted: a `<video>` player at the site's own `/videos/<id>` route with its
+  `/poster`, or wherever the host's `videoUrl` points; a host with nowhere to
+  point draws a placeholder, as it does for a photograph. `duration` is whole
+  seconds. There is no `Film` alias: the studio migrates its stories first.
 - `Standings` remains a fixed snapshot with its existing shape.
 
 Link validation allows absolute HTTP(S) and mailto destinations and refuses

@@ -85,11 +85,20 @@
             }
           },
           {
-            "component": "Film",
+            "component": "Video",
             "content": {
               "provider": "youtube",
               "video_id": "k4FNP7tL1Xg",
               "title": "Lexus webcast"
+            }
+          },
+          {
+            "component": "Video",
+            "content": {
+              "provider": "hosted",
+              "video_id": "5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f",
+              "title": "Day 3 course flyover",
+              "duration": 81
             }
           }
         ]
