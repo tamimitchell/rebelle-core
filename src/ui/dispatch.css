@@ -3,13 +3,14 @@
   border-bottom: 1px solid color-mix(in srgb, var(--white) 6%, transparent);
 }
 
-/* A partner's dispatch is a card in its brand, not a row. */
+/* A partner's dispatch is a card in its brand, not a row — and still a card,
+ * in neutral white, for a sponsor nobody has drawn a lockup for. */
 .live-entry--partner {
   margin: 14px 18px;
   padding: 14px 16px 16px;
-  border: 1px solid color-mix(in srgb, var(--live-brand) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--live-brand, var(--white)) 45%, transparent);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--live-brand) 5%, transparent);
+  background: color-mix(in srgb, var(--live-brand, var(--white)) 5%, transparent);
 }
 
 .live-entry__meta {
