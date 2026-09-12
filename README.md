@@ -159,6 +159,15 @@ A private preview supplies `photoUrl`; returning null shows the credit with an
 unavailable state and never falls back to fetching the stored URL. Failed image
 loads use the same state. Authorship is validated as data and never rendered.
 
+A dispatch's `sponsor` is the studio's sponsor **key** (`SponsorKeySchema`),
+never a printed name. A host holding the roster — the rally days document
+embeds each day's presenting sponsors as `SponsorSchema` rows — supplies
+`sponsorFor`, and the chip wears the row's name and the lockup its
+`lockup_key` names; without one, the key draws a lockup of its own name from
+`SPONSOR_LOCKUPS` or its words in a plain chip. Every `source: sponsor`
+dispatch is a partner card, tinted by its brand when one is drawn and neutral
+otherwise (studio #306 quest 3).
+
 The shared row shows quote attribution, recap labels, video title/duration and
 an explicit placeholder for an unassigned clip. A YouTube clip has a watch link;
 hosted playback and delivery of a referenced story remain consumer integration
