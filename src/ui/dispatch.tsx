@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DispatchPayloadSchema, type DispatchPayload, type DispatchPanel, type DispatchRecord } from '../dispatch.ts';
-import { SponsorLockup, brandClass } from './sponsor-lockup.tsx';
-export { SponsorLockup, brandClass } from './sponsor-lockup.tsx';
+import { SponsorLockup, sponsorBrandClass, type SponsorChip } from './sponsor-lockup.tsx';
+export { SponsorLockup, brandClass, sponsorBrandClass, sponsorWords, type SponsorChip } from './sponsor-lockup.tsx';
 
 type Photo = NonNullable<DispatchPayload['photos']>[number];
 export type DispatchViewProps = {
@@ -10,6 +10,11 @@ export type DispatchViewProps = {
   onOpenPhoto?: (photo: Photo) => void; onOpenMoment?: (id: string) => void; onOpenStory?: (id: string) => void;
   /** A preview host can resolve authenticated bytes or return null. Never stored. */
   photoUrl?: (photo: Photo) => string | null | undefined;
+  /**
+   * A host holding the sponsor roster names the chip and says which lockup it
+   * wears; without one, the key draws the lockup it names or its own words.
+   */
+  sponsorFor?: (key: string) => SponsorChip | null | undefined;
 };
 function sourceChipClass(source: DispatchRecord['payload']['source']): string {
   // hq = live cyan, media = warm dune, fans = gain green; sponsor stays
@@ -35,21 +40,25 @@ function linkLabel(link: string): string {
   return 'OPEN LINK';
 }
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, photoUrl }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, photoUrl, sponsorFor }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
   const isQuote = payload.kind === 'quote';
   const stats = payload.stats;
   const hasWidget = stats != null && stats.pairs.length > 0;
-  const brand = payload.source === 'sponsor' && payload.sponsor ? brandClass(payload.sponsor) : null;
+  const sponsor: SponsorChip | null = payload.sponsor ? (sponsorFor?.(payload.sponsor) ?? { key: payload.sponsor }) : null;
+  // Every sponsor's dispatch is a partner card, drawn or not: the brand class
+  // colours it when a lockup exists, and the card's own fallback holds otherwise.
+  const partner = payload.source === 'sponsor' && sponsor !== null;
+  const brand = partner ? sponsorBrandClass(sponsor) : null;
 
   return (
-    <React.Fragment><article className={`live-entry${brand ? ` live-entry--partner ${brand}` : ''}`}>
+    <React.Fragment><article className={`live-entry${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
       <header className="live-entry__meta">
         <span className={sourceChipClass(payload.source)}>{sourceLabel(payload)}</span>
-        {payload.sponsor && <SponsorLockup sponsor={payload.sponsor} />}
-        {brand && <span className="live-entry__partner">PARTNER</span>}
+        {sponsor && <SponsorLockup sponsor={sponsor} />}
+        {partner && <span className="live-entry__partner">PARTNER</span>}
         <time className="live-entry__time" dateTime={payload.posted_at}>
           {timeLabel ?? payload.posted_at}
         </time>

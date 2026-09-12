@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, parseDispatchDraft } from '../src/dispatch.ts';
+import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, SPONSOR_LOCKUPS, SponsorSchema, parseDispatchDraft } from '../src/dispatch.ts';
 import { DispatchView } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
@@ -65,4 +65,40 @@ test('the live envelope names its year and day, including an empty day', () => {
   assert.equal(DispatchesFeedDocumentSchema.safeParse(dayless).success, false);
   assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, feed_key:'rebelle_live.dispatches'}).success, false);
   assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, feed_key:'rebelle_live.dispatches.2025'}).success, false);
+});
+
+test('a sponsor is a key on the wire, and every sponsor dispatch is a partner card', () => {
+  const base = {...records[0].payload, source:'sponsor' as const};
+  for (const word of ['BILSTEIN', 'jiffy lube', 'jiffy_lube', '-ford', 'ford-', '']) {
+    assert.equal(DispatchPayloadSchema.safeParse({...base, sponsor: word}).success, false, word);
+  }
+  const drawn = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'bilstein'}} />);
+  assert.ok(drawn.includes('live-entry--partner live-brand--bilstein'));
+  assert.ok(drawn.includes('>BILSTEIN<') && drawn.includes('PARTNER'));
+  const plain = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'storyteller-overland'}} />);
+  assert.ok(plain.includes('live-entry--partner') && !plain.includes('live-brand--'));
+  assert.ok(plain.includes('STORYTELLER OVERLAND') && plain.includes('PARTNER'));
+  const hq = renderToStaticMarkup(<DispatchView dispatch={{...base, source:'hq', sponsor:'bilstein'}} />);
+  assert.ok(hq.includes('live-brand--bilstein') && !hq.includes('live-entry--partner') && !hq.includes('PARTNER'));
+});
+test('a host holding the roster names the chip and says which lockup it wears', () => {
+  const base = {...records[0].payload, source:'sponsor' as const};
+  const named = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'warner-ineos'}}
+    sponsorFor={(key) => ({ key, name: 'INEOS Grenadier', lockup_key: null })} />);
+  assert.ok(named.includes('INEOS GRENADIER') && !named.includes('WARNER INEOS'));
+  const relabelled = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'stryten-energy'}}
+    sponsorFor={(key) => ({ key, name: 'Stryten Energy', lockup_key: 'stryten' })} />);
+  assert.ok(relabelled.includes('live-entry--partner live-brand--stryten') && relabelled.includes('>STRYTEN<'));
+  const unknown = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'bilstein'}} sponsorFor={() => null} />);
+  assert.ok(unknown.includes('live-brand--bilstein'));
+  assert.deepEqual(Object.keys(SPONSOR_LOCKUPS).length, 9);
+});
+test('a sponsor row on the wire is strict and its link is an http(s) address', () => {
+  const row = { key:'ford', name:'Ford', lockup_key:null, tier:'Presenting', blurb:null, link:'https://www.ford.com/' };
+  assert.deepEqual(SponsorSchema.parse(row), row);
+  assert.equal(SponsorSchema.safeParse({...row, key:'Ford'}).success, false);
+  assert.equal(SponsorSchema.safeParse({...row, link:'javascript:alert(1)'}).success, false);
+  assert.equal(SponsorSchema.safeParse({...row, lockup_key:'Jiffy Lube'}).success, false);
+  assert.equal(SponsorSchema.safeParse({...row, logo:'x'}).success, false);
+  assert.equal(SponsorSchema.safeParse({...row, name:''}).success, false);
 });

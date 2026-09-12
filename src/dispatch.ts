@@ -9,6 +9,40 @@ const HttpUrlSchema = z
   }, 'must be an absolute http(s) URL');
 
 export const DISPATCH_SOURCES = ['hq', 'media', 'fans', 'sponsor', 'team'] as const;
+
+/** A sponsor's key, as the studio's Sponsors table spells it: what a dispatch carries and a reader joins on. */
+export const SPONSOR_KEY = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export const SponsorKeySchema = z.string().regex(SPONSOR_KEY, 'a sponsor key is lowercase words joined by hyphens');
+
+/**
+ * The lockups the reader draws, keyed the way a sponsor's key is spelled. A
+ * sponsor whose `lockup_key` names none of these wears a plain chip; the
+ * drawings live in `ui/dispatch.css`, one `live-brand--*` class each.
+ */
+export const SPONSOR_LOCKUPS: Readonly<Record<string, string>> = {
+  pirelli: 'PIRELLI',
+  bilstein: 'BILSTEIN',
+  iridium: 'iridium',
+  'jiffy-lube': 'JIFFY LUBE',
+  stryten: 'STRYTEN',
+  synchrony: 'SYNCHRONY',
+  'baja-designs': 'BAJA DESIGNS',
+  yeti: 'YETI',
+  pennzoil: 'PENNZOIL',
+};
+
+/** One sponsor as the rally days document embeds it beside the day it presents (studio #306 quest 3). */
+export const SponsorSchema = z
+  .object({
+    key: SponsorKeySchema,
+    name: z.string().min(1).max(120),
+    lockup_key: SponsorKeySchema.nullable(),
+    tier: z.string().min(1).max(120).nullable(),
+    blurb: z.string().min(1).max(600).nullable(),
+    link: HttpUrlSchema.nullable(),
+  })
+  .strict();
+export type Sponsor = z.infer<typeof SponsorSchema>;
 export const DISPATCH_KINDS = ['update', 'gallery', 'quote', 'checkpoint', 'video', 'recap'] as const;
 export const DISPATCH_PANELS = ['tracker', 'media', 'strategy', 'score'] as const;
 /** Readers never see the provider word: it picks the URL template and the id shape. */
@@ -84,7 +118,7 @@ export const DispatchPayloadSchema = z
     day: z.number().int().min(0).max(8),
     panel: z.enum(DISPATCH_PANELS).nullable(),
     teams: z.array(TeamNumberSchema).nullable(),
-    sponsor: z.string().nullable(),
+    sponsor: SponsorKeySchema.nullable(),
     stats: StatsSchema.nullable(),
     photos: z.array(z.object({ url: PhotoUrlSchema, credit: z.string().min(1) }).strict()).nullable(),
     link: HttpUrlSchema.nullable(),
