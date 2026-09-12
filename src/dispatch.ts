@@ -121,16 +121,31 @@ const feedRecord = <Payload extends z.ZodTypeAny>(payload: Payload) =>
     })
     .strict();
 
+/**
+ * One live document per rally year, its key carrying the year, holding the
+ * day that is live (studio Decided #135). `day` is what the shell reads as
+ * the live day; a document without one is a contract failure, not a day to
+ * guess from the records. The studio refuses a record from another day at
+ * send; the replay fixtures still hold a whole rally in one document, so the
+ * shape does not refuse that here.
+ */
 export const DispatchesFeedDocumentSchema = z
   .object({
     contract_version: z.literal('1'),
-    feed_key: z.literal('rebelle_live.dispatches'),
+    feed_key: z.string().regex(/^rebelle_live\.dispatches\.\d{4}$/, 'the dispatch feed key carries its rally year'),
     record_type_key: z.literal('rebelle_live.dispatch'),
     record_schema_version: z.literal('2'),
     sent_at: z.string().datetime({ offset: true }),
+    rally_year: z.number().int().min(1900).max(9999),
+    day: z.number().int().min(0).max(8),
     records: z.array(feedRecord(DispatchPayloadSchema)),
   })
-  .strict();
+  .strict()
+  .superRefine((document, context) => {
+    if (!document.feed_key.endsWith(`.${document.rally_year}`)) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ['feed_key'], message: 'the feed key names a different year than the document' });
+    }
+  });
 export type DispatchesFeedDocument = z.infer<typeof DispatchesFeedDocumentSchema>;
 export type DispatchRecord = DispatchesFeedDocument['records'][number];
 

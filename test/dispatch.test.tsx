@@ -8,7 +8,7 @@ import { DispatchView } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
 test('the Studio schema-2 writer fixture draws all six operational kinds', () => {
-  assert.deepEqual(records.map(row => row.payload.kind), ['update','gallery','quote','checkpoint','video','recap']);
+  assert.deepEqual(records.map(row => row.payload.kind), ['update','gallery','quote','checkpoint','video','video','recap']);
   for (const row of records) {
     const before = JSON.stringify(row.payload);
     const html = renderToStaticMarkup(<DispatchView dispatch={row.payload} />);
@@ -18,7 +18,7 @@ test('the Studio schema-2 writer fixture draws all six operational kinds', () =>
   }
   const quote = renderToStaticMarkup(<DispatchView dispatch={records[2].payload} />);
   assert.ok(quote.includes('Sabrina Howells, #172'));
-  const recap = renderToStaticMarkup(<DispatchView dispatch={records[5].payload} />);
+  const recap = renderToStaticMarkup(<DispatchView dispatch={records.find(row => row.payload.kind === 'recap')!.payload} />);
   assert.ok(recap.includes('The plot twist'));
   assert.ok(recap.includes('OPEN · THE STORY'));
   assert.ok(recap.includes('ALL TEAMS IN CAMP'));
@@ -56,4 +56,13 @@ test('video placeholders stay useful without a media request', () => {
   assert.ok(html.includes('1:21'));
   assert.ok(html.includes('Coming soon'));
   assert.ok(!html.includes('<iframe') && !html.includes('<video'));
+});
+
+test('the live envelope names its year and day, including an empty day', () => {
+  assert.equal(DispatchesFeedDocumentSchema.parse(fixture).day, 3);
+  assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, records:[]}).success, true);
+  const {day, ...dayless} = fixture;
+  assert.equal(DispatchesFeedDocumentSchema.safeParse(dayless).success, false);
+  assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, feed_key:'rebelle_live.dispatches'}).success, false);
+  assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, feed_key:'rebelle_live.dispatches.2025'}).success, false);
 });
