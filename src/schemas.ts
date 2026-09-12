@@ -1,3 +1,4 @@
+import { StoryComponentSchema } from "./story.ts";
 import { z } from 'zod';
 import { StoryPlacementSchema } from './story.ts';
 
@@ -293,7 +294,7 @@ const PostLinkSchema = z
     return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.length > 0;
   }, 'must be an absolute http(s) URL');
 
-export const PostPayloadSchema = z
+export const LegacyPostPayloadSchema = z
   .object({
     kind: z.enum(['dispatch', 'news']),
     date: CalendarDateSchema,
@@ -312,26 +313,40 @@ export const PostPayloadSchema = z
       context.addIssue({ code: z.ZodIssueCode.custom, path: ['link'], message: 'dispatch has no link' });
     }
   });
+
+
+export const PostPayloadSchema = z.object({
+  kind: z.enum(['dispatch', 'news']), date: CalendarDateSchema,
+  category: z.string().min(1), headline: z.string().min(1), dek: z.string().min(1),
+  body: z.string().min(1).nullable(), link: PostLinkSchema.nullable(),
+  telling: z.array(StoryComponentSchema).min(1).max(60).optional(),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(200).optional(),
+  published_at: z.string().datetime({ offset: true }).optional(),
+}).strict().superRefine((post, context) => {
+  if (post.telling) {
+    for (const key of ['slug', 'published_at'] as const) {
+      if (!post[key]) context.addIssue({ code: 'custom', path: [key], message: 'An article needs this field' });
+    }
+  } else {
+    const old = LegacyPostPayloadSchema.safeParse({ kind: post.kind, date: post.date, category: post.category,
+      headline: post.headline, dek: post.dek, body: post.body, link: post.link });
+    if (!old.success) for (const issue of old.error.issues) context.addIssue(issue);
+  }
+});
 export type PostPayload = z.infer<typeof PostPayloadSchema>;
 
-export const PostsFeedRecordSchema = z
-  .object({
-    id: z.string().uuid(),
-    version_id: z.string().uuid(),
-    schema_version: z.literal('2'),
-    payload: PostPayloadSchema,
-  })
-  .strict();
+const LegacyPostsFeedRecordSchema = z.object({
+  id: z.string().uuid(), version_id: z.string().uuid(), schema_version: z.literal('2'), payload: LegacyPostPayloadSchema,
+}).strict();
+const ComposedPostsFeedRecordSchema = z.object({
+  id: z.string().uuid(), version_id: z.string().uuid(), schema_version: z.literal('3'), payload: PostPayloadSchema,
+}).strict();
+export const PostsFeedRecordSchema = z.discriminatedUnion('schema_version', [LegacyPostsFeedRecordSchema, ComposedPostsFeedRecordSchema]);
 export type PostsFeedRecord = z.infer<typeof PostsFeedRecordSchema>;
-
-export const PostsFeedDocumentSchema = z
-  .object({
-    contract_version: z.literal('1'),
-    feed_key: z.literal('system.posts'),
-    record_type_key: z.literal('system.post'),
-    record_schema_version: z.literal('2'),
-    sent_at: z.string().datetime({ offset: true }),
-    records: z.array(PostsFeedRecordSchema),
-  })
-  .strict();
+export const PostsFeedDocumentSchema = z.union([
+  z.object({ contract_version: z.literal('1'), feed_key: z.literal('system.posts'), record_type_key: z.literal('system.post'),
+    record_schema_version: z.literal('2'), sent_at: z.string().datetime({ offset: true }), records: z.array(LegacyPostsFeedRecordSchema) }).strict(),
+  z.object({ contract_version: z.literal('2'), feed_key: z.literal('system.posts'), record_type_key: z.literal('system.post'),
+    record_schema_version: z.literal('3'), sent_at: z.string().datetime({ offset: true }), records: z.array(PostsFeedRecordSchema) }).strict(),
+]);
 export type PostsFeedDocument = z.infer<typeof PostsFeedDocumentSchema>;
