@@ -9,7 +9,7 @@ import { SPONSOR_LOCKUPS, type Mark, type SponsorLogos } from '../dispatch.ts';
  *
  * A sponsor whose row carries its marks (studio #349) wears those instead:
  * the white one-colour mark on a dark ground, the full-colour lockup on a
- * white plate where the page says *presented by*. A mark is never recoloured
+ * bright frost plate where the page says *presented by*. A mark is never recoloured
  * either.
  *
  * Keyed by the sponsor's key — what a dispatch's `sponsor` carries and a rally
@@ -55,7 +55,7 @@ export interface SponsorLockupProps {
    * Where it stands. `badge` — a dispatch's meta row, a partner card — draws
    * the white mark on a dark ground (the brand's own where that is dark, else
    * navy; `dispatch.css` says which); `presented-by` — the live page's and
-   * Home's *presented by* line — draws the colour mark on a white plate. A
+   * Home's *presented by* line — draws the colour mark on a frost plate. A
    * sponsor with only one mark draws that one where it can; with none, the
    * drawn lockup or the plain chip.
    */
