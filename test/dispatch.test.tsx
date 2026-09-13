@@ -68,6 +68,22 @@ test('video placeholders stay useful without a media request', () => {
   assert.ok(!html.includes('<iframe') && !html.includes('<video'));
 });
 
+test('a reader can open YouTube clips in its media pane; previews retain the external link', () => {
+  const video = {provider:'youtube' as const, video_id:'7hq77WoZA-w', title:'Morning show', duration:null};
+  const dispatch = {...records[4].payload, video};
+  const preview = renderToStaticMarkup(<DispatchView dispatch={dispatch} />);
+  assert.ok(preview.includes('href="https://www.youtube.com/watch?v=7hq77WoZA-w"'));
+  assert.ok(preview.includes('target="_blank"'));
+  const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
+  assert.ok(reader.includes('<button type="button" class="live-entry__link">Watch video'));
+  assert.ok(!reader.includes('youtube.com/watch'));
+  for (const video_id of [null, undefined]) {
+    const placeholder = renderToStaticMarkup(<DispatchView dispatch={{...dispatch, video:{...video, video_id}}} onOpenVideo={() => {}} />);
+    assert.ok(placeholder.includes('Coming soon'));
+    assert.ok(!placeholder.includes('Watch video'));
+  }
+});
+
 test('the live envelope names its year and day, including an empty day', () => {
   assert.equal(DispatchesFeedDocumentSchema.parse(fixture).day, 3);
   assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, records:[]}).success, true);

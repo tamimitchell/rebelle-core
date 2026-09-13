@@ -8,6 +8,8 @@ export type DispatchViewProps = {
   dispatch: DispatchPayload; timeLabel?: string; panelLabels?: Partial<Record<DispatchPanel, string>>;
   onViewPanel?: (panel: DispatchPanel) => void; onFilterTeam?: (team: string) => void;
   onOpenPhoto?: (photo: Photo) => void; onOpenMoment?: (id: string) => void; onOpenStory?: (id: string) => void;
+  /** A reader can open its media pane and keep the trigger for return focus. */
+  onOpenVideo?: (video: NonNullable<DispatchPayload['video']>, trigger: HTMLButtonElement) => void;
   /** A preview host can resolve authenticated bytes or return null. Never stored. */
   photoUrl?: (photo: Photo) => string | null | undefined;
   /**
@@ -40,7 +42,7 @@ function linkLabel(link: string): string {
   return 'OPEN LINK';
 }
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, photoUrl, sponsorFor }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, sponsorFor }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
@@ -83,7 +85,9 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         <p className="live-widget__title">{payload.video.title}</p>
         <p className="live-entry__caption">{payload.video.duration ? Math.floor(payload.video.duration / 60) + ':' + String(payload.video.duration % 60).padStart(2, '0') : 'Video'}
           {payload.video.video_id == null && ' · Coming soon'}</p>
-        {payload.video.provider === 'youtube' && payload.video.video_id && <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch video →</a>}
+        {payload.video.provider === 'youtube' && payload.video.video_id && (onOpenVideo
+          ? <button type="button" className="live-entry__link" onClick={(event) => onOpenVideo(payload.video!, event.currentTarget)}>Watch video →</button>
+          : <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch video →</a>)}
         {payload.video.provider === 'hosted' && payload.video.video_id && <p className="live-entry__caption">Clip preview unavailable</p>}
       </div>}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
