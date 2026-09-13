@@ -317,6 +317,33 @@
   padding: 4px 10px;
 }
 
+/* A sponsor's own mark (studio #349). The white mark keeps the brand ground a
+ * drawn lockup names and takes navy for a brand nobody drew — a white mark on
+ * the neutral chip would vanish. The colour lockup takes a white plate: a
+ * brand's own ink is drawn for paper, not for navy. */
+.live-lockup--mark,
+.live-lockup--presented-by {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+}
+
+.live-lockup--mark img,
+.live-lockup--presented-by img {
+  display: block;
+  width: auto;
+  height: 18px;
+  max-width: 132px;
+  object-fit: contain;
+}
+
+.live-lockup--navy { background-color: var(--navy); }
+.live-lockup--presented-by { background-color: var(--white); }
+.live-lockup--presented-by img { height: 22px; max-width: 160px; }
+
+.live-lockup--strip.live-lockup--mark img { height: 14px; }
+.live-lockup--strip.live-lockup--presented-by img { height: 18px; }
+
 .live-lockup--strip.live-brand--bilstein { font-size: 10.5px; letter-spacing: 0.06em; }
 .live-lockup--strip.live-brand--iridium { font-size: 11.5px; }
 

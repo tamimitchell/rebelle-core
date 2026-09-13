@@ -31,34 +31,10 @@ export const SPONSOR_LOCKUPS: Readonly<Record<string, string>> = {
   pennzoil: 'PENNZOIL',
 };
 
-/** One sponsor as the rally days document embeds it beside the day it presents (studio #306 quest 3). */
-export const SponsorSchema = z
-  .object({
-    key: SponsorKeySchema,
-    name: z.string().min(1).max(120),
-    lockup_key: SponsorKeySchema.nullable(),
-    tier: z.string().min(1).max(120).nullable(),
-    blurb: z.string().min(1).max(600).nullable(),
-    link: HttpUrlSchema.nullable(),
-  })
-  .strict();
-export type Sponsor = z.infer<typeof SponsorSchema>;
-export const DISPATCH_KINDS = ['update', 'gallery', 'quote', 'checkpoint', 'video', 'recap'] as const;
-export const DISPATCH_PANELS = ['tracker', 'media', 'strategy', 'score'] as const;
-/** Readers never see the provider word: it picks the URL template and the id shape. */
-export const VIDEO_PROVIDERS = ['youtube', 'hosted'] as const;
-/** Carried on every dispatch, shown to no reader (studio #306). */
-export const AUTHORSHIP = ['human', 'ai-assisted', 'ai-drafted'] as const;
-
-export type DispatchSource = (typeof DISPATCH_SOURCES)[number];
-export type DispatchPanel = (typeof DISPATCH_PANELS)[number];
-
-const TeamNumberSchema = z.string().regex(/^\d+$/, 'team numbers are digit strings');
-
 /**
- * Photo URLs are fetched automatically on render — no click stands between a
- * payload value and a network request — so they get the same discipline as
- * `link`, plus the same-origin path form the fixture actually uses. A single
+ * Photo URLs and a sponsor's marks are fetched automatically on render — no
+ * click stands between a payload value and a network request — so they get
+ * the same discipline as `link`, plus the same-origin path form the fixture actually uses. A single
  * leading slash is a path on this origin; "//host" is protocol-relative and
  * escapes it, so it is refused (Linden/Selvage, PR round).
  */
@@ -74,6 +50,56 @@ const PhotoUrlSchema = z
       return false;
     }
   }, 'must be a same-origin path or an absolute http(s) URL');
+
+/**
+ * One of a sponsor's two marks (studio #349): `white` is the one-colour mark
+ * for a dark badge, `color` the brand's full lockup for a *presented by* line.
+ * `url` is the site's own image route. The file's pixels ride along when the
+ * studio knows them, so a badge can reserve its box before the bytes arrive;
+ * an SVG has none and scales to the box.
+ */
+export const MarkSchema = z
+  .object({
+    url: PhotoUrlSchema,
+    alt: z.string().min(1).max(200),
+    width: z.number().int().positive().optional(),
+    height: z.number().int().positive().optional(),
+  })
+  .strict()
+  .refine((mark) => (mark.width === undefined) === (mark.height === undefined), "a mark's pixels come as a pair");
+export type Mark = z.infer<typeof MarkSchema>;
+
+export const SponsorLogosSchema = z.object({ white: MarkSchema.nullable(), color: MarkSchema.nullable() }).strict();
+export type SponsorLogos = z.infer<typeof SponsorLogosSchema>;
+
+/**
+ * One sponsor as the rally days document embeds it beside the day it presents
+ * (studio #306 quest 3). Record schema 4 adds `logos`; a schema-3 row has
+ * none, which reads as no marks.
+ */
+export const SponsorSchema = z
+  .object({
+    key: SponsorKeySchema,
+    name: z.string().min(1).max(120),
+    lockup_key: SponsorKeySchema.nullable(),
+    tier: z.string().min(1).max(120).nullable(),
+    blurb: z.string().min(1).max(600).nullable(),
+    link: HttpUrlSchema.nullable(),
+    logos: SponsorLogosSchema.default(() => ({ white: null, color: null })),
+  })
+  .strict();
+export type Sponsor = z.infer<typeof SponsorSchema>;
+export const DISPATCH_KINDS = ['update', 'gallery', 'quote', 'checkpoint', 'video', 'recap'] as const;
+export const DISPATCH_PANELS = ['tracker', 'media', 'strategy', 'score'] as const;
+/** Readers never see the provider word: it picks the URL template and the id shape. */
+export const VIDEO_PROVIDERS = ['youtube', 'hosted'] as const;
+/** Carried on every dispatch, shown to no reader (studio #306). */
+export const AUTHORSHIP = ['human', 'ai-assisted', 'ai-drafted'] as const;
+
+export type DispatchSource = (typeof DISPATCH_SOURCES)[number];
+export type DispatchPanel = (typeof DISPATCH_PANELS)[number];
+
+const TeamNumberSchema = z.string().regex(/^\d+$/, 'team numbers are digit strings');
 
 const StatPairSchema = z.object({ label: z.string().min(1), value: z.string().min(1) }).strict();
 
