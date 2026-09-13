@@ -121,8 +121,21 @@ test('a sponsor row on the wire is strict, its link is an http(s) address, and a
   assert.equal(MarkSchema.safeParse({ ...color, width: 800 }).success, false, 'the pixels come as a pair');
   assert.equal(MarkSchema.safeParse({ ...color, width: 0, height: 0 }).success, false);
   assert.equal(MarkSchema.safeParse({ ...color, url: '//evil.example/mark.png' }).success, false);
-  assert.equal(MarkSchema.safeParse({ ...color, url: 'https://rebellerally.com/mark.png' }).success, true);
+  assert.equal(MarkSchema.safeParse({ ...color, url: '/\\evil.example/mark.png' }).success, false);
+  assert.equal(MarkSchema.safeParse({ ...color, url: 'https://rebellerally.com/mark.png' }).success, false, 'a mark is the site\'s own image route');
+  assert.equal(MarkSchema.safeParse({ ...color, url: '/images/9d8c7b6a-5f4e-4d3c-8b2a-1c0d9e8f7a6b/641' }).success, false, 'at a declared width');
   assert.equal(MarkSchema.safeParse({ ...color, alt: '' }).success, false);
+  assert.equal(MarkSchema.safeParse({ ...color, alt: 'x'.repeat(201) }).success, false, 'the alt is capped, and the studio writes the name');
+  assert.equal(MarkSchema.safeParse({ ...color, alt: 'x'.repeat(200) }).success, true);
+  // The same hole on a photo's address: "/\\host" is "//host" to a browser.
+  assert.equal(DispatchPayloadSchema.safeParse({ ...records[0].payload, photos: [{ url: '/\\evil.example/a.jpg', credit: 'x' }] }).success, false);
+  assert.equal(DispatchPayloadSchema.safeParse({ ...records[0].payload, photos: [{ url: '/photos/a.jpg', credit: 'x' }] }).success, true);
+});
+test('the white mark keeps the brand ground only where the brand names it dark', () => {
+  const css = readFileSync(new URL('../src/ui/dispatch.css', import.meta.url), 'utf8');
+  const grounded = [...css.matchAll(/\.live-brand--([a-z-]+)\s*\{[^}]*--live-mark-ground/g)].map((m) => m[1]).sort();
+  assert.deepEqual(grounded, ['baja-designs', 'jiffy-lube', 'stryten']);
+  assert.match(css, /\.live-lockup--mark \{ background-color: var\(--live-mark-ground, var\(--navy\)\); \}/);
 });
 test('a badge wears the white mark on a dark ground, presented by wears the colour mark on a plate, and one mark falls back to the other', () => {
   const ford = { key: 'ford', name: 'Ford', lockup_key: null, logos: { white, color } };
