@@ -8,9 +8,9 @@ import { SPONSOR_LOCKUPS, type Mark, type SponsorLogos } from '../dispatch.ts';
  * wears a neutral chip with its name rather than the wrong colors.
  *
  * A sponsor whose row carries its marks (studio #349) wears those instead:
- * the white one-colour mark on the brand colour, or on navy for a brand
- * nobody drew; the full-colour lockup on a white plate where the page says
- * *presented by*. A mark is never recoloured either.
+ * the white one-colour mark on a dark ground, the full-colour lockup on a
+ * white plate where the page says *presented by*. A mark is never recoloured
+ * either.
  *
  * Keyed by the sponsor's key — what a dispatch's `sponsor` carries and a rally
  * day's `presented_by` rows name — or by the lockup key a row says it wears.
@@ -53,7 +53,8 @@ export interface SponsorLockupProps {
   size?: 'entry' | 'strip';
   /**
    * Where it stands. `badge` — a dispatch's meta row, a partner card — draws
-   * the white mark on a dark ground; `presented-by` — the live page's and
+   * the white mark on a dark ground (the brand's own where that is dark, else
+   * navy; `dispatch.css` says which); `presented-by` — the live page's and
    * Home's *presented by* line — draws the colour mark on a white plate. A
    * sponsor with only one mark draws that one where it can; with none, the
    * drawn lockup or the plain chip.
@@ -71,8 +72,7 @@ export function SponsorLockup({ sponsor, size = 'entry', variant = 'badge' }: Sp
   }
   const white = chip.logos?.white;
   if (white) {
-    const ground = brand ? `live-brand--${brand.key}` : 'live-lockup--navy';
-    return <React.Fragment><span className={`live-lockup live-lockup--mark ${ground}${sized}`}><MarkImage mark={white} /></span></React.Fragment>;
+    return <React.Fragment><span className={`live-lockup live-lockup--mark${brand ? ` live-brand--${brand.key}` : ''}${sized}`}><MarkImage mark={white} /></span></React.Fragment>;
   }
   if (!brand) {
     return <React.Fragment><span className="rr-chip rr-chip--neutral">{(chip.name ?? sponsorWords(chip.key)).toUpperCase()}</span></React.Fragment>;

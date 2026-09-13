@@ -124,10 +124,10 @@ test('a sponsor row on the wire is strict, its link is an http(s) address, and a
   assert.equal(MarkSchema.safeParse({ ...color, url: 'https://rebellerally.com/mark.png' }).success, true);
   assert.equal(MarkSchema.safeParse({ ...color, alt: '' }).success, false);
 });
-test('a badge wears the white mark on its brand or on navy, presented by wears the colour mark on a plate, and one mark falls back to the other', () => {
+test('a badge wears the white mark on a dark ground, presented by wears the colour mark on a plate, and one mark falls back to the other', () => {
   const ford = { key: 'ford', name: 'Ford', lockup_key: null, logos: { white, color } };
   const badge = renderToStaticMarkup(<SponsorLockup sponsor={ford} />);
-  assert.ok(badge.includes('live-lockup live-lockup--mark live-lockup--navy') && badge.includes(`src="${white.url}"`) && badge.includes('width="2000" height="750"'), badge);
+  assert.ok(badge.includes('class="live-lockup live-lockup--mark"') && badge.includes(`src="${white.url}"`) && badge.includes('width="2000" height="750"'), badge);
   assert.ok(!badge.includes(color.url));
   const presented = renderToStaticMarkup(<SponsorLockup sponsor={ford} variant="presented-by" size="strip" />);
   assert.ok(presented.includes('live-lockup live-lockup--presented-by live-lockup--strip') && presented.includes(`src="${color.url}"`) && presented.includes('alt="Ford"'), presented);
@@ -140,5 +140,5 @@ test('a badge wears the white mark on its brand or on navy, presented by wears t
   assert.ok(chip.includes('rr-chip rr-chip--neutral') && chip.includes('JEEP'));
   const base = {...records[0].payload, source:'sponsor' as const, sponsor: 'ford'};
   const card = renderToStaticMarkup(<DispatchView dispatch={base} sponsorFor={() => ford} />);
-  assert.ok(card.includes('live-entry--partner') && card.includes('live-lockup--mark live-lockup--navy') && card.includes(white.url), card);
+  assert.ok(card.includes('live-entry--partner') && card.includes('class="live-lockup live-lockup--mark"') && card.includes(white.url), card);
 });
