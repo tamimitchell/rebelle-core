@@ -31,7 +31,56 @@ export const SPONSOR_LOCKUPS: Readonly<Record<string, string>> = {
   pennzoil: 'PENNZOIL',
 };
 
-/** One sponsor as the rally days document embeds it beside the day it presents (studio #306 quest 3). */
+/**
+ * Photo URLs and a sponsor's marks are fetched automatically on render — no
+ * click stands between a payload value and a network request — so they get
+ * the same discipline as `link`, plus the same-origin path form the fixture actually uses. A single
+ * leading slash is a path on this origin; "//host" is protocol-relative and
+ * escapes it, so it is refused (Linden/Selvage, PR round) — and so is "/\host",
+ * which every browser reads as the same thing (Selvage, studio #349 round).
+ */
+const PhotoUrlSchema = z
+  .string()
+  .min(1)
+  .refine((value) => {
+    if (value.startsWith('/')) return !/^\/[\/\\]/.test(value);
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }, 'must be a same-origin path or an absolute http(s) URL');
+
+/** The site's own image route and nothing else: a reader fetches a mark on render, so the address is pinned to the one the studio writes (`Images::Resolution`). */
+export const MARK_URL = /^\/images\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/(320|640|960|1280|1920)$/;
+
+/**
+ * One of a sponsor's two marks (studio #349): `white` is the one-colour mark
+ * for a dark badge, `color` the brand's full lockup for a *presented by* line.
+ * The file's pixels ride along when the studio knows them, so a badge can
+ * reserve its box before the bytes arrive; an SVG has none and scales to the
+ * box.
+ */
+export const MarkSchema = z
+  .object({
+    url: z.string().regex(MARK_URL, "a mark is served by the site's image route"),
+    alt: z.string().min(1).max(200),
+    width: z.number().int().positive().optional(),
+    height: z.number().int().positive().optional(),
+  })
+  .strict()
+  .refine((mark) => (mark.width === undefined) === (mark.height === undefined), "a mark's pixels come as a pair");
+export type Mark = z.infer<typeof MarkSchema>;
+
+export const SponsorLogosSchema = z.object({ white: MarkSchema.nullable(), color: MarkSchema.nullable() }).strict();
+export type SponsorLogos = z.infer<typeof SponsorLogosSchema>;
+
+/**
+ * One sponsor as the rally days document embeds it beside the day it presents
+ * (studio #306 quest 3). Record schema 4 adds `logos`; a schema-3 row has
+ * none, which reads as no marks.
+ */
 export const SponsorSchema = z
   .object({
     key: SponsorKeySchema,
@@ -40,6 +89,7 @@ export const SponsorSchema = z
     tier: z.string().min(1).max(120).nullable(),
     blurb: z.string().min(1).max(600).nullable(),
     link: HttpUrlSchema.nullable(),
+    logos: SponsorLogosSchema.default(() => ({ white: null, color: null })),
   })
   .strict();
 export type Sponsor = z.infer<typeof SponsorSchema>;
@@ -54,26 +104,6 @@ export type DispatchSource = (typeof DISPATCH_SOURCES)[number];
 export type DispatchPanel = (typeof DISPATCH_PANELS)[number];
 
 const TeamNumberSchema = z.string().regex(/^\d+$/, 'team numbers are digit strings');
-
-/**
- * Photo URLs are fetched automatically on render — no click stands between a
- * payload value and a network request — so they get the same discipline as
- * `link`, plus the same-origin path form the fixture actually uses. A single
- * leading slash is a path on this origin; "//host" is protocol-relative and
- * escapes it, so it is refused (Linden/Selvage, PR round).
- */
-const PhotoUrlSchema = z
-  .string()
-  .min(1)
-  .refine((value) => {
-    if (value.startsWith('/')) return !value.startsWith('//');
-    try {
-      const url = new URL(value);
-      return url.protocol === 'http:' || url.protocol === 'https:';
-    } catch {
-      return false;
-    }
-  }, 'must be a same-origin path or an absolute http(s) URL');
 
 const StatPairSchema = z.object({ label: z.string().min(1), value: z.string().min(1) }).strict();
 
