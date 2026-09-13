@@ -10,6 +10,11 @@ Everything that must mean the same thing across site, studio, and the apps.
   never separate interfaces.
 - `src/story.ts` and `ui/story` — a story: the studio's composed piece for one
   slot on a surface, and the one renderer every surface wears (below).
+- `src/positions.ts` — the tracker's public documents as the positions Worker
+  writes them (site `ops/cloudflare/positions/`): every team's newest fix,
+  every team's trail, one team's day file. `test/fixtures/positions/2024-4/`
+  is that Worker's own output for 2024 day 4, fetched, never hand-typed; the
+  site keeps byte-identical copies.
 - `ds/` — the committed **Claude Design export**: the CSS layer plus the assets
   that CSS references. This is a snapshot of the canonical design system,
   "Rebelle Rally · Field Glass":

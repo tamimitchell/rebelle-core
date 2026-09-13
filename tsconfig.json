@@ -16,6 +16,7 @@
     "src/ui/story.tsx",
     "src/dispatch.ts",
     "src/ui/dispatch.tsx",
-    "src/ui/post.tsx"
+    "src/ui/post.tsx",
+    "src/positions.ts"
   ]
 }
