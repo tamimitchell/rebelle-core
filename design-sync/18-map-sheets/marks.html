@@ -1,0 +1,24 @@
+<!-- @dsCard group="18 · Map Sheets" viewport="700x300" name="The marks on the sheet" subtitle="The tracker's voice on paper, navy and cyan: the rally's checkpoint marks in full colour, a door-plate number for a vehicle, the trail fading behind it, and the day's places" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:300px;font-family:var(--font-body);box-sizing:border-box;padding:24px 30px;color:var(--ink);display:grid;grid-template-columns:1fr 1fr 1fr;gap:26px;align-content:start}
+h3{font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:var(--ls-nav);text-transform:uppercase;color:var(--cyan);border-bottom:2px solid var(--cyan);display:inline-block;padding-bottom:3px;margin:0 0 12px}
+.row{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.mk{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--font-display);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+.mk svg{width:22px;height:22px;overflow:visible;filter:drop-shadow(0 1px 1px rgba(12,20,32,.4))}
+.veh{font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.06em;line-height:1;color:var(--navy);background:#FFFFFF;border:1.5px solid var(--navy);border-top-width:5px;border-radius:3px;padding:4px 6px 3px;width:max-content}
+.veh.sel{box-shadow:0 0 0 2px rgba(24,159,218,.45),0 0 12px rgba(24,159,218,.85)}
+.trail{height:3px;width:100%;border-radius:2px;background:linear-gradient(90deg,rgba(24,159,218,.35),var(--cyan) 70%,rgba(24,159,218,0) 71%,rgba(24,159,218,.45) 72%)}
+.note{font-size:11px;line-height:1.5;margin:10px 0 0;color:var(--desert-taupe)}
+</style></head><body class="terrain">
+<div><h3>Checkpoints</h3><div class="row">
+<div class="mk"><svg viewBox="0 0 22 22"><path d="M5 3 V21" stroke="#F5F0E6" stroke-width="2.6" stroke-linecap="round"/><path d="M5 2.5 H18.5 L15.5 7.5 L18.5 12.5 H5 Z" fill="#84D400" stroke="#F5F0E6" stroke-width="1.8" stroke-linejoin="round"/><g><circle cx="18" cy="4" r="5" fill="#F5F0E6"/><path d="M15.3 4.1 L17.2 6 L20.7 2.4" fill="none" stroke="#0D213D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g></svg><span>CP1</span></div>
+<div class="mk"><svg viewBox="0 0 22 22"><rect x="4" y="4" width="14" height="14" rx="1.5" fill="#189FDA" stroke="#F5F0E6" stroke-width="2"/></svg><span>CP2</span></div>
+<div class="mk"><svg viewBox="0 0 22 22"><path d="M11 2 L20 11 L11 20 L2 11 Z" fill="#0B0F14" stroke="#F5F0E6" stroke-width="2" stroke-linejoin="round"/></svg><span>CP3</span></div>
+</div><p class="note">Green flag, blue square, black diamond: the rally's own marks, full colour in every state. Collected takes a bone badge; live takes a cyan glow.</p></div>
+<div><h3>Vehicles</h3><div class="row"><span class="veh sel">118</span><span class="veh">143</span><span class="veh">203</span></div><div class="trail" style="margin-top:16px"></div><p class="note">Every team is the same plate, a small door panel. No heading: a tracker does not always know it. The followed team glows, and its trail fades behind it like dust.</p></div>
+<div><h3>Places</h3><div class="row">
+<div class="mk"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="#F5F0E6" stroke="#0D213D" stroke-width="1.5"/><path d="M8.5 6.5 L16 11 L8.5 15.5 Z" fill="#0D213D"/></svg><span>Start</span></div>
+<div class="mk"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="#F5F0E6" stroke="#0D213D" stroke-width="1.5"/><path d="M6.5 6.5 H11 V11 H6.5 Z M11 11 H15.5 V15.5 H11 Z" fill="#0D213D"/></svg><span>Finish</span></div>
+<div class="mk"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="#F5F0E6" stroke="#0D213D" stroke-width="1.5"/><path d="M11 5 L18 16.5 H4 Z" fill="#0D213D"/><path d="M11 10.5 L13.6 16.5 H8.4 Z" fill="#F5F0E6"/></svg><span>Base camp</span></div>
+</div><p class="note">Bone discs with a navy glyph. Labels sit centred under every mark, navy on a sand halo, so annotation reads as its own voice beside the sepia place names.</p></div>
+</body></html>

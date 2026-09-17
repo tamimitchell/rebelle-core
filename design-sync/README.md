@@ -40,3 +40,13 @@ their one committed snapshot; their `../styles.css` link is the project's own la
 and does not resolve here. `../voice.md` is the hand-written distillation consumers
 read; when a card changes in the project, replace the snapshot and re-read the
 distillation against it.
+
+## The map sheet cards
+
+`18-map-sheets/` is the three **18 · Map Sheets** cards of the design system, copied
+verbatim from the project on 2026-09-16, with `the-thinking.md`, the short write-up of
+why the live map is paper, written for Emily. Same posture as the voice cards: they
+stay out of `ds/`, and their `../styles.css` and `../assets/maps/` links are the
+project's own and do not resolve here. The styles the cards describe are code, not
+CSS: `rebelle-site` `src/lib/map-grounds.js` builds Atlas and Terrain Paper from the
+tokens at runtime, and the clips carry them written out as JSON.
