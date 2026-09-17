@@ -1,0 +1,34 @@
+<!-- @dsCard group="18 · Map Sheets" viewport="700x520" name="Contract · Map Sheets" subtitle="The live map is printed paper: Terrain Paper carried onto a real map. Two sheets, Atlas and Terrain Paper; the tracker's marks on top in navy and cyan; the map is never glass" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:520px;font-family:var(--font-body);box-sizing:border-box;padding:26px 30px 30px 56px;color:var(--ink)}
+h2{font-family:var(--font-display);font-weight:600;font-size:28px;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.hrule{width:46px;height:3px;background:var(--cyan);margin:9px 0 15px}
+.cols{display:grid;grid-template-columns:1.1fr 1fr;gap:34px;position:relative}
+.sub{font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:var(--ls-nav);text-transform:uppercase;color:var(--cyan);border-bottom:2px solid var(--cyan);display:inline-block;padding-bottom:3px;margin-bottom:8px}
+p{font-size:12px;line-height:1.55;margin:0 0 7px;text-wrap:pretty}
+.li{display:grid;grid-template-columns:14px 1fr;gap:8px;margin:0 0 7px}
+.li i{width:7px;height:7px;border:1.5px solid var(--cyan);border-radius:50%;margin-top:5px;box-sizing:border-box}
+.li p{margin:0}
+.mid{position:absolute;left:calc(52.4% - 6.5px);top:-2px;bottom:-2px}
+.still{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--terrain-line);margin-top:6px}
+.cap{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--desert-taupe);margin-top:5px}
+</style></head><body class="terrain tp-marks">
+<span class="tp-mark tl"></span><span class="tp-mark tr"></span><span class="tp-mark bl"></span><span class="tp-mark br"></span>
+<span class="tp-rule-v" style="left:var(--tp-margin);top:32px;bottom:32px"></span>
+<h2>The map is paper</h2><div class="hrule"></div>
+<div class="cols">
+<span class="tp-rule-v sep mid"></span>
+<div class="col"><span class="sub">The thinking</span>
+<p>Rebelle is run on paper maps and a compass, so the live map is paper too. Not a satellite photo, not a dark screen with glowing lines: the sheet the competitors unfold on the hood at dawn, drawn live.</p>
+<div class="li"><i></i><p><b>Colour means height.</b> Playa bone on the valley floor rising to rust on the summits. The range refits to the ground in view, so dunes and high country each get the full sweep.</p></div>
+<div class="li"><i></i><p><b>Relief is pressed in.</b> Lit from one side, shaded copper where the light falls, dark slate where the rock is rugged. Six times of day move the light.</p></div>
+<div class="li"><i></i><p><b>Roads pale, water cyan, green only where there are trees.</b> Worn ground reads light from the air. Cyan is the one annotation colour and it stays quiet.</p></div>
+<div class="li"><i></i><p><b>The paper is what you look at; the glass is what you look through.</b> Panels are Field Glass. The map never is.</p></div>
+</div>
+<div class="col"><span class="sub">Two sheets</span>
+<img class="still" src="../assets/maps/atlas.jpg" alt=""><div class="cap">Atlas · full detail, for the website</div>
+<img class="still" src="../assets/maps/terrain-paper.jpg" alt="" style="margin-top:12px"><div class="cap">Terrain Paper · simplified, for video</div>
+</div>
+</div>
+<span class="tp-rule-h" style="left:var(--tp-margin);right:var(--tp-margin);bottom:var(--tp-margin)"></span>
+</body></html>
