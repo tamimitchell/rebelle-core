@@ -1,0 +1,26 @@
+<!-- @dsCard group="13 · Principles" viewport="700x290" name="Glance · Story · Board" subtitle="One source of truth at three depths — a posplate, a card, and a full table" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:290px;background:var(--ground-navy);color:var(--white);font-family:var(--font-body);display:grid;grid-template-columns:170px 215px 1fr;gap:18px;padding:20px 24px;box-sizing:border-box;align-items:stretch}
+.col{display:flex;flex-direction:column;gap:8px;min-width:0}
+.k{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:var(--track-kicker);text-transform:uppercase;color:var(--label-on-dark)}
+.k em{font-style:normal;color:var(--cyan)}
+.platewrap{flex:1;display:flex;align-items:center;justify-content:center}
+.posplate{background:linear-gradient(135deg,var(--fgi-tint-top),var(--fgi-tint-bottom));border-radius:9px;box-shadow:inset 0 0 0 1px var(--fgi-ring),inset 0 1px 0 var(--fgi-light-catch);padding:12px 16px;display:flex;flex-direction:column;gap:2px}
+.posplate .pos{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1}.posplate .pos em{font-style:normal;color:var(--cyan);font-size:16px;vertical-align:middle}
+.posplate .who{font-family:var(--font-mono);font-size:10px;color:var(--white-soft)}
+.card{flex:1;background:linear-gradient(135deg,var(--fgi-tint-top),var(--fgi-tint-bottom));border-radius:14px;box-shadow:inset 0 0 0 1px var(--fgi-ring),inset 0 1px 0 var(--fgi-light-catch);padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between}
+.card .hd{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.05em}
+.card .st{font-family:var(--font-serif);font-style:italic;font-size:13.5px;line-height:1.35;color:var(--white-soft)}
+.card .m{font-family:var(--font-mono);font-size:9.5px;color:var(--label-on-dark)}
+.board{flex:1;background:var(--paper-cool);border-radius:0;color:var(--ink);padding:10px 14px;font-family:var(--font-mono);font-size:11px;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse}
+td,th{text-align:left;padding:4px 6px 4px 0;border-bottom:1px solid var(--hairline);white-space:nowrap}
+th{font-size:var(--fs-doc-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--ink)}
+.you td{color:var(--label-cyan-on-paper);font-weight:600}
+.up{color:var(--delta-up)}.dn{color:var(--delta-down)}
+.foot{font-size:var(--fs-doc-micro);color:var(--ink-faint);letter-spacing:.1em;padding-top:5px}
+</style></head><body>
+<div class="col"><span class="k"><em>Glance</em> — one thing, in a second</span><div class="platewrap"><div class="posplate"><span class="pos">P2 <em>▲1</em></span><span class="who">129 · DESERT DAMES</span></div></div></div>
+<div class="col"><span class="k"><em>Story</em> — a short read</span><div class="card"><span class="hd">DAY 4 — THE DUNES DECIDE</span><span class="st">"One degree off at the fork cost the leaders eleven points — and Desert Dames were waiting."</span><span class="m">Daily recap · 2 min read</span></div></div>
+<div class="col"><span class="k"><em>Board</em> — the data laid out to study</span><div class="board"><table><tr><th>POS</th><th>TEAM</th><th>PTS</th><th>Δ</th></tr><tr><td>1</td><td>104 GRIT &amp; GRACE</td><td>1,482</td><td class="dn">▼1</td></tr><tr class="you"><td>2</td><td>129 DESERT DAMES</td><td>1,479</td><td class="up">▲1</td></tr><tr><td>3</td><td>140 HIGHS &amp; LOWS</td><td>1,463</td><td>—</td></tr></table><div class="foot">REAL TIME – UNOFFICIAL</div></div></div>
+</body></html>
