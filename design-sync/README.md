@@ -41,6 +41,16 @@ and does not resolve here. `../voice.md` is the hand-written distillation consum
 read; when a card changes in the project, replace the snapshot and re-read the
 distillation against it.
 
+## The principles cards
+
+`13-principles/` is the three **13 · Principles** cards of the design system,
+copied verbatim from the project on 2026-09-21. Same posture as the voice cards:
+they stay out of `ds/`, and their `../styles.css` link is the project's own and
+does not resolve here. `../principles.md` is the hand-written distillation builders
+read — the laws with their litmus, the pre-flight and its test, the three depths,
+and the layer Tami set on top; when a card changes in the project, replace the
+snapshot and re-read the distillation against it.
+
 ## The map sheet cards
 
 `18-map-sheets/` is the three **18 · Map Sheets** cards of the design system, copied
