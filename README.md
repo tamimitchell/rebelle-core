@@ -25,6 +25,12 @@ Everything that must mean the same thing across site, studio, and the apps.
   Distilled by hand from the design system's **12 · Voice** cards, whose
   snapshot is `design-sync/12-voice/`. Exported as `@rebelle/core/voice.md`
   for anything that hands a writer or a model the brief.
+- `principles.md` — how the rally decides the small calls: the ten laws with
+  their litmus, the pre-flight, the three depths, and what the course, the
+  competitors and the competition should each feel like. Distilled by hand
+  from the design system's **13 · Principles** cards, whose snapshot is
+  `design-sync/13-principles/`. Exported as `@rebelle/core/principles.md`
+  for anything that hands a builder or a model the brief.
 - `dist/` — generated outputs, committed so consumers need no build step:
   `tokens.css` (site/studio) and `RebelleTokens.swift` (ios-app).
 - `scripts/build-tokens.mjs` — the codegen. Run `pnpm build:tokens` after any

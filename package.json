@@ -24,6 +24,7 @@
     "./prose": "./src/prose.ts",
     "./story-catalog.json": "./dist/story-catalog.json",
     "./voice.md": "./voice.md",
+    "./principles.md": "./principles.md",
     "./ui/post": "./src/ui/post.tsx",
     "./dispatch": "./src/dispatch.ts",
     "./ui/dispatch": "./src/ui/dispatch.tsx",
