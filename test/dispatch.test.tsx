@@ -27,7 +27,7 @@ test('a quote is the navy band: the star, its words in one pair of marks, and wh
   const quote = records[2].payload;
   const typed = renderToStaticMarkup(<DispatchView dispatch={quote} />);
   assert.ok(typed.includes('<article class="live-entry live-entry--quote navy-flat">'));
-  assert.ok(typed.includes('<figure class="rr-quote on-dark live-entry__quote"><span class="rr-star" aria-hidden="true"></span><blockquote>“Now she hands me a roadbook full of pictures and says find this mountain.”</blockquote><cite>Sabrina Howells, #172</cite></figure>'));
+  assert.ok(typed.includes('<figure class="rr-quote on-dark live-entry__quote"><span class="rr-star live-entry__star" aria-hidden="true"></span><blockquote>“Now she hands me a roadbook full of pictures and says find this mountain.”</blockquote><cite>Sabrina Howells, #172</cite></figure>'));
   const transcribed = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, text: 'What is a road? What is a topo line?' }} />);
   assert.ok(transcribed.includes('<blockquote>“What is a road? What is a topo line?”</blockquote>'));
   const partner = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, source: 'sponsor', sponsor: 'pirelli' }} />);

@@ -85,7 +85,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 
       {isQuote
         ? <figure className="rr-quote on-dark live-entry__quote">
-            <span className="rr-star" aria-hidden="true"></span>
+            <span className="rr-star live-entry__star" aria-hidden="true"></span>
             <blockquote>{quoted(payload.text)}</blockquote>
             <cite>{payload.attribution}</cite>
           </figure>
