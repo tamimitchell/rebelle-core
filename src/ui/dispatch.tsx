@@ -33,6 +33,11 @@ function sourceLabel(payload: DispatchRecord['payload']): string {
   return payload.source.toUpperCase();
 }
 
+/** Transcribed excerpts arrive bare and typed ones often carry their own marks; draw one pair either way. */
+function quoted(text: string): string {
+  return /^["“‘']/.test(text) ? text : `“${text}”`;
+}
+
 function linkLabel(link: string): string {
   try {
     if (new URL(link).hostname.endsWith('instagram.com')) return 'VIEW STORY ON INSTAGRAM';
@@ -54,9 +59,11 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   // colours it when a lockup exists, and the card's own fallback holds otherwise.
   const partner = payload.source === 'sponsor' && sponsor !== null;
   const brand = partner ? sponsorBrandClass(sponsor) : null;
+  // A quote is its own band on a fresh navy ground, unless a partner card already frames it.
+  const band = isQuote && !partner;
 
   return (
-    <React.Fragment><article className={`live-entry${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
+    <React.Fragment><article className={`live-entry${band ? ' live-entry--quote navy-flat' : ''}${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
       <header className="live-entry__meta">
         <span className={sourceChipClass(payload.source)}>{sourceLabel(payload)}</span>
         {sponsor && <SponsorLockup sponsor={sponsor} />}
@@ -76,11 +83,13 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         )}
       </header>
 
-      <p className={isQuote ? 'live-entry__text live-entry__text--quote' : 'live-entry__text'}>
-        {payload.text}
-      </p>
-
-      {isQuote && <p className="live-entry__attribution">— {payload.attribution}</p>}
+      {isQuote
+        ? <figure className="rr-quote on-dark live-entry__quote">
+            <span className="rr-star" aria-hidden="true"></span>
+            <blockquote>{quoted(payload.text)}</blockquote>
+            <cite>{payload.attribution}</cite>
+          </figure>
+        : <p className="live-entry__text">{payload.text}</p>}
       {payload.video && <div className="live-widget rr-card rr-card--lit live-entry__video">
         <p className="live-widget__title">{payload.video.title}</p>
         <p className="live-entry__caption">{payload.video.duration ? Math.floor(payload.video.duration / 60) + ':' + String(payload.video.duration % 60).padStart(2, '0') : 'Video'}
