@@ -23,6 +23,18 @@ test('the Studio schema-2 writer fixture draws all six operational kinds', () =>
   assert.ok(recap.includes('OPEN · THE STORY'));
   assert.ok(recap.includes('ALL TEAMS IN CAMP'));
 });
+test('a quote is the navy band: the star, its words in one pair of marks, and who said it', () => {
+  const quote = records[2].payload;
+  const typed = renderToStaticMarkup(<DispatchView dispatch={quote} />);
+  assert.ok(typed.includes('<article class="live-entry live-entry--quote navy-flat">'));
+  assert.ok(typed.includes('<figure class="rr-quote on-dark live-entry__quote"><span class="rr-star live-entry__star" aria-hidden="true"></span><blockquote>“Now she hands me the map and says find this ridge.”</blockquote><cite>Sabrina Howells, #172</cite></figure>'));
+  const transcribed = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, text: 'What is a road? What is a topo line?' }} />);
+  assert.ok(transcribed.includes('<blockquote>“What is a road? What is a topo line?”</blockquote>'));
+  const partner = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, source: 'sponsor', sponsor: 'pirelli' }} />);
+  assert.ok(partner.includes('live-entry--partner'));
+  assert.ok(!partner.includes('live-entry--quote'));
+  assert.ok(partner.includes('<blockquote>'));
+});
 test('a closed day\'s archive parses with the live document\'s shape, and its key has to name the document\'s day', () => {
   assert.equal(dispatchArchiveKey(2026, 3), 'rebelle_live.dispatches.2026.day3');
   const archive = { ...fixture, feed_key: dispatchArchiveKey(2026, fixture.day) };
