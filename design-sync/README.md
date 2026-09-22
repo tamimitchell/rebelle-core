@@ -60,3 +60,14 @@ stay out of `ds/`, and their `../styles.css` and `../assets/maps/` links are the
 project's own and do not resolve here. The styles the cards describe are code, not
 CSS: `rebelle-site` `src/lib/map-grounds.js` builds Atlas and Terrain Paper from the
 tokens at runtime, and the clips carry them written out as JSON.
+
+## The 2025 broadcast boards
+
+`07-broadcast-on-air/` is the odd one out: **source material, not cards.** Noelle
+Esguerra's 2025 Rebelle LIVE master, the eleven approved curtain and fullscreen
+boards cut from it, the two comps over photography and the layout-zone diagram —
+what section 07 was read from, rather than a snapshot of what it says. They moved
+here from `rebelle-live-overlay/designs/` when the 2026 cleanup retired that folder
+(overlay #9): the overlay repo keeps the running code, the design system keeps what
+the code was drawn from. Its own README says what each file is. Same posture as the
+cards in one respect — they stay out of `ds/`, which an import replaces wholesale.
