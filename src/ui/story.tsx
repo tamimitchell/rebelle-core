@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { parseProse, type Inline, type ProseDocument } from '../prose.ts';
 import { asOfLabel, durationLabel, videoUrls, type Story, type StoryComponent } from '../story.ts';
+import { HostedVideoPlayer, type HostedVideoMedia } from './hosted-video.tsx';
 
 type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['content'];
 
@@ -11,7 +12,7 @@ type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['con
  */
 export type StoryMedia = {
   imageUrl?: (id: string, width: number) => string | undefined;
-  videoUrl?: (id: string) => { source: string; poster: string } | undefined;
+  videoUrl?: (id: string) => HostedVideoMedia | undefined;
   embedVideos?: boolean;
 };
 
@@ -68,7 +69,7 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
       }
       const hosted = media.videoUrl ? media.videoUrl(part.content.video_id.toLowerCase()) : urls;
       return <figure className="rr-story__video">
-        {hosted ? <video controls preload="metadata" src={hosted.source} poster={hosted.poster} aria-label={title} /> : <p role="status">Video unavailable</p>}
+        {hosted ? <HostedVideoPlayer media={hosted} title={title} /> : <p role="status">Video unavailable</p>}
         <figcaption>{title}{length}</figcaption>
       </figure>;
     }

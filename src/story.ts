@@ -81,7 +81,7 @@ export const VideoContentSchema = z.discriminatedUnion('provider', [
 export type VideoContent = z.infer<typeof VideoContentSchema>;
 export type VideoUrls =
   | { provider: 'youtube'; watch: string; embed: string }
-  | { provider: 'hosted'; source: string; poster: string };
+  | { provider: 'hosted'; source: string; poster?: string };
 
 /** One template per provider; a hosted video's default is the site's own route, which a host may stand its own in for. */
 export function videoUrls(value: VideoContent): VideoUrls {
@@ -91,7 +91,7 @@ export function videoUrls(value: VideoContent): VideoUrls {
       return { provider: 'youtube', watch: `https://www.youtube.com/watch?v=${parsed.video_id}`, embed: `https://www.youtube-nocookie.com/embed/${parsed.video_id}` };
     case 'hosted': {
       const id = parsed.video_id.toLowerCase();
-      return { provider: 'hosted', source: `/videos/${id}`, poster: `/videos/${id}/poster` };
+      return { provider: 'hosted', source: `/videos/${id}` };
     }
   }
 }

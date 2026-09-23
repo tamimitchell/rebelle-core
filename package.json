@@ -19,6 +19,8 @@
     "./ui/team-results-surface": "./src/ui/team-results-surface.tsx",
     "./ui/story": "./src/ui/story.tsx",
     "./ui/story.css": "./src/ui/story.css",
+    "./ui/hosted-video": "./src/ui/hosted-video.tsx",
+    "./ui/hosted-video.css": "./src/ui/hosted-video.css",
     "./ui/story-surface": "./src/ui/story-surface.tsx",
     "./team-results-catalog.json": "./dist/team-results-catalog.json",
     "./prose": "./src/prose.ts",
