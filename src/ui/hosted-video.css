@@ -5,4 +5,7 @@
 .rr-hosted-player__controller media-time-range { flex: 1; min-width: 44px; }
 .rr-hosted-player__controller media-control-bar > * { min-width: 44px; min-height: 44px; }
 .rr-hosted-player__file { display: inline-block; margin-top: 0.5rem; color: inherit; text-decoration: underline; text-underline-offset: .15em; }
-.rr-hosted-player__unavailable { padding: 1rem; background: var(--navy, #0d213d); color: var(--white, #fff); }
+.rr-hosted-player__unavailable { display: none; padding: 1rem; background: var(--navy, #0d213d); color: var(--white, #fff); }
+.rr-hosted-player--unavailable .rr-hosted-player__controller,
+.rr-hosted-player--unavailable .rr-hosted-player__file { display: none; }
+.rr-hosted-player--unavailable .rr-hosted-player__unavailable { display: block; }

@@ -11,12 +11,13 @@ export type HostedVideoMedia = {
 export function HostedVideoPlayer({ media, title, autoPlay = false }: {
   media: HostedVideoMedia; title: string; autoPlay?: boolean;
 }) {
-  const [unavailable, setUnavailable] = React.useState(false);
-  React.useEffect(() => setUnavailable(false), [media.source]);
   const video = React.createElement('video', {
     slot: 'media', src: media.source, poster: media.poster,
     preload: 'metadata', playsInline: true, autoPlay, 'aria-label': title,
-    onError: () => setUnavailable(true),
+    onError: (event: React.SyntheticEvent<HTMLVideoElement>) =>
+      event.currentTarget.closest('.rr-hosted-player')?.classList.add('rr-hosted-player--unavailable'),
+    onLoadedData: (event: React.SyntheticEvent<HTMLVideoElement>) =>
+      event.currentTarget.closest('.rr-hosted-player')?.classList.remove('rr-hosted-player--unavailable'),
   }, media.captions && React.createElement('track', {
     kind: 'captions', src: media.captions.source, srcLang: media.captions.language,
     label: media.captions.label, default: true,
@@ -29,12 +30,12 @@ export function HostedVideoPlayer({ media, title, autoPlay = false }: {
     media.captions && React.createElement('media-captions-button', { 'aria-label': 'Captions' }),
     React.createElement('media-fullscreen-button', { 'aria-label': 'Full screen' }),
   );
-  if (unavailable) return <p className="rr-hosted-player__unavailable" role="status">Video unavailable. Please try again later.</p>;
   return <div className="rr-hosted-player">
     {React.createElement('media-controller', {
       className: 'rr-hosted-player__controller', style: { aspectRatio: media.aspectRatio ?? '16 / 9' },
       'aria-label': title,
     }, video, controls)}
     <a className="rr-hosted-player__file" href={media.source}>Open video file</a>
+    <p className="rr-hosted-player__unavailable" role="status">Video unavailable. Please try again later.</p>
   </div>;
 }
