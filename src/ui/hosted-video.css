@@ -1,0 +1,11 @@
+.rr-hosted-player { width: 100%; }
+.rr-hosted-player__controller { display: block; width: 100%; max-height: 70vh; background: var(--navy, #0d213d); color: var(--white, #fff); }
+.rr-hosted-player__controller video { display: block; width: 100%; height: 100%; max-height: 70vh; object-fit: contain; background: var(--navy, #0d213d); }
+.rr-hosted-player__controller media-control-bar { display: flex; align-items: center; min-height: 44px; background: var(--navy, #0d213d); color: var(--white, #fff); }
+.rr-hosted-player__controller media-time-range { flex: 1; min-width: 44px; }
+.rr-hosted-player__controller media-control-bar > * { min-width: 44px; min-height: 44px; }
+.rr-hosted-player__file { display: inline-block; margin-top: 0.5rem; color: inherit; text-decoration: underline; text-underline-offset: .15em; }
+.rr-hosted-player__unavailable { display: none; padding: 1rem; background: var(--navy, #0d213d); color: var(--white, #fff); }
+.rr-hosted-player--unavailable .rr-hosted-player__controller,
+.rr-hosted-player--unavailable .rr-hosted-player__file { display: none; }
+.rr-hosted-player--unavailable .rr-hosted-player__unavailable { display: block; }

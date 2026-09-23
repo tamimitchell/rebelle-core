@@ -29,4 +29,4 @@
 .rr-story__figure figcaption, .rr-story__video figcaption, .rr-story__quote figcaption { margin-block-start: var(--sp-8); font-size: var(--fs-meta); }
 .rr-story__quote blockquote { margin: 0; border-inline-start: 3px solid var(--cyan); padding-inline-start: var(--sp-24); }
 .rr-story__quote p { white-space: pre-line; }
-.rr-story__video iframe, .rr-story__video video { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
+.rr-story__video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }

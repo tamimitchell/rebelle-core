@@ -73,7 +73,7 @@ test('a video\'s id is held to its provider\'s shape, and an address is built on
   assert(accepts(hosted));
   assert(accepts({ ...youtube, duration: 3600 }));
   assert.deepEqual(videoUrls(youtube), { provider: 'youtube', watch: 'https://www.youtube.com/watch?v=k4FNP7tL1Xg', embed: 'https://www.youtube-nocookie.com/embed/k4FNP7tL1Xg' });
-  assert.deepEqual(videoUrls(hosted), { provider: 'hosted', source: '/videos/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f', poster: '/videos/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f/poster' });
+  assert.deepEqual(videoUrls(hosted), { provider: 'hosted', source: '/videos/5a0d8f2e-6b3c-4e1a-9f7d-2c4b6a8e0d1f' });
   const refused = [
     // Each provider's id shape refuses the other's, and anything else that is eleven characters or UUID-shaped.
     { ...youtube, video_id: hosted.video_id }, { ...hosted, video_id: youtube.video_id },

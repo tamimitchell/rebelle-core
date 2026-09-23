@@ -94,10 +94,12 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         <p className="live-widget__title">{payload.video.title}</p>
         <p className="live-entry__caption">{payload.video.duration ? Math.floor(payload.video.duration / 60) + ':' + String(payload.video.duration % 60).padStart(2, '0') : 'Video'}
           {payload.video.video_id == null && ' · Coming soon'}</p>
-        {payload.video.provider === 'youtube' && payload.video.video_id && (onOpenVideo
+        {payload.video.video_id && onOpenVideo
           ? <button type="button" className="live-entry__link" onClick={(event) => onOpenVideo(payload.video!, event.currentTarget)}>Watch video →</button>
-          : <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch video →</a>)}
-        {payload.video.provider === 'hosted' && payload.video.video_id && <p className="live-entry__caption">Clip preview unavailable</p>}
+          : null}
+        {payload.video.provider === 'youtube' && payload.video.video_id && !onOpenVideo &&
+          <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch video →</a>}
+        {payload.video.provider === 'hosted' && payload.video.video_id && !onOpenVideo && <p className="live-entry__caption">Clip preview unavailable</p>}
       </div>}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
         {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} →</button> : <span>{moment.label}</span>}
