@@ -15,7 +15,7 @@ Everything that must mean the same thing across site, studio, and the apps.
   every team's trail, one team's day file. `test/fixtures/positions/2024-4/`
   is that Worker's own output for 2024 day 4, fetched, never hand-typed; the
   site keeps byte-identical copies.
-- `src/black-diamond.ts` — the black diamond told in five steps (the 2026
+- `src/black-diamond.ts` — the black diamond told in six steps (the 2026
   Competition Handbook's example: 50 m radius, 25 m step, 300 m max), and its
   rings on any Mapbox map. The site's interactive and the explainer clips
   (`rebelle/clips`) both read it.
@@ -35,6 +35,10 @@ Everything that must mean the same thing across site, studio, and the apps.
   from the design system's **13 · Principles** cards, whose snapshot is
   `design-sync/13-principles/`. Exported as `@rebelle/core/principles.md`
   for anything that hands a builder or a model the brief.
+- `explainers.md` — how the rally explains its competition on the page and in
+  video: one telling in core that every surface reads, numbers cited from the
+  book, the card format and its colours, the map and the motion. The black
+  diamond is its worked example. Exported as `@rebelle/core/explainers.md`.
 - `dist/` — generated outputs, committed so consumers need no build step:
   `tokens.css` (site/studio) and `RebelleTokens.swift` (ios-app).
 - `scripts/build-tokens.mjs` — the codegen. Run `pnpm build:tokens` after any
