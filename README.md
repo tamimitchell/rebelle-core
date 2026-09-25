@@ -15,6 +15,10 @@ Everything that must mean the same thing across site, studio, and the apps.
   every team's trail, one team's day file. `test/fixtures/positions/2024-4/`
   is that Worker's own output for 2024 day 4, fetched, never hand-typed; the
   site keeps byte-identical copies.
+- `src/black-diamond.ts` — the black diamond told in five steps (the 2026
+  Competition Handbook's example: 50 m radius, 25 m step, 300 m max), and its
+  rings on any Mapbox map. The site's interactive and the explainer clips
+  (`rebelle/clips`) both read it.
 - `ds/` — the committed **Claude Design export**: the CSS layer plus the assets
   that CSS references. This is a snapshot of the canonical design system,
   "Rebelle Rally · Field Glass":
