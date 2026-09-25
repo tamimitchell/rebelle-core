@@ -4,7 +4,8 @@ How the rally explains its competition (the scoring, the checkpoints, the format
 website and in video. The black diamond ([`src/black-diamond.ts`](src/black-diamond.ts)) is the
 first one, built with Tami and Emily in September 2026, and the pattern for the rest.
 [`voice.md`](voice.md) is how the words sound; [`principles.md`](principles.md) settles the
-calls this leaves open.
+calls this leaves open. The design system carries it as the **19 · Explainers** card
+(snapshot in [`design-sync/19-explainers/`](design-sync/19-explainers/)).
 
 ## One telling, every surface
 

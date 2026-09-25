@@ -61,6 +61,15 @@ project's own and do not resolve here. The styles the cards describe are code, n
 CSS: `rebelle-site` `src/lib/map-grounds.js` builds Atlas and Terrain Paper from the
 tokens at runtime, and the clips carry them written out as JSON.
 
+## The explainers card
+
+`19-explainers/` is the **19 · Explainers** contract card of the design system, written
+from `../explainers.md` and added to the project on 2026-09-25, so the direction runs the
+other way from the voice and principles cards: the prose came first and the card
+distils it. Same posture otherwise: it stays out of `ds/`, and its `../styles.css` and
+`../assets/explainers/` links are the project's own and do not resolve here. When
+either changes, change the other.
+
 ## The 2025 broadcast boards
 
 `07-broadcast-on-air/` is the odd one out: **source material, not cards.** Noelle
