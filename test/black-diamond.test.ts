@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BANDS, PLACE, RULE, STEPS, ZERO_FROM, addRings, destination, sceneAt, scoreAt, setRings, stepAtSeconds } from '../src/black-diamond.ts';
+import { BANDS, PLACE, RULE, STEPS, ZERO_FROM, addRings, destination, sceneAt, scoreAt, setRings, stepAtSeconds, trackerReadout } from '../src/black-diamond.ts';
 
 // The 2026 Competition Handbook's worked example, PDF p. 11: "50m Radius / 25m Step / 300m Max".
 test('a signal scores as the handbook\'s figure draws it', () => {
@@ -20,9 +20,18 @@ test('every step\'s words carry the rule\'s numbers, and each signal scores what
   const words = STEPS.map((s) => `${s.value} ${s.line}`).join(' | ');
   for (const n of [RULE.points, RULE.radius, RULE.step, ZERO_FROM, RULE.max, RULE.penalty]) assert.match(words, new RegExp(`\\b${n}\\b`));
   const scored = STEPS.map((s) => (s.signal === null ? null : scoreAt(s.signal)));
-  assert.deepEqual(scored, [null, { points: 5, wideMiss: false }, { points: 3, wideMiss: false }, { points: 0, wideMiss: false }, { points: 0, wideMiss: true }]);
+  const wide = { points: 0, wideMiss: true };
+  assert.deepEqual(scored, [null, { points: 5, wideMiss: false }, { points: 3, wideMiss: false }, { points: 0, wideMiss: false }, wide, wide]);
   // the big line is the points the step's signal scores
-  assert.deepEqual(STEPS.slice(1).map((s) => s.value), ['5 points', '3 points', '0 points', '−10 points']);
+  assert.deepEqual(STEPS.slice(1, -1).map((s) => s.value), ['5 points', '3 points', '0 points', '−10 points']);
+});
+
+// Handbook p. 12–13 and 51: every signal leaves the team's own position on the tracker's Last Position screen.
+test('the last step reads the wide miss back as the tracker shows a position', () => {
+  assert.deepEqual(trackerReadout(PLACE), ['38° 18.402′ N', '116° 55.398′ W']);
+  assert.deepEqual(trackerReadout([0.5, -0.999999]), ['01° 00.000′ S', '000° 30.000′ E']);
+  assert.deepEqual(STEPS.map((s) => s.readout), [0, 0, 0, 0, 0, 1]);
+  assert.equal(sceneAt(STEPS.length - 1).readout, 1);
 });
 
 test('a position between two steps is a mix of both, and a clip reaches the last step', () => {

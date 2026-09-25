@@ -1,5 +1,5 @@
 /**
- * The black diamond, told in five steps: the rule, the words for each step, and the rings on a
+ * The black diamond, told in six steps: the rule, the words for each step, and the rings on a
  * Mapbox map at any point between the steps. Plain data and arithmetic with no framework, so the
  * site's interactive and the explainer clips (rebelle/clips) read one source.
  *
@@ -32,14 +32,17 @@ export type Step = {
   bands: number;
   zero: number;
   wide: number;
+  /** The tracker's readout of where the team signalled. */
+  readout: number;
 };
 
 export const STEPS: readonly Step[] = [
-  { key: 'target', value: 'No flag', line: 'Only coordinates', tone: 'white', signal: null, reach: 140, bands: 0, zero: 0, wide: 0 },
-  { key: 'full', value: `${RULE.points} points`, line: `Inside ${RULE.radius} m`, tone: 'cyan', signal: 32, reach: 140, bands: 1, zero: 0, wide: 0 },
-  { key: 'step', value: `${scoreAt(88).points} points`, line: `1 point less every ${RULE.step} m`, tone: 'cyan', signal: 88, reach: 140, bands: 1, zero: 0, wide: 0 },
-  { key: 'zero', value: '0 points', line: `${ZERO_FROM}–${RULE.max} m · no penalty`, tone: 'white', signal: 225, reach: 315, bands: 1, zero: 1, wide: 0 },
-  { key: 'wide', value: `−${RULE.penalty} points`, line: `Wide miss · over ${RULE.max} m`, tone: 'loss', signal: 345, reach: 350, bands: 1, zero: 1, wide: 1 },
+  { key: 'target', value: 'No flag', line: 'Only coordinates', tone: 'white', signal: null, reach: 140, bands: 0, zero: 0, wide: 0, readout: 0 },
+  { key: 'full', value: `${RULE.points} points`, line: `Inside ${RULE.radius} m`, tone: 'cyan', signal: 32, reach: 140, bands: 1, zero: 0, wide: 0, readout: 0 },
+  { key: 'step', value: `${scoreAt(88).points} points`, line: `1 point less every ${RULE.step} m`, tone: 'cyan', signal: 88, reach: 140, bands: 1, zero: 0, wide: 0, readout: 0 },
+  { key: 'zero', value: '0 points', line: `${ZERO_FROM}–${RULE.max} m · no penalty`, tone: 'white', signal: 225, reach: 315, bands: 1, zero: 1, wide: 0, readout: 0 },
+  { key: 'wide', value: `−${RULE.penalty} points`, line: `Wide miss · over ${RULE.max} m`, tone: 'loss', signal: 345, reach: 350, bands: 1, zero: 1, wide: 1, readout: 0 },
+  { key: 'readout', value: 'Coordinates', line: 'Shown after every signal', tone: 'white', signal: 345, reach: 350, bands: 1, zero: 1, wide: 1, readout: 1 },
 ];
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -60,6 +63,7 @@ export const sceneAt = (at: number) => {
     bands: mix(a.bands, b.bands, t),
     zero: mix(a.zero, b.zero, t),
     wide: mix(a.wide, b.wide, t),
+    readout: mix(a.readout, b.readout, t),
     signal,
     signalShown: a.signal === null ? (b.signal === null ? 0 : t) : 1,
     score: scoreAt(signal),
@@ -95,6 +99,16 @@ export const destination = (from: LngLat, bearing: number, metres: number): LngL
   const p2 = Math.asin(Math.sin(p1) * Math.cos(d) + Math.cos(p1) * Math.sin(d) * Math.cos(t));
   const l2 = l1 + Math.atan2(Math.sin(t) * Math.sin(d) * Math.cos(p1), Math.cos(d) - Math.sin(p1) * Math.sin(p2));
   return [(l2 * 180) / Math.PI, (p2 * 180) / Math.PI];
+};
+
+/** A place as the handheld tracker's Last Position screen shows it (Handbook p. 51): degrees and decimal minutes. */
+export const trackerReadout = ([lng, lat]: LngLat): [string, string] => {
+  const ddm = (value: number, width: number, hemisphere: string) => {
+    const thousandths = Math.round(Math.abs(value) * 60_000);
+    const minutes = ((thousandths % 60_000) / 1000).toFixed(3).padStart(6, '0');
+    return `${String(Math.floor(thousandths / 60_000)).padStart(width, '0')}° ${minutes}′ ${hemisphere}`;
+  };
+  return [ddm(lat, 2, lat < 0 ? 'S' : 'N'), ddm(lng, 3, lng < 0 ? 'W' : 'E')];
 };
 
 /** The camera for a position along the steps: how far it holds, how steep it looks, where it faces. */
