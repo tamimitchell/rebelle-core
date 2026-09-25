@@ -20,7 +20,9 @@ test('every step\'s words carry the rule\'s numbers, and each signal scores what
   const words = STEPS.map((s) => `${s.value} ${s.line}`).join(' | ');
   for (const n of [RULE.points, RULE.radius, RULE.step, ZERO_FROM, RULE.max, RULE.penalty]) assert.match(words, new RegExp(`\\b${n}\\b`));
   const scored = STEPS.map((s) => (s.signal === null ? null : scoreAt(s.signal)));
-  assert.deepEqual(scored, [null, { points: 5, wideMiss: false }, { points: 2, wideMiss: false }, { points: 0, wideMiss: false }, { points: 0, wideMiss: true }]);
+  assert.deepEqual(scored, [null, { points: 5, wideMiss: false }, { points: 3, wideMiss: false }, { points: 0, wideMiss: false }, { points: 0, wideMiss: true }]);
+  // the big line is the points the step's signal scores
+  assert.deepEqual(STEPS.slice(1).map((s) => s.value), ['5 points', '3 points', '0 points', '−10 points']);
 });
 
 test('a position between two steps is a mix of both, and a clip reaches the last step', () => {

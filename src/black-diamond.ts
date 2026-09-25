@@ -35,11 +35,11 @@ export type Step = {
 };
 
 export const STEPS: readonly Step[] = [
-  { key: 'target', value: 'No flag', line: 'Only coordinates', tone: 'white', signal: null, reach: 160, bands: 0, zero: 0, wide: 0 },
-  { key: 'full', value: `${RULE.points} points`, line: `Inside ${RULE.radius} m`, tone: 'cyan', signal: 32, reach: 160, bands: 1, zero: 0, wide: 0 },
-  { key: 'step', value: '1 point less', line: `Every ${RULE.step} m`, tone: 'cyan', signal: 110, reach: 160, bands: 1, zero: 0, wide: 0 },
-  { key: 'zero', value: '0 points', line: `${ZERO_FROM}–${RULE.max} m · no penalty`, tone: 'white', signal: 225, reach: 340, bands: 1, zero: 1, wide: 0 },
-  { key: 'wide', value: 'Wide miss', line: `Over ${RULE.max} m · −${RULE.penalty} points`, tone: 'loss', signal: 345, reach: 380, bands: 1, zero: 1, wide: 1 },
+  { key: 'target', value: 'No flag', line: 'Only coordinates', tone: 'white', signal: null, reach: 140, bands: 0, zero: 0, wide: 0 },
+  { key: 'full', value: `${RULE.points} points`, line: `Inside ${RULE.radius} m`, tone: 'cyan', signal: 32, reach: 140, bands: 1, zero: 0, wide: 0 },
+  { key: 'step', value: `${scoreAt(88).points} points`, line: `1 point less every ${RULE.step} m`, tone: 'cyan', signal: 88, reach: 140, bands: 1, zero: 0, wide: 0 },
+  { key: 'zero', value: '0 points', line: `${ZERO_FROM}–${RULE.max} m · no penalty`, tone: 'white', signal: 225, reach: 315, bands: 1, zero: 1, wide: 0 },
+  { key: 'wide', value: `−${RULE.penalty} points`, line: `Wide miss · over ${RULE.max} m`, tone: 'loss', signal: 345, reach: 350, bands: 1, zero: 1, wide: 1 },
 ];
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -98,7 +98,7 @@ export const destination = (from: LngLat, bearing: number, metres: number): LngL
 };
 
 /** The camera for a position along the steps: how far it holds, how steep it looks, where it faces. */
-export const cameraAt = (at: number) => ({ reach: sceneAt(at).reach, pitch: 56 - Math.max(0, at - 2) * 5, bearing: 18 + at * 9 });
+export const cameraAt = (at: number) => ({ reach: sceneAt(at).reach, pitch: 48 - Math.max(0, at - 2) * 4, bearing: 18 + at * 9 });
 /** The zoom at which `reach` metres fill `pixels` on screen at this latitude (Mapbox's 512 px tiles). */
 export const zoomFor = (reach: number, pixels: number, lat: number) => Math.log2((78271.517 * Math.cos((lat * Math.PI) / 180) * pixels) / reach);
 
