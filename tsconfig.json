@@ -17,6 +17,7 @@
     "src/dispatch.ts",
     "src/ui/dispatch.tsx",
     "src/ui/post.tsx",
-    "src/positions.ts"
+    "src/positions.ts",
+    "src/black-diamond.ts"
   ]
 }

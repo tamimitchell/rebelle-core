@@ -27,11 +27,13 @@
     "./story-catalog.json": "./dist/story-catalog.json",
     "./voice.md": "./voice.md",
     "./principles.md": "./principles.md",
+    "./explainers.md": "./explainers.md",
     "./ui/post": "./src/ui/post.tsx",
     "./dispatch": "./src/dispatch.ts",
     "./ui/dispatch": "./src/ui/dispatch.tsx",
     "./ui/dispatch.css": "./src/ui/dispatch.css",
-    "./positions": "./src/positions.ts"
+    "./positions": "./src/positions.ts",
+    "./black-diamond": "./src/black-diamond.ts"
   },
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",
