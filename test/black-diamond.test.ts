@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BANDS, PLACE, RULE, STEPS, ZERO_FROM, addRings, destination, sceneAt, scoreAt, setRings, stepAtSeconds, trackerReadout } from '../src/black-diamond.ts';
+import { BANDS, FLY_IN, PLACE, RULE, STEPS, ZERO_FROM, addRings, cameraAt, destination, flyInAt, sceneAt, scoreAt, setRings, stepAtSeconds, trackerReadout, zoomFor } from '../src/black-diamond.ts';
 
 // The 2026 Competition Handbook's worked example, PDF p. 11: "50m Radius / 25m Step / 300m Max".
 test('a signal scores as the handbook\'s figure draws it', () => {
@@ -64,4 +64,27 @@ test('the rings go onto any map with the four calls, and a step sets every layer
   setRings(map, 4);
   assert.equal(layers.get('bd-wide-line')!['line-opacity'], 1);
   assert.equal(layers.get('bd-band-5-line')!['line-opacity'], 0.95);
+});
+
+test('the fly-in comes in over the hills to the first step, the ground crossing the screen at an even pace', () => {
+  const fit = 330;
+  const view = { width: 1130, height: 900 };
+  const close = (a: number, b: number, what: string) => assert.ok(Math.abs(a - b) < 1e-6, `${what}: ${a} vs ${b}`);
+  const start = flyInAt(0, fit, view);
+  const end = flyInAt(1, fit, view);
+  const far = destination(PLACE, FLY_IN.heading, FLY_IN.metres);
+  close(start.center[0], far[0], 'starts out'), close(start.center[1], far[1], 'starts out'), close(start.zoom, FLY_IN.zoom, 'start zoom');
+  close(end.center[0], PLACE[0], 'lands'), close(end.center[1], PLACE[1], 'lands'), close(end.zoom, zoomFor(cameraAt(0).reach, fit, PLACE[1]), 'lands at the first step');
+  close(end.pitch, cameraAt(0).pitch, 'pitch'), close(end.bearing, cameraAt(0).bearing, 'bearing');
+  // at 30 fps a straight line swept the ground under the view's centre 176 px in one frame, and it strobed
+  const frames = FLY_IN.seconds * 30;
+  const metresPerPixel = (zoom: number) => 2 ** (zoomFor(1, 1, PLACE[1]) - zoom);
+  let fastest = 0;
+  for (let f = 1; f <= frames; f++) {
+    const a = flyInAt((f - 1) / frames, fit, view);
+    const b = flyInAt(f / frames, fit, view);
+    const metres = Math.hypot((b.center[0] - a.center[0]) * 111_320 * Math.cos((PLACE[1] * Math.PI) / 180), (b.center[1] - a.center[1]) * 110_574);
+    fastest = Math.max(fastest, metres / metresPerPixel(b.zoom));
+  }
+  assert.ok(fastest < 40, `the ground moves ${fastest.toFixed(0)} px in a frame`);
 });

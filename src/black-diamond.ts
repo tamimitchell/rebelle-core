@@ -116,6 +116,38 @@ export const cameraAt = (at: number) => ({ reach: sceneAt(at).reach, pitch: 48 -
 /** The zoom at which `reach` metres fill `pixels` on screen at this latitude (Mapbox's 512 px tiles). */
 export const zoomFor = (reach: number, pixels: number, lat: number) => Math.log2((78271.517 * Math.cos((lat * Math.PI) / 180) * pixels) / reach);
 
+/** Before the first step the camera comes in over the hills: from 6.5 km out, in 2.6 s. */
+export const FLY_IN = { seconds: 2.6, metres: 6500, heading: 205, zoom: 12.6, pitch: 34, bearing: -35 } as const;
+export const flyInStart = (centre: LngLat = PLACE) => ({ center: destination(centre, FLY_IN.heading, FLY_IN.metres), zoom: FLY_IN.zoom, pitch: FLY_IN.pitch, bearing: FLY_IN.bearing });
+
+const RHO = 1.42;
+/**
+ * The camera `t` of the way through the fly-in (0 to 1), for a view `width` × `height` pixels in which
+ * the first step's reach fills `fit`. Zoom and pan follow van Wijk and Nuij's path, the one Mapbox's
+ * flyTo takes, so the ground crosses the screen at an even pace; a straight line in both rushes it.
+ */
+export const flyInAt = (t: number, fit: number, view: { width: number; height: number }, centre: LngLat = PLACE) => {
+  const k = 0.5 - Math.cos(Math.PI * Math.max(0, Math.min(1, t))) / 2;
+  const start = flyInStart(centre);
+  const first = cameraAt(0);
+  const w0 = Math.max(view.width, view.height);
+  const w1 = w0 / 2 ** (zoomFor(first.reach, fit, centre[1]) - start.zoom);
+  const u1 = FLY_IN.metres / 2 ** (zoomFor(1, 1, centre[1]) - start.zoom);
+  const r = (i: 0 | 1) => {
+    const b = (w1 * w1 - w0 * w0 + (i ? -1 : 1) * RHO ** 4 * u1 * u1) / (2 * (i ? w1 : w0) * RHO ** 2 * u1);
+    return Math.log(Math.sqrt(b * b + 1) - b);
+  };
+  const r0 = r(0);
+  const s = r0 + k * (r(1) - r0);
+  const along = (w0 * (Math.cosh(r0) * Math.tanh(s) - Math.sinh(r0))) / (RHO ** 2 * u1);
+  return {
+    center: [mix(start.center[0], centre[0], along), mix(start.center[1], centre[1], along)] as LngLat,
+    zoom: start.zoom + Math.log2(Math.cosh(s) / Math.cosh(r0)),
+    pitch: mix(start.pitch, first.pitch, k),
+    bearing: mix(start.bearing, first.bearing, k),
+  };
+};
+
 /** Mapbox paints need colour values, not custom properties: these are `--cyan`, `--navy`, `--white`, `--desert-sand` and `--loss`. */
 export const RING_COLOURS = { band: '#189FDA', core: '#0D213D', coreLine: '#FFFFFF', zero: '#EDE5D6', loss: '#C9262C' };
 
