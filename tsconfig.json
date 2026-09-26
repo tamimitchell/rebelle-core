@@ -18,6 +18,8 @@
     "src/ui/dispatch.tsx",
     "src/ui/post.tsx",
     "src/positions.ts",
-    "src/black-diamond.ts"
+    "src/black-diamond.ts",
+    "src/camera.ts",
+    "src/checkpoints.ts"
   ]
 }
