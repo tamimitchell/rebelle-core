@@ -1,0 +1,13 @@
+<!-- @dsCard group="09 · Marks & Assets" viewport="700x220" name="Compass star" subtitle="The north-star mark — full star on light, cyan knockout ring on dark" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:220px;display:grid;grid-template-columns:1fr 1fr;font-family:var(--font-body)}
+.cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px;box-sizing:border-box}
+
+.dark{background:var(--ground-navy)}
+img{height:120px;width:auto}
+.k{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:var(--track-kicker);text-transform:uppercase}
+.light .k{color:var(--ink-soft)}.dark .k{color:var(--label-on-dark)}
+</style></head><body>
+<div class="cell light terrain tp-plain"><img src="../assets/logo/compass-star.png" alt="Compass star"><span class="k">Full star — navy + cyan</span></div>
+<div class="cell dark"><img src="../assets/logo/compass-star-knockout.png" alt="Compass star knockout"><span class="k">Knockout — star drops out, cyan ring stays</span></div>
+</body></html>

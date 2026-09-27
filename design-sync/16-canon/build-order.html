@@ -1,0 +1,23 @@
+<!-- @dsCard group="16 · Canon" viewport="1280x410" name="Build order & status" subtitle="Each foundation locked before the next leans on it" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:410px;font-family:var(--font-body);box-sizing:border-box;padding:30px 46px 42px}
+h2{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:.05em;text-transform:uppercase;margin:0;color:var(--ink)}
+.hrule{width:46px;height:3px;background:var(--cyan);margin:9px 0 18px}
+.bd{columns:1;column-gap:46px;font-size:11.5px;line-height:1.55;color:var(--ink)}
+.bd p{margin:0 0 9px;text-wrap:pretty;break-inside:avoid}
+.bd p.li{padding-left:15px;position:relative}
+.bd p.li::before{content:'';position:absolute;left:0;top:6px;width:6px;height:6px;border:1.5px solid var(--cyan);border-radius:50%;box-sizing:border-box}
+.bd p.li.sub{padding-left:31px}.bd p.li.sub::before{left:16px;width:5px;height:5px;border-color:var(--ink-faint)}
+b{font-weight:600}em{font-style:normal;color:var(--ink-soft)}
+code{font-family:var(--font-mono);font-size:10px;letter-spacing:.02em;color:var(--terrain-line)}
+table{width:100%;border-collapse:collapse;margin:0 0 10px;break-inside:avoid}
+th{text-align:left;font-family:var(--font-display);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--label-cyan-on-paper);padding:0 12px 5px 0;border-bottom:1px solid var(--tp-mark)}
+td{font-size:11px;line-height:1.45;padding:6px 12px 6px 0;vertical-align:top;border-bottom:1px solid var(--hairline)}
+td:first-child{font-family:var(--font-mono);color:var(--label-cyan-on-paper);white-space:nowrap;width:26px}
+td:nth-child(2){font-family:var(--font-display);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:11px;white-space:nowrap}
+</style></head><body class="terrain tp-marks">
+<span class="tp-mark tl"></span><span class="tp-mark tr"></span><span class="tp-mark bl"></span><span class="tp-mark br"></span>
+<h2>Build order & status</h2><div class="hrule"></div>
+<div class="bd"><table><thead><tr><th>#</th><th>Foundation</th><th>Status here</th></tr></thead><tbody><tr><td>01</td><td>Voice & Channels</td><td>✅ rendered — cards in <code>guidelines/voice/</code>, <code>guidelines/channels/</code>, <code>guidelines/grounds/</code></td></tr><tr><td>02</td><td>Principles</td><td>✅ rendered — cards in <code>guidelines/principles/</code></td></tr><tr><td>03</td><td>Brand canon & assets</td><td>logos + photos imported to <code>assets/</code>; cards in <code>guidelines/brand/</code>; textures ❓</td></tr><tr><td>04</td><td>Imagery</td><td>✅ rendered — cards in <code>guidelines/imagery/</code></td></tr><tr><td>05</td><td>Grounds — full contracts</td><td>✅ rendered — a contract card per ground, each in its own <code>grounds/<ground>/</code> folder alongside that ground's CSS; broadcast mockups in <code>assets/broadcast/</code></td></tr><tr><td>06</td><td>Detail grammar</td><td>in progress — Terrain Paper's texture law and linework law are rendered (<code>grounds/terrain/</code>); Navy · Roadbook · Field Glass marks, separators, and the icon question are next. Seeds: HUD thesis, additive register, bodywork lines, RaceLine placement law</td></tr><tr><td>07+</td><td>Tokens → components → kits</td><td>provisional tokens in <code>tokens/</code> (🟡) — except type stack ✅, broadcast tokens ✅, and the Field Glass material ✅ (approved 2026-08-19). Components: Button (first)</td></tr></tbody></table></div>
+<span class="tp-rule-h" style="left:var(--tp-margin);right:var(--tp-margin);bottom:var(--tp-margin)"></span>
+</body></html>

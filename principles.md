@@ -1,6 +1,6 @@
 # Rebelle Rally — the principles
 
-How the rally decides the hundred small calls, distilled from the three
+How the rally decides the hundred small calls, distilled from the four
 **13 · Principles** cards of the Field Glass design system (Claude Design
 project `b992548a…`, snapshot in
 [`design-sync/13-principles/`](design-sync/13-principles/)), with the layer
@@ -28,6 +28,22 @@ Each with its litmus — the question that settles the call.
 01–09 are the card's, verbatim. 10 is Tami's, named from the rally's own
 sign-off `#iwanttorebelle`, and the second question under 06 is hers too;
 neither is on the card yet.
+
+## The field floor
+
+Law 07 made checkable: requirements, not polish. Desert sun is the
+accessibility spec.
+
+| Floor | Requirement |
+|---|---|
+| **≥ 4.5 : 1** | Text contrast, measured *after* every blur, scrim and texture. Glare is the test. |
+| **≥ 44pt / 48dp** | Tap targets. Gloves are the test. |
+| **Tabular** | Type scales with the reader; numerals stay tabular at every size. |
+| **Settle** | Every motion has a reduced-motion equivalent. The one allowed loop is the live-dot pulse. |
+| **Offline OK** | Offline and stale states are labelled, never silent. |
+| **Battery** | No ambient animation beyond the one pulse. The rally is long and the phone is at camp. |
+| **Label floor** | Labels under 12px take `--label-on-paper` or `--label-on-dark`; the `-faint` tokens are hairlines, never type. |
+| **No dimming** | De-emphasize by removing the accent, never by lowering opacity. |
 
 ## The pre-flight
 

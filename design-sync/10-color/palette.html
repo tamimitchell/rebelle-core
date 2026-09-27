@@ -1,0 +1,83 @@
+<!-- @dsCard group="10 · Color" viewport="1280x600" name="The palette" subtitle="Two official hues plus black and white, the warm desert family, five semantic states and the interaction ramp — everything past the official four is derived, and carries its mark" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;height:600px;background:var(--navy-night);color:var(--white);font-family:var(--font-body);box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column}
+.top{display:flex;align-items:baseline;justify-content:space-between;padding:12px 24px 10px;border-bottom:1px solid var(--hairline-inverse);flex:none}
+h2{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.hint{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.13em;text-transform:uppercase;color:var(--label-on-dark)}
+.band{padding:11px 24px 13px;border-bottom:1px solid var(--hairline-inverse)}
+.band:last-child{border-bottom:none}
+.ch{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:.15em;text-transform:uppercase;color:var(--label-on-dark);display:block;margin-bottom:8px}
+.ch b{color:var(--cyan);font-weight:400}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sw{border-radius:var(--radius-control);overflow:hidden;box-shadow:inset 0 0 0 1px var(--hairline-inverse)}
+.sw .chip{height:62px;display:block}
+.sw .meta{padding:6px 9px 7px;display:flex;flex-direction:column;gap:1px}
+.sw .nm{font-family:var(--font-display);font-weight:600;font-size:var(--fs-doc-note);letter-spacing:.11em;text-transform:uppercase}
+.sw .hex{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.08em;color:var(--label-on-dark)}
+.sw .pan{font-family:var(--font-mono);font-size:8px;letter-spacing:.1em;color:var(--label-tan-on-dark)}
+.seven{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.tl{height:54px;border-radius:var(--radius-tool);display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 6px 8px;gap:1px}
+.tl b{font-family:var(--font-display);font-weight:600;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.tl span{font-family:var(--font-mono);font-size:7.5px;letter-spacing:.05em}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:10px}
+.pair span{font-size:var(--fs-doc-note);line-height:1.45;color:var(--label-on-dark);text-wrap:pretty}
+.pair b{color:var(--white);font-weight:600}
+.pair em{font-style:normal;font-family:var(--font-mono);font-size:var(--fs-doc-kicker);color:var(--label-tan-on-dark)}
+.five{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.st{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--radius-control);box-shadow:inset 0 0 0 1px var(--hairline-inverse)}
+.st i{width:15px;height:15px;border-radius:3px;flex:none;display:block}
+.st .l{display:flex;flex-direction:column;gap:1px;min-width:0}
+.st .l b{font-family:var(--font-display);font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.st .l span{font-family:var(--font-mono);font-size:8px;letter-spacing:.07em;color:var(--label-on-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ramps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ramp{display:flex;flex-direction:column;gap:5px}
+.ramp .rw{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px}
+.ramp .rw i{height:26px;display:grid;place-items:end center;padding-bottom:3px;font-family:var(--font-mono);font-size:7.5px;letter-spacing:.08em;color:rgba(255,255,255,.86)}
+.ramp .cap{font-family:var(--font-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--label-on-dark)}
+.foot{font-size:var(--fs-doc-note);line-height:1.45;color:var(--label-on-dark);margin-top:9px;text-wrap:pretty}
+.foot b{color:var(--white);font-weight:600}
+</style></head><body>
+<div class="top"><h2>The palette</h2><span class="hint">◆ official · ✅ observed shipped · 🟡 derived</span></div>
+
+<div class="band"><span class="ch">◆ <b>Official</b> — the only four. Pantone-specified, in the brand's own book</span>
+<div class="four">
+<div class="sw"><span class="chip" style="background:#0D213D"></span><span class="meta"><span class="nm">Navy</span><span class="hex">--navy · #0D213D</span><span class="pan">Pantone 289 C</span></span></div>
+<div class="sw"><span class="chip" style="background:#189FDA"></span><span class="meta"><span class="nm">Cyan</span><span class="hex">--cyan · #189FDA</span><span class="pan">Pantone 299 C</span></span></div>
+<div class="sw"><span class="chip" style="background:#FFFFFF"></span><span class="meta"><span class="nm">White</span><span class="hex">--white · #FFFFFF</span><span class="pan">the ink on every dark ground</span></span></div>
+<div class="sw"><span class="chip" style="background:#000000"></span><span class="meta"><span class="nm">Black</span><span class="hex">--black · #000000</span><span class="pan">reproduction only — never a ground</span></span></div>
+</div></div>
+
+<div class="band"><span class="ch">🟡 <b>The warm desert family</b> — one ramp, load-bearing in three folders before it was named</span>
+<div class="seven">
+<div class="tl" style="background:var(--desert-bone);color:var(--ink)"><b>Bone</b><span>#F5F0E6 · bleached</span></div>
+<div class="tl" style="background:var(--desert-sand);color:var(--ink)"><b>Sand</b><span>#EDE5D6 · the sheet</span></div>
+<div class="tl" style="background:var(--desert-dune);color:var(--ink)"><b>Dune</b><span>#DFCBA8 · the accent</span></div>
+<div class="tl" style="background:var(--desert-rock);color:var(--ink)"><b>Rock</b><span>#A88F6A · dust</span></div>
+<div class="tl" style="background:var(--desert-taupe);color:var(--white)"><b>Taupe</b><span>#7A6746 · contour ink</span></div>
+<div class="tl" style="background:var(--desert-ink);color:var(--white)"><b>Ink</b><span>#5E4930 · sepia field</span></div>
+<div class="tl" style="background:var(--desert-umber);color:var(--white)"><b>Umber</b><span>#221A14 · frost smoke</span></div>
+</div>
+<div class="pair">
+<span><b>Cyan reports, warm tells.</b> A band picks one accent and holds it — never both. Cyan means live, measured, instrument: standings, checkpoints, timing. The warm pair means story, people, history: the women, the field, ten years on. The choice is about the band's <b>job</b>, not its mood.</span>
+<span><b>Only two steps set type.</b> <em>--desert-dune</em> on dark (11.9:1) and <em>--desert-ink</em> on sand (6.8:1) — reached through <em>--label-tan-on-dark</em> and <em>--label-brown-on-paper</em>, which now alias them. Every other step is a surface, a linework colour or smoke: <em>--desert-rock</em> fills, textures and draws, but never carries a label.</span>
+</div></div>
+
+<div class="band"><span class="ch">🟡 <b>Derived semantic</b> — five coloured states, and five is the ceiling. Stale is deliberately colourless</span>
+<div class="five">
+<div class="st"><i style="background:var(--selected-wash);box-shadow:inset 0 0 0 1px var(--cyan)"></i><span class="l"><b>Selected</b><span>--selected-wash</span></span></div>
+<div class="st"><i style="background:var(--cyan-shield)"></i><span class="l"><b>Live</b><span>--cyan-shield · shipped</span></span></div>
+<div class="st"><i style="background:var(--gain)"></i><span class="l"><b>Cleared</b><span>--gain · shipped</span></span></div>
+<div class="st"><i style="background:var(--loss)"></i><span class="l"><b>Penalty</b><span>--loss</span></span></div>
+<div class="st"><i style="background:var(--caution)"></i><span class="l"><b>Caution</b><span>--caution</span></span></div>
+</div>
+<p class="foot"><b>Two reds, and they are not interchangeable.</b> <span style="font-family:var(--font-mono);font-size:9px">--delta-down</span> <span style="color:var(--delta-down)">#DF1F26</span> is the shipped ▼ mark and stays exactly as it ships. <span style="font-family:var(--font-mono);font-size:9px">--loss</span> <span style="color:var(--loss-text-on-navy)">#C9262C</span> is deeper and less saturated, because the delta red glows at fill size. And <span style="font-family:var(--font-mono);font-size:9px">--on-air</span> #FF0000 means <b>we are on air</b> — it never appears in a chip, a state, or anywhere off the broadcast canvas.</p>
+</div>
+
+<div class="band"><span class="ch">🟡 <b>The interaction ramp</b> — hover lifts on dark grounds and deepens on paper; press always deepens</span>
+<div class="ramps">
+<div class="ramp"><div class="rw"><i style="background:var(--cyan-lift)">LIFT</i><i style="background:var(--cyan-shield)">BASE</i><i style="background:var(--cyan-press)">PRESS</i></div><span class="cap">Cyan — the primary button</span></div>
+<div class="ramp"><div class="rw"><i style="background:var(--navy-lift)">LIFT</i><i style="background:var(--navy)">BASE</i><i style="background:var(--navy-press)">PRESS</i></div><span class="cap">Navy — secondary and paper fills</span></div>
+<div class="ramp"><div class="rw"><i style="background:var(--loss-lift)">LIFT</i><i style="background:var(--loss)">BASE</i><i style="background:var(--loss-press)">PRESS</i></div><span class="cap">Loss — destructive verbs</span></div>
+</div></div>
+</body></html>

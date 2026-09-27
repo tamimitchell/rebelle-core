@@ -30,8 +30,8 @@ Everything that must mean the same thing across site, studio, and the apps.
   snapshot is `design-sync/12-voice/`. Exported as `@rebelle/core/voice.md`
   for anything that hands a writer or a model the brief.
 - `principles.md` — how the rally decides the small calls: the ten laws with
-  their litmus, the pre-flight, the three depths, and what the course, the
-  competitors and the competition should each feel like. Distilled by hand
+  their litmus, the field floor, the pre-flight, the three depths, and what the
+  course, the competitors and the competition should each feel like. Distilled by hand
   from the design system's **13 · Principles** cards, whose snapshot is
   `design-sync/13-principles/`. Exported as `@rebelle/core/principles.md`
   for anything that hands a builder or a model the brief.
@@ -39,6 +39,14 @@ Everything that must mean the same thing across site, studio, and the apps.
   video: one telling in core that every surface reads, numbers cited from the
   book, the card format and its colours, the map and the motion. The black
   diamond is its worked example. Exported as `@rebelle/core/explainers.md`.
+- `channels.md`, `imagery.md`, `canon.md`, `foundations.md` — the rest of the
+  design system's writing: where the rally publishes and which voice leads
+  there; what it shows and how photographs are credited; what is official;
+  the grounds, colour and type in words, with their tokens. Distilled by hand
+  from the **15 · Channels**, **14 · Imagery**, **16 · Canon** with
+  **09 · Marks & Assets**, and **01 · Grounds** with **10 · Color** and
+  **11 · Type** cards, each section's snapshot in `design-sync/`. Exported as
+  `@rebelle/core/<name>.md`.
 - `dist/` — generated outputs, committed so consumers need no build step:
   `tokens.css` (site/studio) and `RebelleTokens.swift` (ios-app).
 - `scripts/build-tokens.mjs` — the codegen. Run `pnpm build:tokens` after any
