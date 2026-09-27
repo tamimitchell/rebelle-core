@@ -182,10 +182,14 @@ export function asOfLabel(asOf: string): string {
   return `${Number(day)} ${MONTHS[Number(month) - 1]} ${year}, ${hour}:${minute}`;
 }
 
-/** A town as a reader names it: its state or province at home, its country abroad. */
+/**
+ * A place as a reader names it: a town with its state or province at home and
+ * its country abroad; a state or a country on its own, once.
+ */
 export function placeLabel(place: MapPlace): string {
   const home = place.country === 'United States' || place.country === 'Canada';
-  return [place.name, home ? place.region : place.country].filter(Boolean).join(', ');
+  const within = home ? place.region : place.country === place.name ? null : place.country;
+  return within ? `${place.name}, ${within}` : place.name;
 }
 
 /** What a map's words say about it, counted from its places and never typed. */
