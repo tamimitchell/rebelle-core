@@ -26,9 +26,9 @@ The live feed's day summary points to the post.
 ## The eras
 
 From 2016 to 2023 a field update is one story of 180 to 1,250 words, opening
-on a one-line fragment in the early years, with the results inside it and the
+on a one-line fragment in 2016 and 2017, with the results inside it and the
 next day's route at its end, then a Daily Tech Tip (2017 to 2022) and a
-Sponsor or Partner Highlight (from 2018) after it ([2016 Day 2], [2017 Day 2], [2018 Day 3],
+Sponsor Highlight, Partner Highlight or Partner Profile (from 2018) after it ([2016 Day 2], [2017 Day 2], [2018 Day 3],
 [2020 Day 3], [2023 Day 1]). **2024 and 2025 are the model**, with named
 sections, a Partner Highlight every day and the day's quotes in their own
 section, at 600 to 1,950 words with 10 to 15 photographs; older posts are
@@ -36,26 +36,33 @@ history, not the template.
 
 ## A competition day, section by section
 
-In 2025's order. Lengths are the 2025 range; "fed by" names what the day brief
-supplies (studio #524) and what base camp's notes have to add.
+In 2025's order. The heading is the section's exact heading, or none. The
+lengths are what 2025 ran, counted in words, a guide and not a limit. "Fed by"
+names what the day brief supplies (studio #524) and what base camp's notes have
+to add.
 
-| Section | What it is for | Length | Fed by |
-|---|---|---|---|
-| Title | Names the year, the day and its presenting partner | One line | The rally day record |
-| Date and base camp | When and where the day ended | One line | The rally day record; base camp |
-| Conditions | The day as numbers, before the story | Five bullets | The record's time limit, distance and difficulty; the weather and start town from base camp's notes |
-| The course | Where the day went, what the navigation asked, which choices teams made | 300–525 words | The record's route, overview and format; the day's dispatches; base camp's notes |
-| Great Quotes From the Day | Competitors and crew in their own words | 3–5 quotes, 315–435 words | Approved quote dispatches |
-| Spotlight | One theme, told through one or two teams | 230–520 words | Base camp's notes name it; approved quotes |
-| Day N Results | Where each class stands, and how teams got there | 175–260 words | The day's results by class |
-| Partner Highlight | The day's presenting partner | 100–160 words | The partner's blurb and link on the rally day |
-| Ways to Follow | Where to watch and read | Fixed text | Fixed text, below |
-| About the Rebelle Rally | The rally in one paragraph | Fixed text | Fixed text, below |
+| Section | Heading | What it is for | Length | Fed by |
+|---|---|---|---|---|
+| Title | The title itself | Names the year, the day and its presenting partner | One line | The rally day record |
+| Date and base camp | None | When and where the day ended | One line | The rally day record; base camp |
+| Conditions | None | The day as numbers, before the story | Five bullets | The record's time limit, distance and difficulty; the weather and start town from base camp's notes |
+| The course | None | Where the day went, what the navigation asked, which choices teams made | 300–525 words | The record's route, overview and format; the day's dispatches; base camp's notes |
+| Quotes | Great Quotes From the Day | Competitors and crew in their own words | 3–5 quotes, about 300–435 words | Approved quote dispatches |
+| Spotlight | Spotlight: {theme} | One theme, told through the teams it fits | 230–520 words | Base camp's notes name it; approved quotes |
+| Results | Day {n} Results | Where each class stands, and how teams got there | 175–260 words | The day's results by class; names from the competitor records |
+| Partner | Partner Highlight: {partner} | The day's presenting partner | 100–160 words | The partner's blurb and link on the rally day |
+| Ways to Follow | Ways to Follow the {year} Rebelle Rally | Where to watch and read | Fixed text | Fixed text, below |
+| About | About the Rebelle Rally | The rally in one paragraph | Fixed text | Fixed text, below |
 
-The quotes and the Spotlight start on Day 3 in 2025; Days 1 and 2 go straight
+In a draft every section heading is a second-level heading (`##`) under the
+title. The 2025 posts mix bold lines, fourth-level and second-level headings
+for the same sections ([2025 Day 5], [2025 Day 6]).
+
+In 2025 the quotes and the Spotlight start on Day 3; Days 1 and 2 go straight
 from the course to the results ([2025 Day 1], [2025 Day 2]). The conditions
 list starts on Day 4 ([2025 Day 4]); Days 1 to 3 give the distance and
-difficulty in the opening paragraph instead.
+difficulty in the opening paragraph instead. In 2026 every competition day
+carries the whole shape.
 
 ### Title
 
@@ -81,10 +88,13 @@ Five bullets, each a label and a value:
 - Difficulty: {n} out of 5
 - Weather at finish line ({town}, {state}): {sky} and {temperature}° F, with {wind}
 
-The labels are the ones four of the five 2025 lists use ([2025 Day 4],
-[2025 Day 6], [2025 Day 7], [2025 Day 8]); Day 5 writes "Starting line weather"
-([2025 Day 5]). Day 7 leaves out the finish ([2025 Day 7]). A difficulty can be
-a range ("3-4 out of 5", [2025 Day 4]).
+The labels, the order and "out of 5" are fixed. The weather values are free
+words in that order, sky then temperature then wind, and may add a "feels like"
+reading ([2025 Day 5], [2025 Day 6]). A difficulty can be a half step or a range
+("3-4 out of 5", [2025 Day 4]). The labels are the ones four of the five 2025
+lists use ([2025 Day 4], [2025 Day 6], [2025 Day 7], [2025 Day 8]); Day 5 writes
+"Starting line weather" ([2025 Day 5]). Day 7 leaves out the finish
+([2025 Day 7]).
 
 ### The course
 
@@ -98,9 +108,12 @@ of Scoring on the live show ([2025 Day 5]), the course director on a challenge
 he set ([2024 Day 3]). Mechanical trouble and the crew who fixed it belong here too
 ([2025 Day 1]).
 
-Tell it in the past tense: the day is done. The Day 5 post describes the course
-in the future tense, as the morning's briefing did; its email puts it in the
-past ([2025 Day 5], [2025 Day 5 email]).
+Tell it in the past tense: the day is done. The Day 5 and Day 6 posts slip
+into the future tense, as the morning's briefing did; the Day 5 email puts it
+in the past ([2025 Day 5], [2025 Day 6], [2025 Day 5 email]).
+
+The course ends tonight, at base camp: who came in when, the repairs, the
+mood. It never looks ahead to tomorrow's places (the rules, below).
 
 ### Great Quotes From the Day
 
@@ -112,37 +125,47 @@ then the quote.
 Crew are named by title and name, `**{title} {name}:**` ([2025 Day 3]).
 In 2024 the section was Competition Quotes, attributed `#204 Andrea Shaffer`,
 with the interviewer's question printed above some answers ([2024 Day 3]);
-2025 drops the questions.
+2025 drops the questions. A quote may look back on an earlier day.
+
+A draft copies each quote exactly as it was approved, typos and all, here and
+in the Spotlight. It changes nothing inside the quotation marks. A quote that
+reads garbled is left out of the draft, not repaired. Trimming, fixing a slip
+or adding a word in [brackets] is a person's edit, made when they approve.
 
 ### Spotlight
 
-`Spotlight: {theme}`. One idea a day, told through one or two teams and their
-own words. 2025's six: Women Who Wrench, Teamwork, Mental Toughness, The Third
+`Spotlight: {theme}`. One idea a day, told through the teams it fits (one to
+three in 2025) and their own words. 2025's six: Women Who Wrench, Teamwork, Mental Toughness, The Third
 Teammate, The Game, Pure Grit ([2025 Day 3] to [2025 Day 8]). A Spotlight may
 open wide before it comes back to the rally; Mental Toughness opens on
 ultramarathons ([2025 Day 5]). Base camp's notes name the theme and the team.
-From 2017 to 2022 a Daily Tech Tip explained one rule a day, why the start
+From 2017 to 2022 a Daily Tech Tip most days explained one rule, why the start
 order is drawn from a bowl or what a marathon stage is ([2018 Day 3],
 [2020 Day 3]); a Spotlight can do that job.
 
 ### Day N Results
 
 Where each class stands tonight, 4x4 first and then X-Cross®, as most 2025
-days order it (Day 5 opens with X-Cross®, Day 3 with the rookies). For the leaders,
-the team number, the two names and the vehicle:
-`Team 129 (Nena Barlow and Teralin Petereit in a 2025 Jeep Gladiator)`. Then
-the Rookie of the Year contenders ([2025 Day 3]). Standings are provisional
+days order it (Day 5 opens with X-Cross®, Day 3 with the rookies). Name the top
+three in each class, each with the team number, both names and the vehicle:
+`Team 129 (Nena Barlow and Teralin Petereit in a 2025 Jeep Gladiator)`. Points
+go in where the day turned on them. Other teams come in for a reason, a climb
+or a close call. Then the Rookie of the Year contenders ([2025 Day 3]). Standings are provisional
 until Day 8, so they "remain", "hold" or "currently" stand ([2025 Day 5]).
 Day 1 named it Day 1 Results and Challenges and folded the day's breakdowns in
 ([2025 Day 1]). 2024 put the results in the course story and called teams by
 their team names ([2024 Day 3]); 2025 gives them their own section and uses
 the competitors' names.
 
+On a marathon stage the scores can come a day late, when teams camp away from
+base camp. The results say so, and the next post carries both days
+([2024 Day 3]).
+
 ### Partner Highlight
 
-`Partner Highlight: {partner}`. The day's presenting partner: what they make,
-how long they have been with the rally, which teams they back or equip, and a
-closing line, "Learn more about {partner} … at {site}." ([2025 Day 5]). It is
+`Partner Highlight: {partner}`. The day's presenting partner, from what the
+blurb holds: what they make, how long they have been with the rally, which
+teams they back or equip. Then a closing line, "Learn more about {partner} … at {site}." ([2025 Day 5]). It is
 built from the partner's own blurb and link, never from a claim the brief does
 not hold. Gratitude and specifics, as [`voice.md`](voice.md) writes to
 partners.
@@ -285,10 +308,14 @@ A ❓ blocks the text that carries it ([`canon.md`](canon.md)).
 ### From the design system
 
 - Let the competitor speak, in the first person, never narrated over; no
-  speed or adrenaline framing; the brag is longest, never fastest; 🧭 only,
-  and sparingly ([`voice.md`](voice.md)).
+  speed or adrenaline framing; the brag is longest, never fastest
+  ([`voice.md`](voice.md)). Position words are fine: leads, holds first, a
+  podium spot. Speed words are not: fastest, quickest, a dash, pulling away.
+- Emoji as [`voice.md`](voice.md) allows them. None of the 97 posts uses one,
+  and none ends on hashtags; the sign-offs belong to social.
 - Credit every photograph ([`voice.md`](voice.md), [`canon.md`](canon.md),
-  [`imagery.md`](imagery.md)).
+  [`imagery.md`](imagery.md)). Logos, schedule graphics and link tiles carry no
+  credit.
 - Two classes, 4x4 and X-Cross®; the special designations are not classes
   ([`canon.md`](canon.md)).
 - Never publish a guessed number ([`canon.md`](canon.md)).
@@ -305,17 +332,26 @@ A ❓ blocks the text that carries it ([`canon.md`](canon.md)).
   2026-09-10). Teams start at intervals, so the story is who chose what and how
   it went, not who got somewhere first.
 - **People by the name they choose**: the name on their entry form or their own
-  byline, not a fuller one from a roster (Tami, 2026-09-26). Staff by title and
-  full name first, surname after ([2025 Day 5]).
-- **Partner names as the partner writes them**: BILSTEIN, YETI, TOTAL CHAOS
-  Fabrication, Pirelli Scorpion™, X-Cross®. The posts drift: "Yeti" in
-  [2024 Day 5], "X-Cross™" in [2025 Day 5].
+  byline, not a fuller one from a roster (Tami, 2026-09-26). Names are spelled
+  as the studio's competitor and staff records hold them, never as a dispatch
+  or an older post has them; the posts slip ("Peterit" five times in 2023).
+  Everyone gets title or team and full name first, surname after
+  ([2025 Day 5]).
+- **Company names as the company writes them**, partners, team sponsors and
+  vehicle makers alike: BILSTEIN, YETI, TOTAL CHAOS Fabrication, INEOS
+  Grenadier, Pirelli Scorpion™, X-Cross®. The posts drift: "Yeti" in
+  [2024 Day 5], "X-Cross™" in [2025 Day 5], "Ineos" beside "INEOS" in
+  [2025 Day 6].
+- **Write 4x4.** WordPress sets it as 4×4 on the page; the same sentence in the
+  email reads 4x4 ([2025 Day 5], [2025 Day 5 email]).
 - **Quotes are approved and verbatim.** A draft uses only a quote a person has
   already approved, word for word; it never writes, finishes or tidies one
   (studio #312). A person may trim one, as the Day 5 email did.
 - **A day's course is not public before 5 a.m. Pacific on its date** (studio
-  #431). A field update never names a later day's places, route or figures;
-  [2020 Day 3] closes on the next day's route, which 2026 does not do.
+  #431). A field update says nothing about a later day: no places, no route,
+  no figures and no teaser. Tonight's base camp may be named; the day ended
+  there. The posts did look ahead, the old ones every day and the model year
+  too ([2020 Day 3], [2025 Day 6]); 2026 does not.
 - **Every number comes from the day brief or the rally's own count**, never
   from an older post. The 2025 posts disagree with each other: 46 rookies at
   Tech Inspection and on Day 3, 44 at Rebellation ([2025 Tech], [2025 Day 3],
@@ -352,6 +388,9 @@ on five 2025 emails ([2025 Prologue email], [2025 Day 1 email],
 | Ways to Follow before or after the Partner Highlight | Before on [2025 Tech] and [2025 Prologue], after on Days 1 to 8 | As each day did |
 | Which class leads the results | 4x4 on most 2025 days; X-Cross® on Day 5, the rookies on Day 3 | 4x4 first |
 | The heading | [2025 Prologue]'s heading says TECH INSPECTION | The heading repeats the title |
+| Section heading levels | Bold lines, fourth-level and second-level headings for the same sections ([2025 Day 5], [2025 Day 6]) | Second-level headings |
+| A look at tomorrow | Most days, old and new ([2020 Day 3], [2025 Day 6]) | None; the day ends at base camp |
+| Quotes and Spotlight on Days 1 and 2 | Not in 2025 ([2025 Day 1], [2025 Day 2]) | Every competition day |
 | Photographer credits | None on the page, the name in the file ([2025 Day 5]) | A credit on every photograph |
 | The number of rookies | 46 at [2025 Tech], 44 at [2025 Rebellation] | The rally's own count |
 | The Director of Scoring's name | "Chrissie Beavis" in the posts ([2018 Day 3], [2025 Day 5]); "Chrisie Bevis" in the studio's list of its users | ❓ for Emily |
@@ -375,6 +414,9 @@ Open for her:
 - Chrissie Beavis or Chrisie Bevis?
 - The rally day's date on the post as well as the email?
 - 4x4 first in the results?
+- Quotes and a Spotlight from Day 1, where 2025 started them on Day 3?
+- Ways to Follow still says the shows start on the first show's date after that
+  day has passed. Keep it, or change the line once the shows are running?
 - The 2026 blanks: the webcast's presenting partner, the show dates and times,
   the kilometres, the live dates.
 - How to tell the 2026 Prologue, the ceremonial start at the Speedway.
