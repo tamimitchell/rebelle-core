@@ -62,6 +62,17 @@ snapshot here. Same posture as the voice cards. Their distillations are
 `../foundations.md` (01, 10 and 11); when a card changes, replace its snapshot
 and re-read the file that distils it.
 
+## The cards' own images
+
+`assets/` holds the images the snapshotted cards point at with `../assets/…`: the
+marks, the linework and the eight credited photographs, copied from the project
+on 2026-09-26 (studio #529) so a card can be drawn from this package alone. `ds/`
+keeps only what its CSS references, so these live here rather than there. The
+photographs and `cracks.png` are resized to 1200px on the long edge; the cards
+show them at a few hundred pixels, and the originals stay in the project and
+`../../media/originals/`. `explainers/black-diamond-3-points.jpg` is not here
+yet, so the 19 · Explainers card draws without its photograph.
+
 ## The map sheet cards
 
 `18-map-sheets/` is the three **18 · Map Sheets** cards of the design system, copied
