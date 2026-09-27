@@ -12,6 +12,8 @@ Rebelle is run on paper maps and a compass. So the live map is paper too. Not a 
 
 **The paper is what you look at. The glass is what you look through.** Everything on top of the sheet speaks in the tracker's voice, navy and cyan: checkpoints as the rally's own marks (green flag, blue square, black diamond), each in full colour whether or not it has been reached; the followed team as a door-plate number; its trail in cyan, fading behind it like dust. Start, finish and base camp are small navy glyphs. The panels around the edge are Field Glass, the instrument look from the broadcast. The map itself is never glass.
 
+**A third sheet, the plate, is for the world.** The map of where Rebelles come from shows towns, not a course, so it needs less. Sand land tinted gently by height, the mountains pressed in, a midnight sea, and a thin bone line at the shore. No roads, no borders, no names. The towns are the only colour on it: each one a cyan dot with a soft glow, and lakes are dark specks so nothing else ever reads as a town. It sits in a chart's double frame with the years along its foot.
+
 **What is invented, for now.** The demo day, the route, and every team on it are made up. The real tracker will draw a team's own breadcrumb rather than a line through the checkpoints, and real checkpoints are scattered across the day, with names like 3A or 13B depending on the track. Whole-field views exist but are switched off until there is a live feed to drive them.
 
 **Questions for you.** Does this read as the rally's map, or as somebody's map of the rally? Do the checkpoint marks match what a team sees on the ground? Is there anything on the sheet you would take away?

@@ -77,11 +77,14 @@ yet, so the 19 · Explainers card draws without its photograph.
 
 `18-map-sheets/` is the three **18 · Map Sheets** cards of the design system, copied
 verbatim from the project on 2026-09-16, with `the-thinking.md`, the short write-up of
-why the live map is paper, written for Emily. Same posture as the voice cards: they
+why the live map is paper, written for Emily. A fourth card, `the-plate.html`, was
+written here first (2026-09-27, the Rebelles map's sheet) and waits for `/design-sync`
+to add it to the project, with its still `plate.jpg` going to the project's
+`assets/maps/`. Same posture as the voice cards: they
 stay out of `ds/`, and their `../styles.css` and `../assets/maps/` links are the
 project's own and do not resolve here. The styles the cards describe are code, not
-CSS: `rebelle-site` `src/lib/map-grounds.js` builds Atlas and Terrain Paper from the
-tokens at runtime, and the clips carry them written out as JSON.
+CSS: `rebelle-site` `src/lib/map-grounds.js` builds Atlas, Terrain Paper and the plate
+from the tokens at runtime, and the clips carry the first two written out as JSON.
 
 ## The explainers card
 
