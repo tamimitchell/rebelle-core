@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { parseProse, type Inline, type ProseDocument } from '../prose.ts';
-import { asOfLabel, durationLabel, mapFigures, placeLabel, videoUrls, type MapContent, type Story, type StoryComponent } from '../story.ts';
+import { asOfLabel, durationLabel, mapFigures, placeLabel, routeFigures, videoUrls, type MapContent, type MapRoute, type Story, type StoryComponent } from '../story.ts';
 import { HostedVideoPlayer, type HostedVideoMedia } from './hosted-video.tsx';
 import { LAND } from './land.ts';
 
@@ -84,10 +84,11 @@ const LATITUDE_TOP = 75;
 const LATITUDE_BOTTOM = -60;
 
 /**
- * A still of the towns, their count in words, and every town listed with its
- * years. A host that can draw a live map reads the list's `data-` fields and
- * draws over the still; one that cannot shows the still (studio Decided #126: no
- * author's code runs, and none of this is code).
+ * A still of the towns, their count in words, every town listed with its years,
+ * and every route listed a day at a time. A host that can draw a live map reads
+ * the lists' `data-` fields and draws over the still; one that cannot shows the
+ * still and the lists (studio Decided #126: no author's code runs, and none of
+ * this is code).
  */
 function PlacesMap({ content }: { content: MapContent }) {
   const figures = mapFigures(content);
@@ -105,14 +106,37 @@ function PlacesMap({ content }: { content: MapContent }) {
         <summary>Every town</summary>
         <ul>
           {content.places.map((place, index) => (
-            <li key={index} data-latitude={place.latitude} data-longitude={place.longitude} data-years={place.years.join(' ')}>
+            <li key={index} data-latitude={place.latitude} data-longitude={place.longitude} data-years={place.years.join(' ')} data-name={place.name} data-region={place.region ?? undefined} data-country={place.country}>
               <span className="rr-story__map-town">{placeLabel(place)}</span>
               {place.years.length > 0 && <span className="rr-story__map-years"> · {place.years.join(', ')}</span>}
             </li>
           ))}
         </ul>
       </details>
+      {content.routes && content.routes.length > 0 && (
+        <details className="rr-story__map-routes">
+          <summary>Every route</summary>
+          {content.routes.map((route) => <RouteList key={route.year} route={route} />)}
+        </details>
+      )}
     </figure>
+  );
+}
+
+/** A route, a day at a time: each day's camp by name, with its position and the day's greens (`longitude,latitude` pairs) on the item. */
+function RouteList({ route }: { route: MapRoute }) {
+  const figures = routeFigures(route);
+  return (
+    <>
+      <p className="rr-story__map-route">{`${route.year} · ${plural(figures.days, 'day', 'days')} · ${plural(figures.greens, 'green', 'greens')}`}</p>
+      <ol data-route-year={route.year}>
+        {route.days.map((day) => (
+          <li key={day.day} data-day={day.day} data-latitude={day.camp.latitude} data-longitude={day.camp.longitude} data-greens={day.greens.map((green) => `${green.longitude},${green.latitude}`).join(' ')}>
+            {`Day ${day.day} · ${day.camp.name}`}
+          </li>
+        ))}
+      </ol>
+    </>
   );
 }
 
