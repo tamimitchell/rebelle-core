@@ -337,6 +337,94 @@
                       "content"
                     ],
                     "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Map"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "caption": {
+                            "type": "string",
+                            "maxLength": 200,
+                            "pattern": "\\S"
+                          },
+                          "places": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "maxLength": 120,
+                                  "pattern": "\\S"
+                                },
+                                "region": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "maxLength": 120,
+                                      "pattern": "\\S"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "country": {
+                                  "type": "string",
+                                  "maxLength": 120,
+                                  "pattern": "\\S"
+                                },
+                                "latitude": {
+                                  "type": "number",
+                                  "minimum": -90,
+                                  "maximum": 90
+                                },
+                                "longitude": {
+                                  "type": "number",
+                                  "minimum": -180,
+                                  "maximum": 180
+                                },
+                                "years": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer",
+                                    "minimum": 2016,
+                                    "maximum": 2100
+                                  },
+                                  "maxItems": 100
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "region",
+                                "country",
+                                "latitude",
+                                "longitude",
+                                "years"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1,
+                            "maxItems": 1000
+                          }
+                        },
+                        "required": [
+                          "places"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
                   }
                 ]
               },

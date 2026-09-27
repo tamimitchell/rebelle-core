@@ -46,3 +46,20 @@ test('a hosted video is a player at the host\'s address, the site\'s own route b
   assert.doesNotMatch(none, /<video/);
   assert.match(none, /<p role="status">Video unavailable<\/p><figcaption>Day 3 &quot;course&quot; flyover<\/figcaption>/);
 });
+
+test('a map draws a still of its towns, counts itself in words, and lists every town with the fields a live map reads', () => {
+  const html = renderToStaticMarkup(<StoryPart part={{ component: 'Map', content: { caption: 'Where <the> field comes from', places: [
+    { name: 'Anchorage', region: 'Alaska', country: 'United States', latitude: 61.216313, longitude: -149.894852, years: [2018, 2021, 2026] },
+    { name: "Antibes", region: "Provence-Alpes-Côte d'Azur", country: 'France', latitude: 43.580418, longitude: 7.125102, years: [2017] },
+    { name: 'Gustavia', region: null, country: 'Saint Barthélemy', latitude: 17.8962, longitude: -62.8498, years: [] },
+  ] } }} />);
+  assert.match(html, /^<figure class="rr-story__map" data-rr-map="">/);
+  assert.match(html, /<path class="rr-story__map-land" d="M/);
+  assert.equal(html.match(/<circle /g)?.length, 3);
+  assert.match(html, /<circle class="rr-story__map-dot" cx="30.11" cy="28.78" r="1.1"><\/circle>/);
+  assert.match(html, /Where &lt;the&gt; field comes from/);
+  assert.match(html, /3 towns · 3 countries · 2017–2026/);
+  assert.match(html, /<li data-latitude="61.216313" data-longitude="-149.894852" data-years="2018 2021 2026"><span class="rr-story__map-town">Anchorage, Alaska<\/span><span class="rr-story__map-years"> · 2018, 2021, 2026<\/span><\/li>/);
+  assert.match(html, /<li data-latitude="17.8962" data-longitude="-62.8498" data-years=""><span class="rr-story__map-town">Gustavia, Saint Barthélemy<\/span><\/li>/);
+  assert.doesNotMatch(html, /<script/);
+});

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { parseProse, type Inline, type ProseDocument } from '../prose.ts';
-import { asOfLabel, durationLabel, videoUrls, type Story, type StoryComponent } from '../story.ts';
+import { asOfLabel, durationLabel, mapFigures, placeLabel, videoUrls, type MapContent, type Story, type StoryComponent } from '../story.ts';
 import { HostedVideoPlayer, type HostedVideoMedia } from './hosted-video.tsx';
+import { LAND } from './land.ts';
 
 type StandingsContent = Extract<StoryComponent, { component: 'Standings' }>['content'];
 
@@ -73,8 +74,50 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
         <figcaption>{title}{length}</figcaption>
       </figure>;
     }
+    case 'Map':
+      return <PlacesMap content={part.content} />;
   }
 }
+
+// The world as longitude and latitude, 75°N to 60°S, where every town sits.
+const LATITUDE_TOP = 75;
+const LATITUDE_BOTTOM = -60;
+
+/**
+ * A still of the towns, their count in words, and every town listed with its
+ * years. A host that can draw a live map reads the list's `data-` fields and
+ * draws over the still; one that cannot shows the still (studio Decided #126: no
+ * author's code runs, and none of this is code).
+ */
+function PlacesMap({ content }: { content: MapContent }) {
+  const figures = mapFigures(content);
+  const span = figures.years.length > 1 ? `${figures.years[0]}–${figures.years.at(-1)}` : figures.years[0];
+  const count = [plural(figures.towns, 'town', 'towns'), plural(figures.countries, 'country', 'countries'), span].filter(Boolean).join(' · ');
+  const height = LATITUDE_TOP - LATITUDE_BOTTOM;
+  return (
+    <figure className="rr-story__map" data-rr-map="">
+      <svg className="rr-story__map-still" viewBox={`0 ${90 - LATITUDE_TOP} 360 ${height}`} aria-hidden="true">
+        <path className="rr-story__map-land" d={LAND} />
+        {content.places.map((place, index) => <circle key={index} className="rr-story__map-dot" cx={round(place.longitude + 180)} cy={round(90 - place.latitude)} r={1.1} />)}
+      </svg>
+      <figcaption>{content.caption && <span className="rr-story__map-caption">{content.caption}</span>}<span className="rr-story__map-count">{count}</span></figcaption>
+      <details className="rr-story__map-towns">
+        <summary>Every town</summary>
+        <ul>
+          {content.places.map((place, index) => (
+            <li key={index} data-latitude={place.latitude} data-longitude={place.longitude} data-years={place.years.join(' ')}>
+              <span className="rr-story__map-town">{placeLabel(place)}</span>
+              {place.years.length > 0 && <span className="rr-story__map-years"> · {place.years.join(', ')}</span>}
+            </li>
+          ))}
+        </ul>
+      </details>
+    </figure>
+  );
+}
+
+const plural = (count: number, one: string, many: string) => `${count.toLocaleString('en-US')} ${count === 1 ? one : many}`;
+const round = (value: number) => Math.round(value * 100) / 100;
 
 function Standings({ content }: { content: StandingsContent }) {
   return (

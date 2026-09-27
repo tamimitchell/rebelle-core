@@ -96,6 +96,33 @@ export function videoUrls(value: VideoContent): VideoUrls {
   }
 }
 
+/**
+ * A town on a map, and the rally years Rebelles came from it (studio #164):
+ * a place, never a person. `years` ascend and do not repeat; a town no year
+ * names has none.
+ */
+export const MapPlaceSchema = z
+  .object({
+    name: text(120),
+    region: text(120).nullable(),
+    country: text(120),
+    latitude: z.number().min(-90).max(90),
+    longitude: z.number().min(-180).max(180),
+    years: z.array(z.number().int().min(2016).max(2100)).max(100)
+      .refine((years) => years.every((year, index) => index === 0 || year > years[index - 1]), 'years must ascend and not repeat'),
+  })
+  .strict();
+export type MapPlace = z.infer<typeof MapPlaceSchema>;
+
+/** Where Rebelles come from, the towns as they stood at `as_of` — a snapshot, as Standings is. */
+export const MapContentSchema = z
+  .object({
+    caption: text(200).optional(),
+    places: z.array(MapPlaceSchema).min(1).max(1000),
+  })
+  .strict();
+export type MapContent = z.infer<typeof MapContentSchema>;
+
 export const StoryComponentSchema = z.discriminatedUnion('component', [
   z.object({ component: z.literal('Paragraph'), content: ParagraphContentSchema }).strict(),
   z.object({ component: z.literal('Standings'), content: StandingsContentSchema }).strict(),
@@ -103,6 +130,7 @@ export const StoryComponentSchema = z.discriminatedUnion('component', [
   z.object({ component: z.literal('Quote'), content: QuoteContentSchema }).strict(),
   z.object({ component: z.literal('Figure'), content: FigureContentSchema }).strict(),
   z.object({ component: z.literal('Video'), content: VideoContentSchema }).strict(),
+  z.object({ component: z.literal('Map'), content: MapContentSchema }).strict(),
 ]);
 export type StoryComponent = z.infer<typeof StoryComponentSchema>;
 
@@ -152,6 +180,21 @@ export function asOfLabel(asOf: string): string {
   if (!match) return asOf;
   const [, year, month, day, hour, minute] = match;
   return `${Number(day)} ${MONTHS[Number(month) - 1]} ${year}, ${hour}:${minute}`;
+}
+
+/** A town as a reader names it: its state or province at home, its country abroad. */
+export function placeLabel(place: MapPlace): string {
+  const home = place.country === 'United States' || place.country === 'Canada';
+  return [place.name, home ? place.region : place.country].filter(Boolean).join(', ');
+}
+
+/** What a map's words say about it, counted from its places and never typed. */
+export function mapFigures(content: MapContent): { towns: number; countries: number; years: number[] } {
+  return {
+    towns: content.places.length,
+    countries: new Set(content.places.map((place) => place.country)).size,
+    years: [...new Set(content.places.flatMap((place) => place.years))].sort((a, b) => a - b),
+  };
 }
 
 /** A video's length as a clock reads it: 81 seconds is "1:21", an hour and more "1:02:03". */
