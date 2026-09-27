@@ -100,6 +100,44 @@
               "title": "Day 3 course flyover",
               "duration": 81
             }
+          },
+          {
+            "component": "Map",
+            "content": {
+              "caption": "Where the field comes from",
+              "places": [
+                {
+                  "name": "Anchorage",
+                  "region": "Alaska",
+                  "country": "United States",
+                  "latitude": 61.216313,
+                  "longitude": -149.894852,
+                  "years": [
+                    2018,
+                    2021,
+                    2026
+                  ]
+                },
+                {
+                  "name": "Antibes",
+                  "region": "Provence-Alpes-Côte d'Azur",
+                  "country": "France",
+                  "latitude": 43.580418,
+                  "longitude": 7.125102,
+                  "years": [
+                    2017
+                  ]
+                },
+                {
+                  "name": "Gustavia",
+                  "region": null,
+                  "country": "Saint Barthélemy",
+                  "latitude": 17.8962,
+                  "longitude": -62.8498,
+                  "years": []
+                }
+              ]
+            }
           }
         ]
       }

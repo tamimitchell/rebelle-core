@@ -152,6 +152,16 @@ photographs and videos use their own telling entries:
   point draws a placeholder, as it does for a photograph. `duration` is whole
   seconds. There is no `Film` alias: the studio migrates its stories first.
 - `Standings` remains a fixed snapshot with its existing shape.
+- `Map`: `{caption?, places}`, one to a thousand towns, each `{name, region,
+  country, latitude, longitude, years}` (studio #164): a town and the rally
+  years Rebelles came from it, never a person, copied from the studio's
+  competitor hometowns as `Standings` copies scores. The renderer draws a still
+  (the towns as dots over the land, `ui/land.ts`: Natural Earth 1:110m, public
+  domain, simplified by `scripts/build-land.mjs`), the counts in words
+  (`mapFigures`) and every town with its years in a fold (`placeLabel`). Each
+  town's `<li>` carries `data-latitude`, `data-longitude` and `data-years`, so a
+  host that can draw a live map reads them and draws over the still; nothing
+  in core runs in the browser.
 
 Link validation allows absolute HTTP(S) and mailto destinations and refuses
 credentials, controls, relative addresses and other schemes. The parser also

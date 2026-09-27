@@ -30,3 +30,14 @@
 .rr-story__quote blockquote { margin: 0; border-inline-start: 3px solid var(--cyan); padding-inline-start: var(--sp-24); }
 .rr-story__quote p { white-space: pre-line; }
 .rr-story__video iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
+.rr-story__map { margin: var(--sp-24) 0; }
+.rr-story__map-still { display: block; width: 100%; height: auto; }
+.rr-story__map-land { fill: color-mix(in srgb, currentColor 12%, transparent); stroke: color-mix(in srgb, currentColor 22%, transparent); stroke-width: .2; }
+.rr-story__map-dot { fill: var(--cyan); }
+.rr-story__map figcaption { margin-block-start: var(--sp-8); font-size: var(--fs-meta); }
+.rr-story__map-count { display: block; font: var(--fw-regular) var(--fs-mono-label)/var(--lh-body) var(--font-mono); letter-spacing: var(--ls-label-wide); text-transform: uppercase; opacity: .72; }
+.rr-story__map-towns { margin-block-start: var(--sp-12); font-size: var(--fs-meta); }
+.rr-story__map-towns summary { cursor: pointer; font: var(--fw-regular) var(--fs-mono-label)/var(--lh-body) var(--font-mono); letter-spacing: var(--ls-label-wide); text-transform: uppercase; }
+.rr-story__map-towns ul { columns: 16rem; column-gap: var(--sp-24); margin: var(--sp-12) 0 0; padding: 0; list-style: none; }
+.rr-story__map-towns li { break-inside: avoid; padding-block: var(--sp-4); }
+.rr-story__map-years { opacity: .72; font-variant-numeric: tabular-nums; }

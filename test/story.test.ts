@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ReleaseArtifactSchema, RELEASE_ARTIFACT_VERSION } from '../src/schemas.ts';
-import { STORY_COMPONENTS, SlotNameSchema, StoryComponentSchema, StorySchema, StoryPlacementSchema, asOfLabel, durationLabel, videoUrls } from '../src/story.ts';
+import { STORY_COMPONENTS, SlotNameSchema, StoryComponentSchema, StorySchema, StoryPlacementSchema, asOfLabel, durationLabel, mapFigures, placeLabel, videoUrls } from '../src/story.ts';
 
 // The cross-repo contract: the studio's build emits it, the site's slot reader
 // parses it, and this file is the copy every consumer pins.
@@ -16,8 +16,8 @@ test('the shared fixture is a release artifact carrying one story in one slot', 
   assert.equal(parsed.schema_version, RELEASE_ARTIFACT_VERSION);
   assert.equal(parsed.placements.length, 1);
   assert.equal(parsed.placements[0].slot, 'site:home-feature');
-  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Video', 'Video']);
-  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Video']);
+  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Video', 'Video', 'Map']);
+  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Video', 'Map']);
 });
 
 test('an artifact under the previous version or with an unknown key is refused, not read partially', () => {
@@ -55,6 +55,30 @@ test('standings rows are a snapshot: numeric team strings, one to ten rows, ties
   assert(!standings(Array.from({ length: 11 }, () => rows[0])));
   assert(!standings([{ ...rows[0], team_number: 129 }]));
   assert(!standings([{ ...rows[0], points: 1188.5 }]));
+});
+
+test('a map carries towns and their years, never a person, and is bounded like any snapshot', () => {
+  const places = story.telling[8].content.places;
+  const map = (next: unknown[], extra: object = {}) => StoryComponentSchema.safeParse({ component: 'Map', content: { places: next, ...extra } }).success;
+  assert(map(places));
+  assert(map(places, { caption: 'Where the field comes from' }));
+  assert(!map([]));
+  assert(!map(Array.from({ length: 1001 }, () => places[0])));
+  assert(!map([{ ...places[0], person: 'A Rebelle' }]), 'a town names no one');
+  assert(!map([{ ...places[0], latitude: 91 }]));
+  assert(!map([{ ...places[0], longitude: -181 }]));
+  assert(!map([{ ...places[0], years: [2021, 2018] }]), 'years ascend');
+  assert(!map([{ ...places[0], years: [2021, 2021] }]), 'years do not repeat');
+  assert(!map([{ ...places[0], years: [2015] }]), 'the first Rebelle was 2016');
+  assert(!map([{ ...places[0], name: '  ' }]));
+  assert(!map([{ ...places[0], region: undefined }]), 'a town with no region says null');
+  assert(!map(places, { html: '<b>no</b>' }));
+});
+
+test('a town is named with its state at home and its country abroad, and a map counts itself', () => {
+  const content = story.telling[8].content;
+  assert.deepEqual(content.places.map(placeLabel), ['Anchorage, Alaska', 'Antibes, France', 'Gustavia, Saint Barthélemy']);
+  assert.deepEqual(mapFigures(content), { towns: 3, countries: 3, years: [2017, 2018, 2021, 2026] });
 });
 
 test('a placement pins the object and the version the release froze', () => {
