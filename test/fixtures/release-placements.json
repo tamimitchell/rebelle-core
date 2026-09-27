@@ -136,6 +136,187 @@
                   "longitude": -62.8498,
                   "years": []
                 }
+              ],
+              "routes": [
+                {
+                  "year": 2023,
+                  "days": [
+                    {
+                      "day": 1,
+                      "camp": {
+                        "name": "Mammoth Lakes",
+                        "latitude": 37.694,
+                        "longitude": -118.759
+                      },
+                      "greens": [
+                        {
+                          "latitude": 37.7918,
+                          "longitude": -118.9341
+                        },
+                        {
+                          "latitude": 37.827,
+                          "longitude": -118.9171
+                        },
+                        {
+                          "latitude": 37.9117,
+                          "longitude": -118.6906
+                        },
+                        {
+                          "latitude": 37.9015,
+                          "longitude": -118.6721
+                        }
+                      ]
+                    },
+                    {
+                      "day": 2,
+                      "camp": {
+                        "name": "Gold Point",
+                        "latitude": 37.3545,
+                        "longitude": -117.365
+                      },
+                      "greens": [
+                        {
+                          "latitude": 37.6667,
+                          "longitude": -118.449
+                        },
+                        {
+                          "latitude": 37.832,
+                          "longitude": -118.1024
+                        },
+                        {
+                          "latitude": 37.6715,
+                          "longitude": -117.6741
+                        },
+                        {
+                          "latitude": 37.4251,
+                          "longitude": -117.6647
+                        },
+                        {
+                          "latitude": 37.354,
+                          "longitude": -117.3652
+                        }
+                      ]
+                    },
+                    {
+                      "day": 3,
+                      "camp": {
+                        "name": "Ridgecrest",
+                        "latitude": 35.576,
+                        "longitude": -117.56
+                      },
+                      "greens": [
+                        {
+                          "latitude": 37.4449,
+                          "longitude": -117.4166
+                        },
+                        {
+                          "latitude": 37.354,
+                          "longitude": -117.3652
+                        },
+                        {
+                          "latitude": 37.3416,
+                          "longitude": -117.3631
+                        },
+                        {
+                          "latitude": 37.476,
+                          "longitude": -117.2163
+                        }
+                      ]
+                    },
+                    {
+                      "day": 4,
+                      "camp": {
+                        "name": "Ridgecrest",
+                        "latitude": 35.576,
+                        "longitude": -117.56
+                      },
+                      "greens": [
+                        {
+                          "latitude": 35.4874,
+                          "longitude": -117.6223
+                        },
+                        {
+                          "latitude": 35.5772,
+                          "longitude": -117.572
+                        },
+                        {
+                          "latitude": 35.5156,
+                          "longitude": -117.5662
+                        },
+                        {
+                          "latitude": 35.6226,
+                          "longitude": -117.3734
+                        }
+                      ]
+                    },
+                    {
+                      "day": 5,
+                      "camp": {
+                        "name": "Johnson Valley",
+                        "latitude": 34.3615,
+                        "longitude": -116.5335
+                      },
+                      "greens": [
+                        {
+                          "latitude": 35.2362,
+                          "longitude": -117.4714
+                        },
+                        {
+                          "latitude": 34.8379,
+                          "longitude": -116.8614
+                        },
+                        {
+                          "latitude": 34.6059,
+                          "longitude": -116.7467
+                        }
+                      ]
+                    },
+                    {
+                      "day": 6,
+                      "camp": {
+                        "name": "Glamis",
+                        "latitude": 32.944,
+                        "longitude": -115.004
+                      },
+                      "greens": [
+                        {
+                          "latitude": 34.3717,
+                          "longitude": -116.5446
+                        },
+                        {
+                          "latitude": 33.13,
+                          "longitude": -115.2748
+                        }
+                      ]
+                    },
+                    {
+                      "day": 7,
+                      "camp": {
+                        "name": "Glamis",
+                        "latitude": 32.945,
+                        "longitude": -115.004
+                      },
+                      "greens": [
+                        {
+                          "latitude": 32.949,
+                          "longitude": -115.1445
+                        },
+                        {
+                          "latitude": 32.9701,
+                          "longitude": -115.0509
+                        },
+                        {
+                          "latitude": 32.8021,
+                          "longitude": -115.0478
+                        },
+                        {
+                          "latitude": 32.73,
+                          "longitude": -114.9217
+                        }
+                      ]
+                    }
+                  ]
+                }
               ]
             }
           }

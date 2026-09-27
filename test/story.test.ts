@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ReleaseArtifactSchema, RELEASE_ARTIFACT_VERSION } from '../src/schemas.ts';
-import { STORY_COMPONENTS, SlotNameSchema, StoryComponentSchema, StorySchema, StoryPlacementSchema, asOfLabel, durationLabel, mapFigures, placeLabel, videoUrls } from '../src/story.ts';
+import { STORY_COMPONENTS, SlotNameSchema, StoryComponentSchema, StorySchema, StoryPlacementSchema, asOfLabel, durationLabel, mapFigures, placeLabel, routeFigures, videoUrls } from '../src/story.ts';
 
 // The cross-repo contract: the studio's build emits it, the site's slot reader
 // parses it, and this file is the copy every consumer pins.
@@ -73,6 +73,36 @@ test('a map carries towns and their years, never a person, and is bounded like a
   assert(!map([{ ...places[0], name: '  ' }]));
   assert(!map([{ ...places[0], region: undefined }]), 'a town with no region says null');
   assert(!map(places, { html: '<b>no</b>' }));
+});
+
+test('a map may carry past routes, camp to camp a day at a time, bounded and in order', () => {
+  const { places, routes } = story.telling[8].content;
+  const [route] = routes;
+  const [day] = route.days;
+  const map = (next: unknown) => StoryComponentSchema.safeParse({ component: 'Map', content: { places, routes: next } }).success;
+  const withDays = (days: unknown[]) => [{ ...route, days }];
+  assert(map(routes));
+  assert(map([]));
+  assert(map(withDays([{ ...day, greens: [] }])), 'a day may have no greens');
+  assert(map(Array.from({ length: 20 }, (_, index) => ({ ...route, year: 2016 + index }))));
+  assert(!map(Array.from({ length: 21 }, (_, index) => ({ ...route, year: 2016 + index }))));
+  assert(!map([route, route]), 'one route a year');
+  assert(!map([{ ...route, year: 2024 }, route]), 'routes ascend by year');
+  assert(!map([{ ...route, year: 2015 }]), 'the first rally was 2016');
+  assert(!map(withDays([])), 'a route has a day');
+  assert(!map(withDays([route.days[1], route.days[0]])), 'days ascend');
+  assert(!map(withDays([day, day])), 'days do not repeat');
+  assert(!map(withDays([{ ...day, day: 0 }])), 'the Prologue is not a route day');
+  assert(!map(withDays([{ ...day, day: 11 }])));
+  assert(!map(withDays([{ ...day, greens: Array.from({ length: 41 }, () => day.greens[0]) }])));
+  assert(!map(withDays([{ ...day, camp: { ...day.camp, name: '  ' } }])));
+  assert(!map(withDays([{ ...day, camp: { ...day.camp, name: 'x'.repeat(61) } }])));
+  assert(!map(withDays([{ ...day, camp: { ...day.camp, latitude: 91 } }])));
+  assert(!map(withDays([{ ...day, greens: [{ ...day.greens[0], longitude: 181 }] }])));
+  assert(!map(withDays([{ ...day, team_number: '129' }])), 'a route names no team');
+  assert(!map(withDays([{ ...day, greens: [{ ...day.greens[0], team: 'A Rebelle' }] }])), 'a green names no one');
+  assert(!map([{ ...route, kind: 'self-camp' }]));
+  assert.deepEqual(routeFigures(route), { days: 7, greens: 26 });
 });
 
 test('a town is named with its state at home and its country abroad, and a map counts itself', () => {

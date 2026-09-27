@@ -412,6 +412,96 @@
                             },
                             "minItems": 1,
                             "maxItems": 1000
+                          },
+                          "routes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "year": {
+                                  "type": "integer",
+                                  "minimum": 2016,
+                                  "maximum": 2100
+                                },
+                                "days": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "day": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 10
+                                      },
+                                      "camp": {
+                                        "type": "object",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string",
+                                            "maxLength": 60,
+                                            "pattern": "\\S"
+                                          },
+                                          "latitude": {
+                                            "type": "number",
+                                            "minimum": -90,
+                                            "maximum": 90
+                                          },
+                                          "longitude": {
+                                            "type": "number",
+                                            "minimum": -180,
+                                            "maximum": 180
+                                          }
+                                        },
+                                        "required": [
+                                          "name",
+                                          "latitude",
+                                          "longitude"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "greens": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "latitude": {
+                                              "type": "number",
+                                              "minimum": -90,
+                                              "maximum": 90
+                                            },
+                                            "longitude": {
+                                              "type": "number",
+                                              "minimum": -180,
+                                              "maximum": 180
+                                            }
+                                          },
+                                          "required": [
+                                            "latitude",
+                                            "longitude"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "maxItems": 40
+                                      }
+                                    },
+                                    "required": [
+                                      "day",
+                                      "camp",
+                                      "greens"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "minItems": 1,
+                                  "maxItems": 10
+                                }
+                              },
+                              "required": [
+                                "year",
+                                "days"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 20
                           }
                         },
                         "required": [

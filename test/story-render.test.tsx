@@ -59,7 +59,19 @@ test('a map draws a still of its towns, counts itself in words, and lists every 
   assert.match(html, /<circle class="rr-story__map-dot" cx="30.11" cy="28.78" r="1.1"><\/circle>/);
   assert.match(html, /Where &lt;the&gt; field comes from/);
   assert.match(html, /3 towns · 3 countries · 2017–2026/);
-  assert.match(html, /<li data-latitude="61.216313" data-longitude="-149.894852" data-years="2018 2021 2026"><span class="rr-story__map-town">Anchorage, Alaska<\/span><span class="rr-story__map-years"> · 2018, 2021, 2026<\/span><\/li>/);
-  assert.match(html, /<li data-latitude="17.8962" data-longitude="-62.8498" data-years=""><span class="rr-story__map-town">Gustavia, Saint Barthélemy<\/span><\/li>/);
+  assert.match(html, /<li data-latitude="61.216313" data-longitude="-149.894852" data-years="2018 2021 2026" data-name="Anchorage" data-region="Alaska" data-country="United States"><span class="rr-story__map-town">Anchorage, Alaska<\/span><span class="rr-story__map-years"> · 2018, 2021, 2026<\/span><\/li>/);
+  assert.match(html, /<li data-latitude="17.8962" data-longitude="-62.8498" data-years="" data-name="Gustavia" data-country="Saint Barthélemy"><span class="rr-story__map-town">Gustavia, Saint Barthélemy<\/span><\/li>/);
+  assert.doesNotMatch(html, /rr-story__map-routes/, 'no routes, no route list');
   assert.doesNotMatch(html, /<script/);
+});
+
+test('a map lists each route a day at a time, with each camp and the day\'s greens on the item', () => {
+  const place = { name: 'Clarkdale', region: 'Arizona', country: 'United States', latitude: 34.77, longitude: -112.06, years: [2023] };
+  const html = renderToStaticMarkup(<StoryPart part={{ component: 'Map', content: { places: [place], routes: [{ year: 2023, days: [
+    { day: 1, camp: { name: 'Mammoth Lakes', latitude: 37.694, longitude: -118.759 }, greens: [{ latitude: 37.7918, longitude: -118.9341 }, { latitude: 37.827, longitude: -118.9171 }] },
+    { day: 2, camp: { name: 'Gold <Point>', latitude: 37.3545, longitude: -117.365 }, greens: [] },
+  ] }] } }} />);
+  assert.match(html, /<details class="rr-story__map-routes"><summary>Every route<\/summary><p class="rr-story__map-route">2023 · 2 days · 2 greens<\/p><ol data-route-year="2023">/);
+  assert.match(html, /<li data-day="1" data-latitude="37.694" data-longitude="-118.759" data-greens="-118.9341,37.7918 -118.9171,37.827">Day 1 · Mammoth Lakes<\/li>/);
+  assert.match(html, /<li data-day="2" data-latitude="37.3545" data-longitude="-117.365" data-greens="">Day 2 · Gold &lt;Point&gt;<\/li>/);
 });

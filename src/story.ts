@@ -96,6 +96,9 @@ export function videoUrls(value: VideoContent): VideoUrls {
   }
 }
 
+const ascending = <T>(key: (item: T) => number) => (items: T[]) => items.every((item, index) => index === 0 || key(item) > key(items[index - 1]));
+const point = { latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180) };
+
 /**
  * A town on a map, and the rally years Rebelles came from it (studio #164):
  * a place, never a person. `years` ascend and do not repeat; a town no year
@@ -106,19 +109,46 @@ export const MapPlaceSchema = z
     name: text(120),
     region: text(120).nullable(),
     country: text(120),
-    latitude: z.number().min(-90).max(90),
-    longitude: z.number().min(-180).max(180),
-    years: z.array(z.number().int().min(2016).max(2100)).max(100)
-      .refine((years) => years.every((year, index) => index === 0 || year > years[index - 1]), 'years must ascend and not repeat'),
+    ...point,
+    years: z.array(z.number().int().min(2016).max(2100)).max(100).refine(ascending((year: number) => year), 'years must ascend and not repeat'),
   })
   .strict();
 export type MapPlace = z.infer<typeof MapPlaceSchema>;
 
-/** Where Rebelles come from, the towns as they stood at `as_of` — a snapshot, as Standings is. */
+/**
+ * A day of a past rally's route: where the teams slept at its end, and the
+ * day's greens. Teams choose their own order, so a route runs camp to camp and
+ * is never a line anyone drove; a base camp and a night out on their own are
+ * both the day's camp (studio #544).
+ */
+export const RouteDaySchema = z
+  .object({
+    day: z.number().int().min(1).max(10),
+    camp: z.object({ name: text(60), ...point }).strict(),
+    greens: z.array(z.object(point).strict()).max(40),
+  })
+  .strict();
+export type RouteDay = z.infer<typeof RouteDaySchema>;
+
+/** A past rally, a day at a time from Day 1; the Prologue is not a route day. */
+export const MapRouteSchema = z
+  .object({
+    year: z.number().int().min(2016).max(2100),
+    days: z.array(RouteDaySchema).min(1).max(10).refine(ascending((day: RouteDay) => day.day), 'days must ascend and not repeat'),
+  })
+  .strict();
+export type MapRoute = z.infer<typeof MapRouteSchema>;
+
+/**
+ * Where Rebelles come from, the towns as they stood at `as_of` — a snapshot, as
+ * Standings is — and the routes of past rallies. Which years may carry a route
+ * is the studio's to decide; the course stays secret until a rally is over.
+ */
 export const MapContentSchema = z
   .object({
     caption: text(200).optional(),
     places: z.array(MapPlaceSchema).min(1).max(1000),
+    routes: z.array(MapRouteSchema).max(20).refine(ascending((route: MapRoute) => route.year), 'routes must ascend by year and not repeat').optional(),
   })
   .strict();
 export type MapContent = z.infer<typeof MapContentSchema>;
@@ -199,6 +229,11 @@ export function mapFigures(content: MapContent): { towns: number; countries: num
     countries: new Set(content.places.map((place) => place.country)).size,
     years: [...new Set(content.places.flatMap((place) => place.years))].sort((a, b) => a - b),
   };
+}
+
+/** What a route's inset says about it, counted: "7 days · 26 greens". */
+export function routeFigures(route: MapRoute): { days: number; greens: number } {
+  return { days: route.days.length, greens: route.days.reduce((sum, day) => sum + day.greens.length, 0) };
 }
 
 /** A video's length as a clock reads it: 81 seconds is "1:21", an hour and more "1:02:03". */
