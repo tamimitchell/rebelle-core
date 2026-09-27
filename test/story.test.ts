@@ -81,6 +81,13 @@ test('a town is named with its state at home and its country abroad, and a map c
   assert.deepEqual(mapFigures(content), { towns: 3, countries: 3, years: [2017, 2018, 2021, 2026] });
 });
 
+test('a state or a country on its own is named once, and a town that shares its state\'s name keeps both', () => {
+  const at = { latitude: 0, longitude: 0, years: [] };
+  assert.equal(placeLabel({ name: 'Maryland', region: null, country: 'United States', ...at }), 'Maryland');
+  assert.equal(placeLabel({ name: 'France', region: null, country: 'France', ...at }), 'France');
+  assert.equal(placeLabel({ name: 'New York', region: 'New York', country: 'United States', ...at }), 'New York, New York');
+});
+
 test('a placement pins the object and the version the release froze', () => {
   assert(StoryPlacementSchema.safeParse(placement).success);
   assert(!StoryPlacementSchema.safeParse({ ...placement, slot: 'home feature' }).success);
