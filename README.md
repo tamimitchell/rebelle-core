@@ -47,6 +47,11 @@ Everything that must mean the same thing across site, studio, and the apps.
   **09 · Marks & Assets**, and **01 · Grounds** with **10 · Color** and
   **11 · Type** cards, each section's snapshot in `design-sync/`. Exported as
   `@rebelle/core/<name>.md`.
+- `field-update.md` — how a field update is built, section by section: the
+  daily post that is also the day's email, its special days, its fixed text
+  with named blanks, and its own rules. A layer on the design system's
+  writing, written from the 2016–2025 posts, each rule citing them. Exported
+  as `@rebelle/core/field-update.md`; the studio's draft reads it.
 - `dist/` — generated outputs, committed so consumers need no build step:
   `tokens.css` (site/studio) and `RebelleTokens.swift` (ios-app).
 - `scripts/build-tokens.mjs` — the codegen. Run `pnpm build:tokens` after any

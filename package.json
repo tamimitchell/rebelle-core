@@ -32,6 +32,7 @@
     "./imagery.md": "./imagery.md",
     "./canon.md": "./canon.md",
     "./foundations.md": "./foundations.md",
+    "./field-update.md": "./field-update.md",
     "./ui/post": "./src/ui/post.tsx",
     "./dispatch": "./src/dispatch.ts",
     "./ui/dispatch": "./src/ui/dispatch.tsx",
