@@ -31,6 +31,7 @@ stand.
 | **Rebelle Live** | The rally-day web channel: dispatch feed, day rundown, live standings for viewers, replay | Editorial, with Roadbook boards inside | Navy · Field Glass chrome · Photo moments |
 | **Live scoring** | The public results tool: class filters, real-time standings, daily totals, deltas | Roadbook, pure | Roadbook Paper · Navy Ground |
 | **Social** | Instagram, Facebook, YouTube, Vimeo, LinkedIn: posts, stories, reels, video features and the recurring series (*Built to Rebelle*, *Why We Rebelle*). The brand's heaviest daily voice work. | Editorial, with Roadbook standings cards inside | Photo · Navy caps graphics |
+| **Newsletter** | The daily email in season, sent through Mailchimp: the day's field update under the same title, with a live-show notice in place of Ways to Follow ([`field-update.md`](field-update.md); the cards have no newsletter) | Editorial, with Roadbook in the conditions list and the results | Photo-led, on the email's light body |
 | **Press & partner** | The partner guide, press kit, sponsor recaps and metrics one-sheets | Editorial hosting, with Roadbook metrics | Photo · Navy · light paper with topo |
 | **iOS app** | The planned native fan app: Today · Standings · Route Story · Teams | By tab | Deep navy body · Field Glass chrome (native Liquid Glass) |
 | **Android app** | The planned sibling, Material-native | Mirrors iOS | The same, through tonal elevation — not faked blur |

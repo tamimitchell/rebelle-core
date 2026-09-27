@@ -91,7 +91,7 @@ const LATITUDE_BOTTOM = -60;
  */
 function PlacesMap({ content }: { content: MapContent }) {
   const figures = mapFigures(content);
-  const span = figures.years.length > 1 ? `${figures.years[0]}–${figures.years.at(-1)}` : figures.years[0];
+  const span = figures.years.length > 1 ? `${figures.years[0]}–${figures.years[figures.years.length - 1]}` : figures.years[0];
   const count = [plural(figures.towns, 'town', 'towns'), plural(figures.countries, 'country', 'countries'), span].filter(Boolean).join(' · ');
   const height = LATITUDE_TOP - LATITUDE_BOTTOM;
   return (
