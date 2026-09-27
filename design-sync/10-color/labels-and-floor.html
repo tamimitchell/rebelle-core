@@ -1,0 +1,66 @@
+<!-- @dsCard group="10 · Color" viewport="1280x330" name="Labels & the field floor" subtitle="Which colours a label may take on each ground, and the two ways type silently falls below floor — faint values used as ink, and an opacity the colour math cannot see" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;height:330px;font-family:var(--font-body);box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;background:var(--navy-night);color:var(--white)}
+.top{display:flex;align-items:baseline;justify-content:space-between;padding:12px 24px 10px;border-bottom:1px solid var(--hairline-inverse);flex:none}
+h2{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.hint{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.13em;text-transform:uppercase;color:var(--label-on-dark)}
+.reg{flex:none;display:grid;grid-template-columns:1fr 1fr;height:104px}
+.reg.dark{background:var(--ground-navy);border-bottom:1px solid var(--hairline-inverse)}
+.cell{padding:11px 20px;box-sizing:border-box;display:flex;flex-direction:column;gap:5px;min-width:0}
+.cell+.cell{border-left:1px solid var(--hairline-inverse)}
+.reg.paper .cell+.cell{border-left-color:var(--hairline)}
+.k{font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--label-on-dark)}
+.reg.paper .k{color:var(--label-on-paper)}
+.ok{color:var(--gain-text-on-navy)}
+.reg.paper .ok{color:var(--gain-on-paper)}
+.bad{color:var(--loss-text-on-navy)}
+.reg.paper .bad{color:var(--loss-on-paper)}
+.spec{font-size:12px;line-height:1.35}
+.tk{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:.06em;color:var(--label-on-dark)}
+.reg.paper .tk{color:var(--label-on-paper)}
+.rules{display:flex;flex-direction:column;gap:7px;margin-top:2px}
+.rw{display:grid;grid-template-columns:64px 1fr;gap:9px;align-items:center}
+.rw i{height:1px;display:block}
+.rw span{font-family:var(--font-mono);font-size:8px;letter-spacing:.07em;color:var(--label-on-dark)}
+.reg.paper .rw span{color:var(--label-on-paper)}
+.law{flex:1;padding:11px 24px 13px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;font-size:var(--fs-doc-note);line-height:1.45;color:var(--label-on-dark)}
+.law b{color:var(--white);font-weight:600}
+.law em{font-style:normal;font-family:var(--font-mono);font-size:var(--fs-doc-kicker);color:var(--label-tan-on-dark)}
+</style></head><body>
+<div class="top"><h2>Labels &amp; the field floor</h2><span class="hint">≥4.5:1 after every blur and scrim · 3:1 for a glyph</span></div>
+
+<div class="reg dark">
+<div class="cell"><span class="k">Label colours <span class="ok">— correct</span></span>
+<span class="spec" style="color:var(--label-on-dark)">Stage · Position · Last update</span>
+<span class="tk">--label-on-dark · .78 · <b class="ok">11.4:1</b></span>
+<span class="spec" style="font-size:10px;color:var(--label-tan-on-dark)">The warm alternative, same floor</span>
+<span class="tk">--label-tan-on-dark · <b class="ok">11.9:1</b></span></div>
+
+<div class="cell"><span class="k">The same values as type <span class="bad">— fails</span></span>
+<span class="spec" style="color:var(--label-on-dark)">Updated 5 min ago</span>
+<span class="tk">--white-faint as type · <b class="bad">4.0:1</b></span>
+<span class="spec" style="font-size:10px;color:rgba(255,255,255,.42);opacity:.62">Pending · dimmed row</span>
+<span class="tk">.42 under a .62 row opacity · <b class="bad">2.5:1</b></span></div>
+</div>
+
+<div class="reg paper terrain tp-plain" style="color:var(--ink)">
+<div class="cell"><span class="k">Label colours <span class="ok">— correct</span></span>
+<span class="spec" style="color:var(--label-on-paper)">Distance · Checkpoints · Terrain</span>
+<span class="tk">--label-on-paper · .72 · <b class="ok">5.79:1</b></span>
+<span class="spec" style="font-size:10px;color:var(--label-brown-on-paper)">Sepia field ink, the warm twin</span>
+<span class="tk">--label-brown-on-paper · <b class="ok">6.8:1</b></span></div>
+
+<div class="cell"><span class="k">The same values as type <span class="bad">— fails</span></span>
+<span class="spec" style="color:var(--ink-faint)">Updated 5 min ago</span>
+<span class="tk">--ink-faint as type · <b class="bad">2.2:1</b></span>
+<span class="spec" style="font-size:10px;color:var(--cyan)">Checkpoint 5 of 9</span>
+<span class="tk">--cyan on sand · <b class="bad">2.4:1</b> → use --label-cyan-on-paper</span></div>
+</div>
+
+<div class="law">
+<span><b>Faint is a line weight, not a text colour.</b> <em>--ink-faint</em> and <em>--white-faint</em> exist to draw rules, ticks, and survey marks — the ladder they belong to now lives with the rules that use it, in <em>Kickers, rules &amp; hairlines</em>. As type they measure 2.2:1 and 4.0:1 — both below floor. Under 12px, type takes a label token; under 9px it takes <em>--ink</em> or <em>--white</em> outright.</span>
+<span><b>Cyan may mark a label but never set one.</b> #189FDA on warm sand is 2.4:1, so on paper a cyan-coded label uses <em>--label-cyan-on-paper</em> #0A5C86 while the cyan itself moves to the rule or the dot beside it. The colour still codes the row; it just stops carrying the letters.</span>
+<span><b>De-emphasize by removing the accent, not by lowering opacity.</b> A row opacity the colour math cannot see multiplies through every label inside it and silently drops the lot below floor. Pending is simply <b>not cyan</b> — never dimmed.</span>
+</div>
+</body></html>

@@ -43,13 +43,24 @@ distillation against it.
 
 ## The principles cards
 
-`13-principles/` is the three **13 · Principles** cards of the design system,
-copied verbatim from the project on 2026-09-21. Same posture as the voice cards:
+`13-principles/` is the four **13 · Principles** cards of the design system,
+copied verbatim from the project on 2026-09-21, with *The field floor* added on
+2026-09-26. Same posture as the voice cards:
 they stay out of `ds/`, and their `../styles.css` link is the project's own and
 does not resolve here. `../principles.md` is the hand-written distillation builders
-read — the laws with their litmus, the pre-flight and its test, the three depths,
-and the layer Tami set on top; when a card changes in the project, replace the
-snapshot and re-read the distillation against it.
+read — the laws with their litmus, the field floor, the pre-flight and its test,
+the three depths, and the layer Tami set on top; when a card changes in the
+project, replace the snapshot and re-read the distillation against it.
+
+## The rest of the written system
+
+`01-grounds/`, `09-marks-and-assets/`, `10-color/`, `11-type/`, `14-imagery/`,
+`15-channels/` and `16-canon/` are those sections' cards, copied verbatim from the
+project on 2026-09-26 (studio #528), so every written part of the system has its
+snapshot here. Same posture as the voice cards. Their distillations are
+`../channels.md` (15), `../imagery.md` (14), `../canon.md` (16 and 09) and
+`../foundations.md` (01, 10 and 11); when a card changes, replace its snapshot
+and re-read the file that distils it.
 
 ## The map sheet cards
 

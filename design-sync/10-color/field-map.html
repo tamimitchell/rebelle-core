@@ -1,0 +1,102 @@
+<!-- @dsCard group="10 · Color" viewport="1280x540" name="The field map" subtitle="Which colour does which job on which ground — the tokens split into two ink registers plus the broadcast exception, and that split is the whole rule" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;height:540px;background:var(--navy-night);color:var(--white);font-family:var(--font-body);box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column}
+.top{display:flex;align-items:baseline;justify-content:space-between;padding:12px 24px 10px;border-bottom:1px solid var(--hairline-inverse);flex:none}
+h2{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.hint{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.13em;text-transform:uppercase;color:var(--label-on-dark)}
+.map{flex:none;display:grid;grid-template-columns:172px 1fr 1fr .74fr;border-bottom:1px solid var(--hairline-inverse)}
+.col{position:relative;min-width:0}
+.col.dark{background:linear-gradient(180deg,var(--navy),var(--navy-dusk))}
+.col.air{background:var(--broadcast-navy)}
+.hd{height:38px;box-sizing:border-box;padding:0 13px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--hairline-inverse)}
+.hd b{font-family:var(--font-display);font-weight:600;font-size:var(--fs-doc-note);letter-spacing:.12em;text-transform:uppercase;display:block}
+.hd span{font-family:var(--font-mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--label-on-dark)}
+.col.paper .hd{border-bottom-color:var(--hairline)}
+.col.paper .hd b{color:var(--ink)}
+.col.paper .hd span{color:var(--label-on-paper)}
+.jobs .hd{border-bottom-color:var(--hairline-inverse)}
+.r{height:32px;box-sizing:border-box;padding:0 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.jobs .r{justify-content:flex-end;text-align:right}
+.col.paper .r{border-bottom-color:var(--hairline)}
+.r:last-child{border-bottom:none}
+.jb{font-family:var(--font-display);font-weight:600;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--white)}
+.tk{font-family:var(--font-mono);font-size:7.5px;letter-spacing:.06em;color:var(--label-on-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.col.paper .tk{color:var(--label-on-paper)}
+i.s{width:13px;height:13px;border-radius:3px;flex:none;display:block}
+i.dot{border-radius:50%;width:7px;height:7px;margin:0 3px}
+i.rule{width:26px;height:1px;border-radius:0;flex:none}
+/* a subtraction is still type, so it takes a LABEL colour — not the faint hairline value this
+   section publishes as the counter-example one card over */
+.non{font-family:var(--font-mono);font-size:8px;letter-spacing:.08em;color:var(--label-on-dark)}
+.col.paper .non{color:var(--label-on-paper)}
+.foot{flex:1;padding:11px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;font-size:var(--fs-doc-note);line-height:1.45;color:var(--label-on-dark)}
+.foot b{color:var(--white);font-weight:600}
+.foot em{font-style:normal;font-family:var(--font-mono);font-size:var(--fs-doc-kicker);color:var(--label-tan-on-dark)}
+</style></head><body>
+<div class="top"><h2>The field map</h2><span class="hint">two ink registers · one broadcast exception</span></div>
+
+<div class="map">
+<div class="col jobs"><div class="hd"><b>The job</b><span>what the colour is for</span></div>
+<div class="r"><span class="jb">Body text</span></div>
+<div class="r"><span class="jb">Label under 12px</span></div>
+<div class="r"><span class="jb">The accent</span></div>
+<div class="r"><span class="jb">Warm alternative</span></div>
+<div class="r"><span class="jb">Selected control</span></div>
+<div class="r"><span class="jb">Cleared</span></div>
+<div class="r"><span class="jb">Penalty</span></div>
+<div class="r"><span class="jb">Caution</span></div>
+<div class="r"><span class="jb">Rule hairline</span></div>
+<div class="r"><span class="jb">Control edge</span></div>
+<div class="r"><span class="jb">Bullet disc</span></div>
+</div>
+
+<div class="col dark"><div class="hd"><b>Dark grounds</b><span>Navy · Photo · Field Glass</span></div>
+<div class="r"><i class="s" style="background:var(--white)"></i><span class="tk">--white</span></div>
+<div class="r"><i class="s" style="background:var(--label-on-dark)"></i><span class="tk">--label-on-dark · .78</span></div>
+<div class="r"><i class="s" style="background:var(--cyan-shield)"></i><span class="tk">--cyan-shield</span></div>
+<div class="r"><i class="s" style="background:var(--label-tan-on-dark)"></i><span class="tk">--label-tan-on-dark</span></div>
+<div class="r"><i class="s" style="background:var(--selected-wash);box-shadow:inset 0 0 0 1px var(--cyan)"></i><span class="tk">--selected-wash + hairline</span></div>
+<div class="r"><i class="s" style="background:var(--gain)"></i><span class="tk">--gain · text --gain-text-on-navy</span></div>
+<div class="r"><i class="s" style="background:var(--loss)"></i><span class="tk">--loss · text --loss-text-on-navy</span></div>
+<div class="r"><i class="s" style="background:var(--caution)"></i><span class="tk">--caution · bright, it owns the hue</span></div>
+<div class="r"><i class="rule" style="background:var(--hairline-inverse)"></i><span class="tk">--hairline-inverse · .14</span></div>
+<div class="r"><i class="s" style="background:transparent;box-shadow:inset 0 0 0 1px var(--control-hairline)"></i><span class="tk">--control-hairline · .34</span></div>
+<div class="r"><i class="dot" style="background:var(--bullet-disc)"></i><span class="tk">--bullet-disc</span></div>
+</div>
+
+<div class="col paper terrain tp-plain"><div class="hd"><b>Paper grounds</b><span>Terrain · Roadbook</span></div>
+<div class="r"><i class="s" style="background:var(--ink)"></i><span class="tk">--ink</span></div>
+<div class="r"><i class="s" style="background:var(--label-on-paper)"></i><span class="tk">--label-on-paper · .72</span></div>
+<div class="r"><i class="s" style="background:var(--label-cyan-on-paper)"></i><span class="tk">--label-cyan-on-paper</span></div>
+<div class="r"><i class="s" style="background:var(--label-brown-on-paper)"></i><span class="tk">--label-brown-on-paper</span></div>
+<div class="r"><i class="s" style="background:var(--selected-wash-on-paper);box-shadow:inset 0 0 0 1px var(--cyan)"></i><span class="tk">--selected-wash-on-paper</span></div>
+<div class="r"><i class="s" style="background:var(--gain-on-paper)"></i><span class="tk">--gain-on-paper</span></div>
+<div class="r"><i class="s" style="background:var(--loss-on-paper)"></i><span class="tk">--loss-on-paper</span></div>
+<div class="r"><i class="s" style="background:var(--caution-wash);box-shadow:inset 0 0 0 1px var(--caution-on-paper)"></i><span class="tk">--caution-wash + -on-paper</span></div>
+<div class="r"><i class="rule" style="background:var(--hairline)"></i><span class="tk">--hairline · .14</span></div>
+<div class="r"><i class="s" style="background:transparent;box-shadow:inset 0 0 0 1px var(--control-hairline-on-paper)"></i><span class="tk">--control-hairline-on-paper</span></div>
+<div class="r"><i class="dot" style="background:var(--bullet-disc-on-paper)"></i><span class="tk">--bullet-disc-on-paper</span></div>
+</div>
+
+<div class="col air"><div class="hd"><b>On-Air</b><span>the broadcast canvas</span></div>
+<div class="r"><i class="s" style="background:var(--white)"></i><span class="tk">--white</span></div>
+<div class="r"><i class="s" style="background:var(--white)"></i><span class="tk">--white — never faint</span></div>
+<div class="r"><i class="s" style="background:var(--cyan-shield)"></i><span class="tk">--cyan-shield</span></div>
+<div class="r"><span class="non">— cyan only on air</span></div>
+<div class="r"><i class="s" style="background:var(--bc-row-highlight)"></i><span class="tk">--bc-row-highlight</span></div>
+<div class="r"><i class="s" style="background:var(--delta-up)"></i><span class="tk">--delta-up · shipped</span></div>
+<div class="r"><i class="s" style="background:var(--delta-down)"></i><span class="tk">--delta-down · shipped</span></div>
+<div class="r"><span class="non">— not a broadcast state</span></div>
+<div class="r"><i class="rule" style="background:var(--bc-border-mid)"></i><span class="tk">--bc-border-mid</span></div>
+<div class="r"><span class="non">— no buttons on air</span></div>
+<div class="r"><span class="non">— boards, not prose</span></div>
+</div>
+</div>
+
+<div class="foot">
+<span><b>Two registers, not six palettes.</b> Every dark ground shares one ink and every paper ground shares the other, so a colour is chosen by <em>register</em>, not by ground. Field Glass adds material, not colour; Photo Ground adds a scrim, not colour.</span>
+<span><b>Every semantic has a paper twin, and the twin is darker.</b> The shipped delta colours were drawn against navy and fail on warm sand, so the fill and the type swap places: on navy the hue is the fill, on paper the hue becomes a wash and a dark ink carries the contrast. The naive values prove it — <em>#10B981 · 2.4:1</em> and <em>#DF1F26 · 4.0:1</em> on sand.</span>
+<span><b>On-Air is the exception, and it subtracts.</b> No warm accent, no caution, no controls, no faint labels — the air has one second to be read. In return it owns <em>--on-air</em> #FF0000, which appears nowhere else in the system.</span>
+</div>
+</body></html>

@@ -1,0 +1,53 @@
+<!-- @dsCard group="11 · Type & measure" viewport="1280x376" name="Space & size" subtitle="Eight steps, derived from an audit rather than invented — the number is the pixel value, the gutter is 24 everywhere, and 44 is a floor" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;height:376px;background:var(--navy-night);color:var(--white);font-family:var(--font-body);box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column}
+.top{display:flex;align-items:baseline;justify-content:space-between;padding:var(--sp-12) var(--gutter) 10px;border-bottom:1px solid var(--hairline-inverse);flex:none}
+h2{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.hint{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.13em;text-transform:uppercase;color:var(--label-on-dark)}
+.band{padding:11px var(--gutter) 13px;border-bottom:1px solid var(--hairline-inverse)}
+.band:last-child{border-bottom:none;padding-bottom:var(--sp-16)}
+.ch{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:.15em;text-transform:uppercase;color:var(--label-on-dark);display:block;margin-bottom:var(--sp-8)}
+.ch b{color:var(--cyan);font-weight:400}
+.ramp{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-8) var(--sp-32)}
+.rw{display:grid;grid-template-columns:52px 62px 1fr;gap:var(--sp-12);align-items:center}
+.rw i{height:9px;background:var(--cyan-shield);border-radius:1px;display:block;justify-self:start}
+.rw .mi{background:var(--desert-dune)}
+.rw b{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.05em;font-weight:400;color:var(--white)}
+.rw span{font-size:10px;line-height:1.35;color:var(--label-on-dark)}
+.sizes{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-16)}
+.sz{display:flex;flex-direction:column;gap:3px;padding-left:11px;box-shadow:inset 1px 0 0 var(--hairline-inverse)}
+.sz b{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:.05em;font-weight:400;color:var(--desert-dune)}
+.sz span{font-size:10px;line-height:1.35;color:var(--label-on-dark)}
+.laws{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp-24);font-size:var(--fs-doc-note);line-height:1.45;color:var(--label-on-dark)}
+.laws b{color:var(--white);font-weight:600}
+.laws em{font-style:normal;font-family:var(--font-mono);font-size:var(--fs-doc-kicker);color:var(--desert-dune)}
+</style></head><body>
+<div class="top"><h2>Space &amp; size</h2><span class="hint">the number is the pixel value · micro 4–12 · macro 16–48</span></div>
+
+<div class="band"><span class="ch">🟡 <b>The scale</b> — eight steps, drawn to width. <span style="color:var(--desert-dune)">Warm</span> is micro rhythm, <span style="color:var(--cyan-shield)">cyan</span> is macro</span>
+<div class="ramp">
+<div class="rw"><i class="mi" style="width:4px"></i><b>--sp-4</b><span>Glyph to label · hairline inset</span></div>
+<div class="rw"><i style="width:16px"></i><b>--sp-16</b><span>Between grouped blocks · button vertical at lg</span></div>
+<div class="rw"><i class="mi" style="width:6px"></i><b>--sp-6</b><span>Inside a chip · stacked mono lines</span></div>
+<div class="rw"><i style="width:24px"></i><b>--sp-24</b><span>The gutter — card, band, page</span></div>
+<div class="rw"><i class="mi" style="width:8px"></i><b>--sp-8</b><span>Label to value · list rows · button gap</span></div>
+<div class="rw"><i style="width:32px"></i><b>--sp-32</b><span>Between bands and sections</span></div>
+<div class="rw"><i class="mi" style="width:12px"></i><b>--sp-12</b><span>Row rhythm · icon indent · md vertical</span></div>
+<div class="rw"><i style="width:48px"></i><b>--sp-48</b><span>Page margins — the largest the system uses</span></div>
+</div></div>
+
+<div class="band"><span class="ch">🟡 <b>Sizes</b> — deliberately off the ramp: each is a measured optical or ergonomic value, not a multiple</span>
+<div class="sizes">
+<div class="sz"><b>--hit-min · 44px</b><span>The mobile hit-target floor. A floor, not a size — never ship below it.</span></div>
+<div class="sz"><b>--icon-inline · 17px</b><span>Tabler beside a label, optically matched to 11.5px body.</span></div>
+<div class="sz"><b>--icon-mark · 20px</b><span>A card's own mark, standing alone with no ring.</span></div>
+<div class="sz"><b>--icon-chip · 12px</b><span>Inside a chip, against 9px mono.</span></div>
+</div></div>
+
+<div class="band"><div class="laws">
+<span><b>Derived, not invented.</b> An audit of 77 files found <em>30</em> distinct padding values and <em>26</em> distinct gaps — every integer from 1 to 46, and no scale at all. These eight steps are that audit's frequency peaks rounded onto one ramp, so adopting them moves most existing values by 0–2px instead of redrawing the system.</span>
+<span><b>Two rhythms, one scale.</b> <em>4–12</em> is micro: distances inside a single row, where the eye reads one object. <em>16–48</em> is macro: distances between blocks, where the eye moves. Borrowing across the two — a 24px gap inside a row, a 6px gap between blocks — is what makes a layout feel arbitrary even when every value is on-scale.</span>
+<span><b>The register is the source of truth.</b> Button, Chip and the list marks are on the scale; <em>--sp-16</em> at lg was not cosmetic, since 14px measured 42px tall and missed the hit floor. Specimen cards in this system are measured frames at fixed viewports, so their own padding fits the card — read the register, not the card.</span>
+</div></div>
+</body></html>

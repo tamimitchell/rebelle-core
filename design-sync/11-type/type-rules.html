@@ -1,0 +1,29 @@
+<!-- @dsCard group="11 · Type & measure" viewport="700x250" name="Type rules & retirements" subtitle="The nine usage rules, and the faces this stack replaced" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:250px;background:var(--paper-cool);color:var(--ink);font-family:var(--font-body);display:grid;grid-template-columns:1.4fr 1fr;padding:20px 28px;box-sizing:border-box;gap:28px}
+.col{display:flex;flex-direction:column;gap:5px;min-width:0}
+.hd{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:var(--ls-label-wide);text-transform:uppercase;color:var(--cyan);margin-bottom:3px}
+.q{display:grid;grid-template-columns:16px 1fr;gap:8px;font-size:11px;line-height:1.35}
+.q b{font-family:var(--font-mono);font-weight:400;font-size:var(--fs-doc-kicker);color:var(--cyan)}
+.ret{font-size:11px;line-height:1.4;color:var(--ink-soft)}
+.ret s{color:var(--ink-faint)}
+</style></head><body>
+<div class="col"><span class="hd">Usage rules</span>
+<div class="q"><b>1</b><span>Oswald is always uppercase — except data figures.</span></div>
+<div class="q"><b>2</b><span>Oswald always carries tracking; never 0 except data figures.</span></div>
+<div class="q"><b>3</b><span>Inter is never uppercase and never tracked.</span></div>
+<div class="q"><b>4</b><span>Articles read at 18px / lh 1.7 — never interface 14px.</span></div>
+<div class="q"><b>5</b><span>Every column of digits: tabular-nums.</span></div>
+<div class="q"><b>6</b><span>Mono is for labels and stamps, never sentences.</span></div>
+<div class="q"><b>7</b><span>Cormorant Garamond at most once per page.</span></div>
+<div class="q"><b>8</b><span>Links never set their own font-family — they inherit.</span></div>
+<div class="q"><b>9</b><span>Display line-heights go below 1.0 by design. Don't "fix" them.</span></div>
+</div>
+<div class="col"><span class="hd">Retired</span>
+<span class="ret"><s>Arimo</s> → Oswald (headings, nav) + inheritance (links)</span>
+<span class="ret"><s>Open Sans</s> → Inter, interface and long-form</span>
+<span class="ret"><s>Open Sans Condensed · Roboto</s> → Oswald</span>
+<span class="ret"><s>Weights 300 &amp; 700</s> → both faces top out at 600</span>
+<span class="ret" style="margin-top:auto;font-family:var(--font-mono);font-size:9px;letter-spacing:.08em">--font-magazine: RESERVED, not defined — Inter carries both for now</span>
+</div>
+</body></html>

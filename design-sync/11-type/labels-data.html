@@ -1,0 +1,24 @@
+<!-- @dsCard group="11 · Type & measure" viewport="700x290" name="Labels & data figures" subtitle="Oswald both — labels uppercase and tracked; data figures untracked, tabular, never uppercase" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>
+body{margin:0;height:290px;background:var(--ground-navy);color:var(--white);font-family:var(--font-body);display:grid;grid-template-columns:1fr 1fr;padding:20px 26px;box-sizing:border-box;gap:26px}
+.col{display:flex;flex-direction:column;gap:13px;min-width:0}
+.col+.col{border-left:1px solid var(--hairline-inverse);padding-left:26px}
+.r{display:flex;align-items:baseline;gap:14px}
+.o{font-family:var(--font-display);text-transform:uppercase;white-space:nowrap}
+.m{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:.1em;color:var(--label-on-dark);text-transform:uppercase;margin-left:auto}
+.hd{font-family:var(--font-mono);font-size:var(--fs-doc-kicker);letter-spacing:var(--ls-label-wide);text-transform:uppercase;color:var(--cyan)}
+.num{font-family:var(--font-display);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+</style></head><body>
+<div class="col"><span class="hd">Label scale — tracked caps</span>
+<div class="r"><span class="o" style="font-weight:500;font-size:var(--fs-nav);letter-spacing:var(--ls-nav)">The Rally · Story · Teams</span><span class="m">nav 15/500</span></div>
+<div class="r"><span class="o" style="font-weight:600;font-size:var(--fs-label);letter-spacing:var(--ls-label-wide)">Stage status</span><span class="m">label 15/600</span></div>
+<div class="r"><span class="rr-btn rr-btn--primary rr-btn--lg">Watch live</span><span class="m">button 14 · ls .12</span></div>
+<div class="r"><span class="o" style="font-weight:500;font-size:var(--fs-link);letter-spacing:var(--ls-label);color:var(--cyan)">View full standings →</span><span class="m">link 13/500</span></div>
+<div class="r"><span class="o" style="font-weight:600;font-size:var(--fs-kicker);letter-spacing:var(--ls-kicker);color:var(--cyan)">Rebelle Live</span><span class="m">kicker 12 · ls .20</span></div>
+</div>
+<div class="col"><span class="hd">Data figures — no tracking, tabular</span>
+<div class="r"><span class="num" style="font-size:var(--fs-data-xl)">P2 · 1,321</span><span class="m">data-xl 30</span></div>
+<div class="r"><span class="num" style="font-size:var(--fs-data-lg)">Stage 4 of 7 · 15/17</span><span class="m">data-lg 20</span></div>
+<span style="font-size:11px;color:var(--white-soft);line-height:1.5;margin-top:auto">Every column of digits gets <span style="font-family:var(--font-mono);font-size:10px">font-variant-numeric: tabular-nums</span> — standings never mis-align.</span>
+</div>
+</body></html>
