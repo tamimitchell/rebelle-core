@@ -123,7 +123,7 @@ function PlacesMap({ content }: { content: MapContent }) {
   );
 }
 
-/** A route, a day at a time: each day's camp by name, with its position and the day's greens (`longitude,latitude` pairs) on the item. */
+/** A route, a day at a time: each day's camp by name, where it has one, with its position and the day's greens (`longitude,latitude` pairs) on the item. */
 function RouteList({ route }: { route: MapRoute }) {
   const figures = routeFigures(route);
   return (
@@ -132,7 +132,7 @@ function RouteList({ route }: { route: MapRoute }) {
       <ol data-route-year={route.year}>
         {route.days.map((day) => (
           <li key={day.day} data-day={day.day} data-latitude={day.camp.latitude} data-longitude={day.camp.longitude} data-greens={day.greens.map((green) => `${green.longitude},${green.latitude}`).join(' ')}>
-            {`Day ${day.day} · ${day.camp.name}`}
+            {day.camp.name === null ? `Day ${day.day}` : `Day ${day.day} · ${day.camp.name}`}
           </li>
         ))}
       </ol>

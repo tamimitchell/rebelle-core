@@ -70,8 +70,10 @@ test('a map lists each route a day at a time, with each camp and the day\'s gree
   const html = renderToStaticMarkup(<StoryPart part={{ component: 'Map', content: { places: [place], routes: [{ year: 2023, days: [
     { day: 1, camp: { name: 'Mammoth Lakes', latitude: 37.694, longitude: -118.759 }, greens: [{ latitude: 37.7918, longitude: -118.9341 }, { latitude: 37.827, longitude: -118.9171 }] },
     { day: 2, camp: { name: 'Gold <Point>', latitude: 37.3545, longitude: -117.365 }, greens: [] },
+    { day: 3, camp: { name: null, latitude: 37.9616, longitude: -117.7594 }, greens: [] },
   ] }] } }} />);
-  assert.match(html, /<details class="rr-story__map-routes"><summary>Every route<\/summary><p class="rr-story__map-route">2023 · 2 days · 2 greens<\/p><ol data-route-year="2023">/);
+  assert.match(html, /<details class="rr-story__map-routes"><summary>Every route<\/summary><p class="rr-story__map-route">2023 · 3 days · 2 greens<\/p><ol data-route-year="2023">/);
   assert.match(html, /<li data-day="1" data-latitude="37.694" data-longitude="-118.759" data-greens="-118.9341,37.7918 -118.9171,37.827">Day 1 · Mammoth Lakes<\/li>/);
   assert.match(html, /<li data-day="2" data-latitude="37.3545" data-longitude="-117.365" data-greens="">Day 2 · Gold &lt;Point&gt;<\/li>/);
+  assert.match(html, /<li data-day="3" data-latitude="37.9616" data-longitude="-117.7594" data-greens="">Day 3<\/li>/, 'a camp no one named is the day alone');
 });

@@ -119,12 +119,13 @@ export type MapPlace = z.infer<typeof MapPlaceSchema>;
  * A day of a past rally's route: where the teams slept at its end, and the
  * day's greens. Teams choose their own order, so a route runs camp to camp and
  * is never a line anyone drove; a base camp and a night out on their own are
- * both the day's camp (studio #544).
+ * both the day's camp (studio #544). A camp no one recorded a name for says
+ * null, and is drawn unnamed.
  */
 export const RouteDaySchema = z
   .object({
     day: z.number().int().min(1).max(10),
-    camp: z.object({ name: text(60), ...point }).strict(),
+    camp: z.object({ name: text(60).nullable(), ...point }).strict(),
     greens: z.array(z.object(point).strict()).max(40),
   })
   .strict();
