@@ -133,19 +133,18 @@
 --fs-body:14px;/* @kind font */
 --fs-small:13px;/* @kind font */
 --fs-meta:12px;/* @kind font */
-/* mono scale — IBM Plex Mono w400, uppercase content, labels/stamps only */
+/* mono scale — IBM Plex Mono w400, uppercase content, labels/stamps only. 12px is the floor: no text on a product surface is smaller (Tami, 2026-09-28) */
 --fs-mono-stamp:12px;/* @kind font */
---fs-mono-label:10px;/* @kind font */
---fs-mono-micro:9px;/* @kind font */
+--fs-mono-label:12px;/* @kind font */
+--fs-mono-micro:12px;/* @kind font */
 /* DOC CHROME — for this design system's OWN specimen cards, and never for a product surface. Cards
    are dense documentation frames at fixed viewports, so their annotation type runs below the product
-   floor: --fs-meta (12px) is the smallest body the system ships and --fs-mono-micro (9px) the
-   smallest label. These three exist because 65 cards were inventing eight sizes between 8 and 11.5px
+   floor: 12px is the smallest text the system ships, body or label. These three exist because 65 cards were inventing eight sizes between 8 and 11.5px
    with no token to reach for. If you are building a product surface and reaching for these, the
    size you actually want is on the body scale. */
 --fs-doc-note:10.5px;/* @kind font */
 --fs-doc-micro:8.5px;/* @kind font */
---fs-doc-kicker:var(--fs-mono-micro);/* 9px — mono column heads and kickers, the commonest of all */
+--fs-doc-kicker:9px;/* mono column heads and kickers, the commonest of all */
 /* editorial — Cormorant Garamond w500, max one per page, never UI */
 --fs-quote:clamp(30px,3.6vw,52px);/* @kind font */
 /* line heights */

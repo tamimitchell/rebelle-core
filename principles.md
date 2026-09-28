@@ -38,11 +38,12 @@ accessibility spec.
 |---|---|
 | **≥ 4.5 : 1** | Text contrast, measured *after* every blur, scrim and texture. Glare is the test. |
 | **≥ 44pt / 48dp** | Tap targets. Gloves are the test. |
+| **≥ 12px** | Text size. No text under 12px, labels included (Tami, 2026-09-28). |
 | **Tabular** | Type scales with the reader; numerals stay tabular at every size. |
 | **Settle** | Every motion has a reduced-motion equivalent. The one allowed loop is the live-dot pulse. |
 | **Offline OK** | Offline and stale states are labelled, never silent. |
 | **Battery** | No ambient animation beyond the one pulse. The rally is long and the phone is at camp. |
-| **Label floor** | Labels under 12px take `--label-on-paper` or `--label-on-dark`; the `-faint` tokens are hairlines, never type. |
+| **Label floor** | Labels take `--label-on-paper` or `--label-on-dark`; the `-faint` tokens are hairlines, never type. |
 | **No dimming** | De-emphasize by removing the accent, never by lowering opacity. |
 
 ## The pre-flight

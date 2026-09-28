@@ -500,11 +500,11 @@
     },
     {
       "name": "--fs-mono-label",
-      "value": "10px"
+      "value": "12px"
     },
     {
       "name": "--fs-mono-micro",
-      "value": "9px"
+      "value": "12px"
     },
     {
       "name": "--fs-doc-note",
@@ -516,7 +516,7 @@
     },
     {
       "name": "--fs-doc-kicker",
-      "value": "var(--fs-mono-micro)"
+      "value": "9px"
     },
     {
       "name": "--fs-quote",

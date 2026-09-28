@@ -68,7 +68,7 @@ other, so a colour is chosen by register, not by ground:
 | Job | Dark grounds | Paper grounds |
 |---|---|---|
 | Body text | `--white` | `--ink` |
-| Label under 12px | `--label-on-dark` | `--label-on-paper` |
+| Label | `--label-on-dark` | `--label-on-paper` |
 | The accent | `--cyan-shield` | `--label-cyan-on-paper` |
 | Warm alternative | `--label-tan-on-dark` | `--label-brown-on-paper` |
 | Rule hairline | `--hairline-inverse` | `--hairline` |
