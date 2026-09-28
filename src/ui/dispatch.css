@@ -22,7 +22,7 @@
 
 .live-entry__partner {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 0.16em;
   color: color-mix(in srgb, var(--white) 50%, transparent);
 }
@@ -44,7 +44,7 @@
   cursor: pointer;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 9.5px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   color: color-mix(in srgb, var(--cyan) 90%, transparent);
 }
@@ -139,7 +139,7 @@
 .live-entry__media {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 9.5px;
+  font-size: 12px;
   letter-spacing: 0.16em;
   color: var(--cyan);
 }
@@ -147,7 +147,7 @@
 .live-entry__credit {
   margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--white) 62%, transparent);
@@ -216,14 +216,14 @@
 .live-widget__kicker {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 9.5px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   color: var(--cyan);
 }
 
 .live-widget__tag {
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   color: color-mix(in srgb, var(--white) 62%, transparent);
 }
@@ -255,7 +255,7 @@
   display: block;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 8.5px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   color: color-mix(in srgb, var(--cyan) 90%, transparent);
 }
@@ -339,7 +339,7 @@
 }
 
 .live-lockup--strip {
-  font-size: 10.5px;
+  font-size: 12px;
   padding: 4px 10px;
 }
 
@@ -384,8 +384,8 @@
 .live-lockup--strip.live-lockup--mark img { height: 14px; }
 .live-lockup--strip.live-lockup--presented-by img { height: 18px; }
 
-.live-lockup--strip.live-brand--bilstein { font-size: 10.5px; letter-spacing: 0.06em; }
-.live-lockup--strip.live-brand--iridium { font-size: 11.5px; }
+.live-lockup--strip.live-brand--bilstein { font-size: 12px; letter-spacing: 0.06em; }
+.live-lockup--strip.live-brand--iridium { font-size: 12px; }
 
 
 @media (max-width: 759px) {
