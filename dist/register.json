@@ -304,7 +304,7 @@
     },
     {
       "name": "--white-soft",
-      "value": "rgba(255,255,255,.72)"
+      "value": "rgba(255,255,255,.8)"
     },
     {
       "name": "--white-faint",
@@ -324,7 +324,7 @@
     },
     {
       "name": "--label-on-dark",
-      "value": "rgba(255,255,255,.78)"
+      "value": "var(--white-soft)"
     },
     {
       "name": "--label-cyan-on-paper",

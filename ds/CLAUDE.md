@@ -1,1 +1,3 @@
 Never use left-border accent design (a colored border-left edge on cards/panels) — the user calls it an AI-tell. When a panel needs a live/cyan accent, use the broadcast-authentic moves instead: the folder-tab notch, the 2px cyan header underline (--bc-border-strong), or the cyan top rule on Field Glass mega panels.
+
+PDF process: decide the PDF's role up front. Most of our PDFs are digital attachments, not physically printed — for those, don't treat print as "the web page, but printed." Bake every decorative layer (textures, grounds, frost plates, linework) to images from the start and keep only text live. Only fight the print engine when the document will actually go to paper.

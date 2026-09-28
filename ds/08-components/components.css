@@ -370,7 +370,7 @@
    treatment docked on an edge. A statement's baseline IS an edge — that is the one non-ground dock,
    and it is allowed because the shapes are the master's, unstretched. Never on Terrain Paper: paper
    is drawn on, not painted. Never centred under a centred head either; livery runs, it does not
-   balance. ────────────────────────────────────────────────────────────────────────────────────── */
+   balance. On the WEBSITE, heroes only — a raceline under every section head turns busy fast. */
 .rr-sechead{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-12)}
 .rr-sechead>.k{font-family:var(--font-display);font-weight:600;font-size:var(--fs-kicker);letter-spacing:var(--ls-kicker);text-transform:uppercase;color:var(--white)}
 .rr-sechead>h2,.rr-sechead>h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:var(--fs-subsection);letter-spacing:var(--ls-display);text-transform:uppercase;line-height:var(--lh-display);color:var(--white)}

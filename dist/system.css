@@ -68,14 +68,14 @@
 --control-hairline:rgba(255,255,255,.34);--control-hairline-on-paper:rgba(13,33,61,.34);
 /* 🟡 derived — inks & hairlines, shared by every paper ground */
 --ink:#0D213D;--ink-soft:rgba(13,33,61,.64);--ink-faint:rgba(13,33,61,.38);
---white-soft:rgba(255,255,255,.72);--white-faint:rgba(255,255,255,.42);
+--white-soft:rgba(255,255,255,.8);--white-faint:rgba(255,255,255,.42);/* DARK-GROUND TEXT LAW: text on dark is --white or --white-soft — nothing dimmer. --white-faint is hairlines, ticks and quiet icons ONLY (clears the 3:1 graphics floor, fails the 4.5:1 type floor). One gray, not a ramp. */
 --hairline:rgba(13,33,61,.14);--hairline-inverse:rgba(255,255,255,.14);
 /* 🟡 LABEL COLORS — the smallest-legible-label rule (field floor: ≥4.5:1 after every blur and scrim).
    Mono and micro labels under 12px MUST use these. Never use --ink-faint / --white-faint as text:
    those are HAIRLINE colors for rules, ticks, and survey marks, and they measure ~2.2:1 and ~4.0:1
    as type — both below floor. Cyan is also not a label color on paper (#189FDA on warm sand is 2.4:1);
    it may mark a label but not set it. Below 9px, go to --ink / --white outright. */
---label-on-paper:rgba(13,33,61,.72);--label-on-dark:rgba(255,255,255,.78);
+--label-on-paper:rgba(13,33,61,.72);--label-on-dark:var(--white-soft);/* aliases the ONE dark-ground gray — there is no second */
 --label-cyan-on-paper:#0A5C86;/* the one cyan that clears floor on sand — for cyan-coded labels */
 /* THE WARM PAIR — the alternative to cyan for a header+icon label. Cyan says live, measured,
    instrument; the warm pair says editorial, field, human — sections about people, story, and
@@ -621,7 +621,12 @@
 /* THE RACELINE — the brand's livery stripe (canon: foundation 05, Navy Ground decoration).
    ONE SOURCE: assets/broadcast/raceline.svg — the exact master shapes (lugs fading .8→2, connector jogs intact).
    Never redraw it in CSS. PLACEMENT LAW: always a border treatment, flat by nature — docked on an edge of
-   Navy Ground or Roadbook Paper (grounds or cards), NEVER on Field Glass and NEVER on Terrain Paper.
+   Navy Ground, Photo Ground, Field Glass, or Roadbook Paper (grounds, cards, or panels), NEVER on Terrain
+   Paper and never on the frost plate (Terrain's card is paper territory, whatever it's made of). Photo Ground
+   and Field Glass are lineage, not exceptions: the stripe was born on the live overlay — glass panels over
+   live footage. On glass it stays flat, docked on the panel edge; it never picks up blur, glow, or bevel.
+   WEB RESTRAINT: on the website the raceline appears on heroes only — repeated down a page it reads busy;
+   one flash of livery up top, then linework carries the rest. Broadcast and print keep the full law.
    Terrain Paper takes linework instead — dotted verticals, solid horizontals, survey crosses, scale bars
    (elements/terrain-paper.css). Livery is vehicle language; paper is drawn on, not painted.
    Lineage: FJ60 Land Cruiser body-side stripe package → 2025 curtain footer. */
@@ -1007,7 +1012,7 @@
    treatment docked on an edge. A statement's baseline IS an edge — that is the one non-ground dock,
    and it is allowed because the shapes are the master's, unstretched. Never on Terrain Paper: paper
    is drawn on, not painted. Never centred under a centred head either; livery runs, it does not
-   balance. ────────────────────────────────────────────────────────────────────────────────────── */
+   balance. On the WEBSITE, heroes only — a raceline under every section head turns busy fast. */
 .rr-sechead{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-12)}
 .rr-sechead>.k{font-family:var(--font-display);font-weight:600;font-size:var(--fs-kicker);letter-spacing:var(--ls-kicker);text-transform:uppercase;color:var(--white)}
 .rr-sechead>h2,.rr-sechead>h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:var(--fs-subsection);letter-spacing:var(--ls-display);text-transform:uppercase;line-height:var(--lh-display);color:var(--white)}

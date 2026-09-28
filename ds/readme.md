@@ -5,7 +5,7 @@ The design system for **Rebelle Rally** — the longest competitive off-road ral
 ## Sections
 
 | # | Section | Folder | What's in it |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 01 | Grounds | `01-grounds/` | The six contracts side by side, and the laws across them |
 | 02 | Navy Ground | `02-navy-ground/` | The default — the desert at dusk, and the card cut out of it |
 | 03 | Photo Ground | `03-photo-ground/` | Full-bleed photography under a directional scrim |
@@ -23,6 +23,8 @@ The design system for **Rebelle Rally** — the longest competitive off-road ral
 | 15 | Channels | `15-channels/` | Where the system ships, and which voice leads |
 | 16 | Canon | `16-canon/` | Sources, build order, foundations, and the file index |
 | 17 | Documents | `17-documents/` | Page-scale laws — section heads, the accent channel, the figure row, the texture fade (the Navy print with its mask inverted), the footer |
+| 18 | Map Sheets | `18-map-sheets/` | Terrain Paper carried onto a live map — Atlas (full, for the website) and Terrain Paper (quiet, for video), the tracker's marks on top, and why the map is paper. The styles themselves are code: `rebelle-site` `src/lib/map-grounds.js`, snapshotted as JSON in the clips |
+| 19 | Explainers | `19-explainers/` | How the rally explains its competition on the page and in video — one telling in `@rebelle/core` that the page, the clips and the broadcast all read, the book's numbers, the card that leads with the answer. The black diamond is the worked example; the full write-up is `@rebelle/core` `explainers.md` |
 | — | Templates | `templates/` | Whole starting documents a consuming project copies — the cost sheet, on one ground and two |
 
 **Folders match section numbers.** A ground owns its whole language in its own folder — tokens, element classes, and cards together. `styles.css` imports each ground's CSS directly; `tokens/` holds only what is brand-wide (fonts, brand colour, type, motion). **A card lives with the ground it is made of** — the box darker than the ground is Navy's, the frost plate is Terrain's; there is no ground-agnostic card, so section 08 documents the register they share and nothing that only makes sense on one ground.
