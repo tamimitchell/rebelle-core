@@ -133,7 +133,7 @@
 /* ── CHIP — reports, never acts. The inverse of the Button on every axis: mono not Oswald, pill not
    radius-6, hairline or tint not solid fill, and it MAY carry one leading icon (a Button never does).
    One size only — a chip that needs to be bigger is a heading. ───────────────────────────────── */
-.rr-chip{display:inline-flex;align-items:center;gap:var(--sp-6);font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:var(--sp-6) var(--sp-12);border-radius:999px;line-height:1;white-space:nowrap;box-sizing:border-box;border:1px solid transparent}
+.rr-chip{display:inline-flex;align-items:center;gap:var(--sp-6);font-family:var(--font-mono);font-size:var(--fs-mono-micro);letter-spacing:.14em;text-transform:uppercase;padding:var(--sp-6) var(--sp-12);border-radius:999px;line-height:1;white-space:nowrap;box-sizing:border-box;border:1px solid transparent}
 .rr-chip>i{font-size:var(--icon-chip);line-height:1;flex:none}
 /* dark grounds — navy, photo, glass */
 .rr-chip--neutral{color:rgba(255,255,255,.88);border-color:var(--control-hairline)}
@@ -177,7 +177,7 @@
 /* 02 · numbered — mono cyan numerals, label leading, detail trailing. Only when order matters:
    a numeral promises sequence, so it is a claim, not a decoration. */
 .rr-li--num{grid-template-columns:var(--sp-16) 1fr;line-height:1.4}
-.rr-num{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.06em;color:var(--cyan);padding-top:3px}
+.rr-num{font-family:var(--font-mono);font-size:var(--fs-mono-micro);letter-spacing:.06em;color:var(--cyan);padding-top:3px}
 .rr-cg-paper .rr-num{color:var(--label-cyan-on-paper)}
 .rr-li--num b{font-weight:600;color:var(--white)}
 .rr-li--num em{font-style:normal;color:var(--label-on-dark)}
@@ -188,7 +188,7 @@
 .rr-li--icon{grid-template-columns:var(--icon-mark) 1fr;gap:var(--sp-12);align-items:baseline}
 .rr-li--icon>i{color:rgba(255,255,255,.82);transform:translateY(2px);font-size:var(--icon-inline);line-height:1;flex:none}
 .rr-cg-paper .rr-li--icon>i{color:rgba(13,33,61,.8)}
-.rr-li--icon b{font-family:var(--font-display);font-weight:600;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;display:block;margin-bottom:1px}
+.rr-li--icon b{font-family:var(--font-display);font-weight:600;font-size:var(--fs-kicker);letter-spacing:.11em;text-transform:uppercase;display:block;margin-bottom:1px}
 /* 04 · status — THE CHECKPOINT ROW. One triad, circle-check → navigation → circle, and four cells:
    the mark, the code, the state, the time. State reads before the words, and the row spends exactly
    two colours: CLEARED green on a finished checkpoint, cyan on the one in progress. PENDING IS
@@ -198,7 +198,7 @@
 .rr-li--status{grid-template-columns:var(--icon-inline) 40px 1fr auto;align-items:center;padding:5px 0;margin-bottom:0;border-bottom:1px solid rgba(255,255,255,.07)}
 .rr-li--status:last-of-type{border-bottom:none}
 .rr-li--status>i{font-size:var(--icon-inline);line-height:1;flex:none;color:var(--white-faint)}
-.rr-li--status .rr-id{font-family:var(--font-display);font-weight:600;font-size:11.5px;letter-spacing:.07em;color:var(--white-soft)}
+.rr-li--status .rr-id{font-family:var(--font-display);font-weight:600;font-size:var(--fs-kicker);letter-spacing:.07em;color:var(--white-soft)}
 .rr-li--status .rr-st{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:var(--track-kicker);text-transform:uppercase;color:var(--label-on-dark)}
 .rr-li--status .rr-tm{font-family:var(--font-mono);font-size:var(--fs-doc-micro);letter-spacing:.06em;color:var(--label-on-dark);white-space:nowrap}
 /* logged — the mark takes the accent, the state takes CLEARED */
