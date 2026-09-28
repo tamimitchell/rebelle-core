@@ -59,14 +59,14 @@
 --control-hairline:rgba(255,255,255,.34);--control-hairline-on-paper:rgba(13,33,61,.34);
 /* 🟡 derived — inks & hairlines, shared by every paper ground */
 --ink:#0D213D;--ink-soft:rgba(13,33,61,.64);--ink-faint:rgba(13,33,61,.38);
---white-soft:rgba(255,255,255,.72);--white-faint:rgba(255,255,255,.42);
+--white-soft:rgba(255,255,255,.8);--white-faint:rgba(255,255,255,.42);/* DARK-GROUND TEXT LAW: text on dark is --white or --white-soft — nothing dimmer. --white-faint is hairlines, ticks and quiet icons ONLY (clears the 3:1 graphics floor, fails the 4.5:1 type floor). One gray, not a ramp. */
 --hairline:rgba(13,33,61,.14);--hairline-inverse:rgba(255,255,255,.14);
 /* 🟡 LABEL COLORS — the smallest-legible-label rule (field floor: ≥4.5:1 after every blur and scrim).
    Mono and micro labels under 12px MUST use these. Never use --ink-faint / --white-faint as text:
    those are HAIRLINE colors for rules, ticks, and survey marks, and they measure ~2.2:1 and ~4.0:1
    as type — both below floor. Cyan is also not a label color on paper (#189FDA on warm sand is 2.4:1);
    it may mark a label but not set it. Below 9px, go to --ink / --white outright. */
---label-on-paper:rgba(13,33,61,.72);--label-on-dark:rgba(255,255,255,.78);
+--label-on-paper:rgba(13,33,61,.72);--label-on-dark:var(--white-soft);/* aliases the ONE dark-ground gray — there is no second */
 --label-cyan-on-paper:#0A5C86;/* the one cyan that clears floor on sand — for cyan-coded labels */
 /* THE WARM PAIR — the alternative to cyan for a header+icon label. Cyan says live, measured,
    instrument; the warm pair says editorial, field, human — sections about people, story, and

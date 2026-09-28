@@ -39,7 +39,12 @@
 /* THE RACELINE — the brand's livery stripe (canon: foundation 05, Navy Ground decoration).
    ONE SOURCE: assets/broadcast/raceline.svg — the exact master shapes (lugs fading .8→2, connector jogs intact).
    Never redraw it in CSS. PLACEMENT LAW: always a border treatment, flat by nature — docked on an edge of
-   Navy Ground or Roadbook Paper (grounds or cards), NEVER on Field Glass and NEVER on Terrain Paper.
+   Navy Ground, Photo Ground, Field Glass, or Roadbook Paper (grounds, cards, or panels), NEVER on Terrain
+   Paper and never on the frost plate (Terrain's card is paper territory, whatever it's made of). Photo Ground
+   and Field Glass are lineage, not exceptions: the stripe was born on the live overlay — glass panels over
+   live footage. On glass it stays flat, docked on the panel edge; it never picks up blur, glow, or bevel.
+   WEB RESTRAINT: on the website the raceline appears on heroes only — repeated down a page it reads busy;
+   one flash of livery up top, then linework carries the rest. Broadcast and print keep the full law.
    Terrain Paper takes linework instead — dotted verticals, solid horizontals, survey crosses, scale bars
    (elements/terrain-paper.css). Livery is vehicle language; paper is drawn on, not painted.
    Lineage: FJ60 Land Cruiser body-side stripe package → 2025 curtain footer. */
