@@ -175,7 +175,10 @@ WordPress formatting must be reported by the converter before any replacement.
 The studio's eight-post source audit documents concrete cases, including missing
 alt text, galleries, preformatted text and posts exceeding the story limit.
 
-`pnpm build:catalog` regenerates both catalogs and `dist/prose-validator.mjs`.
+`pnpm build:catalog` regenerates both catalogs, `dist/prose-validator.mjs` and
+`dist/prose-tree.mjs`. The tree bundle takes the same input and writes each
+string's parsed tree, or null where the parser refuses it, for a host that
+renders outside JavaScript (the studio's email).
 Rails invokes this bundled Node 22 validator with one bounded JSON array of
 Markdown strings on stdin; stdout is one nullable error per string. It needs no
 installed Node dependencies at execution time. The bundle test compares it with
