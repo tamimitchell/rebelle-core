@@ -20,8 +20,14 @@ Each rally day gets one field update. It goes up on the blog in the evening and
 out as the day's email under the same title. On five 2025 days, 84 to 95 percent
 of the email's sentences are the post's, word for word (see The newsletter,
 below).
-A person approves the text once; the email is a copy with one block swapped.
-The live feed's day summary points to the post.
+A person approves the text once. The live feed's day summary points to the post.
+
+**From 2026 the post carries the story, and the page and the email carry the
+frame** (studio Decided #219). The date and the day's time limit, distance,
+difficulty and route are the article page's and the email's *At a glance*,
+read from the rally-day record; the email adds the live-show notice and About
+the Rebelle Rally. So a draft is the story alone, and the sections below are
+the post's.
 
 ## The eras
 
@@ -44,19 +50,22 @@ to add.
 | Section | Heading | What it is for | Length | Fed by |
 |---|---|---|---|---|
 | Title | The title itself | Names the year, the day and its presenting partner | One line | The rally day record |
-| Date and base camp | None | When and where the day ended | One line | The rally day record; base camp |
-| Conditions | None | The day as numbers, before the story | Five bullets | The record's time limit, distance and difficulty; the weather and start town from base camp's notes |
+| Conditions | None | The weather at the start and finish lines, before the story | Two bullets | The weather and towns from base camp's notes |
 | The course | None | Where the day went, what the navigation asked, which choices teams made | 300–525 words | The record's route, overview and format; the day's dispatches; base camp's notes |
 | Quotes | Great Quotes From the Day | Competitors and crew in their own words | 3–5 quotes, about 300–435 words | Approved quote dispatches |
 | Spotlight | Spotlight: {theme} | One theme, told through the teams it fits | 230–520 words | Base camp's notes name it; approved quotes |
-| Results | Day {n} Results | Where each class stands, and how teams got there | 175–260 words | The day's results by class; names from the competitor records |
+| Results | Day {n} Results | Where each class stands, and how teams got there, each class followed by its Top 5 | 175–260 words | The day's results by class; names from the competitor records |
 | Partner | Partner Highlight: {partner} | The day's presenting partner | 100–160 words | The partner's blurb and link on the rally day |
-| Ways to Follow | Ways to Follow the {year} Rebelle Rally | Where to watch and read | Fixed text | Fixed text, below |
-| About | About the Rebelle Rally | The rally in one paragraph | Fixed text | Fixed text, below |
 
-In a draft every section heading is a second-level heading (`##`) under the
-title. The 2025 posts mix bold lines, fourth-level and second-level headings
-for the same sections ([2025 Day 5], [2025 Day 6]).
+2025 also opened on a date line and listed the time limit, distance and
+difficulty among the conditions, and ended on Ways to Follow and About. From
+2026 none of these is in a competition day's post: the date and the figures
+are the *At a glance*, and the fixed text is the email's (Fixed text, below).
+
+In a draft every section heading is a third-level heading (`###`), as the
+studio writes them; the title is the page's own heading. The 2025 posts mix
+bold lines, fourth-level and second-level headings for the same sections
+([2025 Day 5], [2025 Day 6]).
 
 In 2025 the quotes and the Spotlight start on Day 3; Days 1 and 2 go straight
 from the course to the results ([2025 Day 1], [2025 Day 2]). The conditions
@@ -71,30 +80,30 @@ in capitals and the partner as the partner writes it ([2025 Day 5]). The post's
 own heading repeats the title exactly. In 2021 and 2022 the days were STAGE {n}
 and the partner "Powered by" ([2021 Stage 2]).
 
-### Date and base camp
+### The date line
 
-The date in bold, then the base camp town in italics:
+A competition day's post has none: the page and the email print the rally
+day's date in the *At a glance*. Tech Inspection and Rebellation, which have no
+*At a glance*, keep 2025's line, the date in bold, then the town in italics:
 `**October 14, 2025** _(Ridgecrest, California)_` ([2025 Day 5]). Use the
-rally day's date. The posts sometimes carry the day they went up instead: the
+day's own date. The posts sometimes carry the day they went up instead: the
 Day 3 post says October 13, its email October 12 ([2025 Day 3]).
 
 ### Conditions
 
-Five bullets, each a label and a value:
+Two bullets, each a label and a value:
 
 - Weather at start line ({town}, {state}): {sky} and {temperature}° F, with {wind}
-- Time limit: {hours} Hours
-- Distance: {miles} miles / {km} km
-- Difficulty: {n} out of 5
 - Weather at finish line ({town}, {state}): {sky} and {temperature}° F, with {wind}
 
-The labels, the order and "out of 5" are fixed. The weather values are free
-words in that order, sky then temperature then wind, and may add a "feels like"
-reading ([2025 Day 5], [2025 Day 6]). A difficulty can be a half step or a range
-("3-4 out of 5", [2025 Day 4]). The labels are the ones four of the five 2025
-lists use ([2025 Day 4], [2025 Day 6], [2025 Day 7], [2025 Day 8]); Day 5 writes
-"Starting line weather" ([2025 Day 5]). Day 7 leaves out the finish
-([2025 Day 7]).
+2025's five put the time limit, distance and difficulty between these two; from
+2026 those are the *At a glance*, and the weather, which only base camp's notes
+hold, stays in the post. The labels and the order are fixed. The values are
+free words in that order, sky then temperature then wind, and may add a "feels
+like" reading ([2025 Day 5], [2025 Day 6]). The labels are the ones four of the
+five 2025 lists use ([2025 Day 4], [2025 Day 6], [2025 Day 7], [2025 Day 8]);
+Day 5 writes "Starting line weather" ([2025 Day 5]). Day 7 leaves out the
+finish ([2025 Day 7]).
 
 ### The course
 
@@ -148,8 +157,10 @@ order is drawn from a bowl or what a marathon stage is ([2018 Day 3],
 Where each class stands tonight, 4x4 first and then X-Cross®, as most 2025
 days order it (Day 5 opens with X-Cross®, Day 3 with the rookies). Name the top
 three in each class, each with the team number, both names and the vehicle:
-`Team 129 (Nena Barlow and Teralin Petereit in a 2025 Jeep Gladiator)`. Points
-go in where the day turned on them. Other teams come in for a reason, a climb
+`Team 129 (Nena Barlow and Teralin Petereit in a 2025 Jeep Gladiator)`. Each
+class's words are followed by its Top 5 through the day, a table printed from
+the results (a `Standings` part), so the words tell how teams got there rather
+than list the order. Points go in where the day turned on them. Other teams come in for a reason, a climb
 or a close call. Then the Rookie of the Year contenders ([2025 Day 3]). Standings are provisional
 until Day 8, so they "remain", "hold" or "currently" stand ([2025 Day 5]).
 Day 1 named it Day 1 Results and Challenges and folded the day's breakdowns in
@@ -175,7 +186,8 @@ partners.
 ### Tech Inspection
 
 The first field update, before any scored day. `{year} Rebelle Rally Field
-Update: TECH INSPECTION`, with no presenting partner in 2025 ([2025 Tech]).
+Update: TECH INSPECTION`, with no presenting partner in 2025 ([2025 Tech]). It
+opens on the date line (above).
 
 - **Opening**, two paragraphs: the edition, how many teams cleared inspection,
   the course's length, maps, compass and roadbook only, and that the course is
@@ -188,7 +200,8 @@ Update: TECH INSPECTION`, with no presenting partner in 2025 ([2025 Tech]).
   staff.
 - **Vehicle Entries and Contingency**: the manufacturers and their entries, the
   two classes as [`canon.md`](canon.md) defines them, and the challenges.
-- Ways to Follow, then Partner Highlight, then About.
+- **Partner Highlight**, when the notes name a partner. 2025 put Ways to Follow
+  before it and About after; from 2026 the post ends on the partner.
 
 2024 had more sections: Competitor Lineup, Green Basecamps, The Route and
 Challenges Ahead, and Experience the Rally Live ([2024 Tech]). The Fast Facts
@@ -202,32 +215,36 @@ described only as far as [`canon.md`](canon.md) does, start and finish.
 lighter: no conditions list, no quotes section, the Director on what the
 Prologue is for, a rookie's first impressions. **Prologue Results** says it
 does not count and that its enduro scores set Day 1's start order, then names
-the first teams off the line. From 2016 to 2019 it was Day 0. The 2026 Prologue
+the first teams off the line. It has no Top 5. From 2016 to 2019 it was Day 0. The 2026 Prologue
 is the ceremonial start at Las Vegas Motor Speedway ([`canon.md`](canon.md)),
 not a drive to base camp, so 2025's route story may not fit it.
 
 ### Day 8
 
-The last scored day. Its results section is **Day 8 Overall Standings**: the
-podium in each class as a list, `**1st:** Team {n}, {names}, {vehicle}`, and a
-line saying the awards come at Rebellation ([2025 Day 8]).
+The last scored day. Its results section is **Day 8 Overall Standings**: each
+class's words, then its Top 5 through all eight days, and a line saying the
+awards come at Rebellation. 2025 printed each podium as a list,
+`**1st:** Team {n}, {names}, {vehicle}` ([2025 Day 8]); the table does that job.
 
 ### Rebellation
 
 `{year} Rebelle Rally: REBELLATION`, without "Field Update", posted after the
-gala ([2025 Rebellation]). In order: the rally summed up, a statistics list,
+gala ([2025 Rebellation]). In order: the date line (above), the rally summed up, a statistics list,
 **4x4 Class** (who won and how, the stage wins, the podium list) with its
 **Bone Stock Award**, **X-Cross® Class** the same, **Rookies of the Year**,
 **Special Awards** (the Pirelli Scorpion™ Tire Challenge by class, the Pennzoil
 Challenge, the International Cup), the **Team Spirit Award**, then Partner
-Highlight and About. No Ways to Follow.
+Highlight. 2025 ended on About, with no Ways to Follow; from 2026 About is the
+email's.
 
 ## Photographs
 
 A 2025 post carries 10 to 13 images: a lead photograph under the title, one
 between most sections, the partner's logo with the Partner Highlight, and in
 Ways to Follow the live schedule and giveaway graphics with four link tiles
-(Live Tracking, Scoring, Team Bios, Standings) ([2025 Day 5]). Choose them as
+(Live Tracking, Scoring, Team Bios, Standings) ([2025 Day 5]). With Ways to
+Follow gone from 2026, so are the graphics and tiles; the email's live-show
+notice links out instead. Choose the photographs as
 [`imagery.md`](imagery.md) says.
 
 **None of the 97 posts shows a photographer's credit.** Many 2025 photographs
@@ -238,22 +255,23 @@ photograph in a field update carries its photographer's name.
 
 ## Fixed text
 
-These repeat every day with only the blanks changing. A draft copies them; it
-never writes them.
+These repeat every day with only the blanks changing. From 2026 they are not
+in the post (studio Decided #219): the email carries the live-show notice and
+About, filled from the blanks below, and the article page carries neither. A
+draft never writes them.
 
 ### Ways to Follow
 
-Under the heading `Ways to Follow the {year} Rebelle Rally`, the same on every
-2025 day from Tech Inspection to Day 8 ([2025 Tech] to [2025 Day 8]):
-
-```text
-Fans can follow the Rebelle Rally live through the Rebelle Rally LIVE Webcast Presented by {webcast_partner}, starting {first_show_day}. Daily broadcasts will be available via rebellerally.com, YouTube, and Facebook, featuring morning competition day previews, scoring updates, and evening recap shows. For real-time updates, live tracking, scores, daily recaps, team bios, and more, visit the rally’s official website and connect with the community on social media @rebellerally on Instagram, Facebook, and YouTube.
-```
+Every 2025 post from Tech Inspection to Day 8 had a paragraph under
+`Ways to Follow the {year} Rebelle Rally` on the webcast and the rally's
+channels ([2025 Tech] to [2025 Day 8]). From 2026 neither the post nor the page
+carries it; the email's live-show notice does its job.
 
 ### The email's live-show notice
 
-The email replaces Ways to Follow with a notice that changes with the week
-([2025 Prologue email], [2025 Day 5 email], [2025 Day 8 email]):
+The email carries a notice that changes with the week, where 2025's emails
+swapped it in for Ways to Follow ([2025 Prologue email], [2025 Day 5 email],
+[2025 Day 8 email]):
 
 ```text
 The day before the first show:
@@ -276,7 +294,7 @@ fresh each year.
 
 The same paragraph on every post of 2021, 2024 and 2025, with the kilometres,
 region and dates changing (2022 carries it twice, 2023 not at all;
-[2021 Stage 1], [2024 Tech], [2025 Tech]):
+[2021 Stage 1], [2024 Tech], [2025 Tech]). From 2026 it ends the email:
 
 ```text
 The Rebelle Rally is the longest competitive off-road rally in the United States. Traversing over {km} kilometers through {region}’s iconic terrain in {year}, it is an endurance competition consisting of precision driving and navigating – not fastest speed. The competition is innovative and unique, using maps, compass, roadbooks and strategy – known as Rebelle Format. GPS and other electronic devices are strictly prohibited. Remote and off-grid for eight competition days, the Rebelle Rally is considered a providing ground for people, products and stock manufacturer vehicles.
@@ -295,7 +313,7 @@ Follow live {live_dates} @ rebellerally.com/live.
 |---|---|---|
 | `{year}` | 2025 | 2026 |
 | `{webcast_partner}` | Toyota | ❓ |
-| `{first_show_day}` · `{first_show_time}` | Friday, October 10th · 12:00pm PDT | ❓ |
+| `{first_show_time}` | 12:00pm PDT | ❓ |
 | `{show_dates}` · `{final_show_date}` · `{final_shows}` | October 10-18 · Saturday, October 18 · Coffee with Katy and the Awards Podium from 8:00 AM to 11:00 AM, and the Rebellation Red Carpet starting at 5:00 PM | ❓ |
 | `{km}` | 2,800 | ❓ ([`canon.md`](canon.md) marks the 2026 distance open) |
 | `{region}` | Nevada and California | Nevada and California ([`canon.md`](canon.md)) |
@@ -379,16 +397,22 @@ on five 2025 emails ([2025 Prologue email], [2025 Day 1 email],
 - **Mailchimp adds the footer**: the social icons, the mailing address and the
   unsubscribe line. A draft never writes it.
 
+**From 2026 the studio draws the email from the approved post** (studio
+Decided #219, #224): the subject is the title and the preview text the dek;
+then the lead photograph, the *At a glance* from the rally-day record, the whole
+post, the week's live-show notice, About the Rebelle Rally and the footer. It is
+made as a Mailchimp draft, and a person sends it.
+
 ## Where the posts disagree
 
 | What | Where | This guide |
 |---|---|---|
-| The date line | [2025 Day 3]'s post says the next day; its email, the rally day | The rally day's date |
-| The conditions labels | [2025 Day 5] against Days 4, 6, 7 and 8 | The Days 4, 6, 7 and 8 labels |
-| Ways to Follow before or after the Partner Highlight | Before on [2025 Tech] and [2025 Prologue], after on Days 1 to 8 | As each day did |
+| The date line | [2025 Day 3]'s post says the next day; its email, the rally day | The day's own date, in the *At a glance*; only Tech Inspection and Rebellation carry a line |
+| The conditions labels | [2025 Day 5] against Days 4, 6, 7 and 8 | The Days 4, 6, 7 and 8 labels, for the two weather lines |
+| Ways to Follow before or after the Partner Highlight | Before on [2025 Tech] and [2025 Prologue], after on Days 1 to 8 | Neither; the post has no Ways to Follow |
 | Which class leads the results | 4x4 on most 2025 days; X-Cross® on Day 5, the rookies on Day 3 | 4x4 first |
 | The heading | [2025 Prologue]'s heading says TECH INSPECTION | The heading repeats the title |
-| Section heading levels | Bold lines, fourth-level and second-level headings for the same sections ([2025 Day 5], [2025 Day 6]) | Second-level headings |
+| Section heading levels | Bold lines, fourth-level and second-level headings for the same sections ([2025 Day 5], [2025 Day 6]) | Third-level headings |
 | A look at tomorrow | Most days, old and new ([2020 Day 3], [2025 Day 6]) | None; the day ends at base camp |
 | Quotes and Spotlight on Days 1 and 2 | Not in 2025 ([2025 Day 1], [2025 Day 2]) | Every competition day |
 | Photographer credits | None on the page, the name in the file ([2025 Day 5]) | A credit on every photograph |
@@ -406,17 +430,19 @@ their words here.
 
 Not yet read. Emily's corrections are folded in here, with the date she read it.
 
+Decided since by Tami (2026-09-27, studio Decided #219): the date and the day's
+figures are the page's and the email's, and Ways to Follow and About leave the
+post. That settles two of the questions first asked here, the date on the post
+and Ways to Follow's wording once the shows are running.
+
 Open for her:
 
 - "Providing ground" or "proving ground" in About the Rebelle Rally?
 - A credit on every photograph from 2026: under each photograph, or one line
   at the end?
 - Chrissie Beavis or Chrisie Bevis?
-- The rally day's date on the post as well as the email?
 - 4x4 first in the results?
 - Quotes and a Spotlight from Day 1, where 2025 started them on Day 3?
-- Ways to Follow still says the shows start on the first show's date after that
-  day has passed. Keep it, or change the line once the shows are running?
 - The 2026 blanks: the webcast's presenting partner, the show dates and times,
   the kilometres, the live dates.
 - How to tell the 2026 Prologue, the ceremonial start at the Speedway.
