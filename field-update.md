@@ -62,9 +62,10 @@ difficulty among the conditions, and ended on Ways to Follow and About. From
 2026 none of these is in a competition day's post: the date and the figures
 are the *At a glance*, and the fixed text is the email's (Fixed text, below).
 
-In a draft every section heading is a second-level heading (`##`) under the
-title. The 2025 posts mix bold lines, fourth-level and second-level headings
-for the same sections ([2025 Day 5], [2025 Day 6]).
+In a draft every section heading is a third-level heading (`###`), as the
+studio writes them; the title is the page's own heading. The 2025 posts mix
+bold lines, fourth-level and second-level headings for the same sections
+([2025 Day 5], [2025 Day 6]).
 
 In 2025 the quotes and the Spotlight start on Day 3; Days 1 and 2 go straight
 from the course to the results ([2025 Day 1], [2025 Day 2]). The conditions
@@ -411,7 +412,7 @@ made as a Mailchimp draft, and a person sends it.
 | Ways to Follow before or after the Partner Highlight | Before on [2025 Tech] and [2025 Prologue], after on Days 1 to 8 | Neither; the post has no Ways to Follow |
 | Which class leads the results | 4x4 on most 2025 days; X-Cross® on Day 5, the rookies on Day 3 | 4x4 first |
 | The heading | [2025 Prologue]'s heading says TECH INSPECTION | The heading repeats the title |
-| Section heading levels | Bold lines, fourth-level and second-level headings for the same sections ([2025 Day 5], [2025 Day 6]) | Second-level headings |
+| Section heading levels | Bold lines, fourth-level and second-level headings for the same sections ([2025 Day 5], [2025 Day 6]) | Third-level headings |
 | A look at tomorrow | Most days, old and new ([2020 Day 3], [2025 Day 6]) | None; the day ends at base camp |
 | Quotes and Spotlight on Days 1 and 2 | Not in 2025 ([2025 Day 1], [2025 Day 2]) | Every competition day |
 | Photographer credits | None on the page, the name in the file ([2025 Day 5]) | A credit on every photograph |
