@@ -437,9 +437,16 @@
                                         "type": "object",
                                         "properties": {
                                           "name": {
-                                            "type": "string",
-                                            "maxLength": 60,
-                                            "pattern": "\\S"
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                                "maxLength": 60,
+                                                "pattern": "\\S"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
                                           },
                                           "latitude": {
                                             "type": "number",

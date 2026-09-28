@@ -84,6 +84,8 @@ test('a map may carry past routes, camp to camp a day at a time, bounded and in 
   assert(map(routes));
   assert(map([]));
   assert(map(withDays([{ ...day, greens: [] }])), 'a day may have no greens');
+  assert(map(withDays([{ ...day, camp: { ...day.camp, name: null } }])), 'a camp no one named says null');
+  assert(!map(withDays([{ ...day, camp: { latitude: day.camp.latitude, longitude: day.camp.longitude } }])), 'an unnamed camp says so');
   assert(map(Array.from({ length: 20 }, (_, index) => ({ ...route, year: 2016 + index }))));
   assert(!map(Array.from({ length: 21 }, (_, index) => ({ ...route, year: 2016 + index }))));
   assert(!map([route, route]), 'one route a year');
