@@ -57,7 +57,8 @@ this first.
 - **Body** is sentence case. *The drama is a heading held for forty miles, not
   a jump cut.*
 - **Emoji:** 🧭 essentially only, sparingly; one playful 🙋 when earned; never
-  confetti.
+  confetti. Instagram runs looser: *"THE NEXT RALLY YOU WATCH COULD BE THE ONE
+  YOU DRIVE. 🔥🏁"* (Tami, 2026-09-29).
 - **The wordmark** — the engraved serif REBELLE letterforms — is logo artwork,
   never typeset. Cormorant Garamond echoes the voice without imitating the mark.
 
