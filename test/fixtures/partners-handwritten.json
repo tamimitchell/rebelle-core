@@ -1,0 +1,179 @@
+{
+  "contract_version": "1",
+  "feed_key": "rebelle.partners",
+  "record_type_key": "rebelle.partner",
+  "record_schema_version": "1",
+  "sent_at": "2026-09-30T23:00:00Z",
+  "records": [
+    {
+      "id": "6dbbebf7-bdcd-4b16-a39e-b040ed08b607",
+      "version_id": "1667a0a0d7d794c28b4181897b45017eaaecc3debf661f0b6b5dcafbd3a37b27",
+      "schema_version": "1",
+      "payload": {
+        "key": "pennzoil",
+        "name": "Pennzoil",
+        "lockup_key": null,
+        "tier": "partner",
+        "blurb": null,
+        "link": "https://www.pennzoil.com/",
+        "position": 1,
+        "logos": {
+          "white": {
+            "url": "/images/f4344dc8-a0e4-4b0b-8d27-aba5ecf3aee4/640",
+            "alt": "Pennzoil",
+            "width": 2001,
+            "height": 1134
+          },
+          "color": {
+            "url": "/images/e7ba71c4-19fa-484c-995f-a30003754661/640",
+            "alt": "Pennzoil",
+            "width": 2000,
+            "height": 1134
+          },
+          "dark": {
+            "url": "/images/e7ba71c4-19fa-484c-995f-a30003754661/640",
+            "alt": "Pennzoil",
+            "width": 2000,
+            "height": 1134
+          }
+        }
+      }
+    },
+    {
+      "id": "d32ba338-b9bf-453e-933e-585c7e959cc9",
+      "version_id": "a33464a2ec17bdac04a4a0915e452dfb8a6df3d763eee81caac5d14c8266a708",
+      "schema_version": "1",
+      "payload": {
+        "key": "toyota",
+        "name": "Toyota",
+        "lockup_key": null,
+        "tier": "partner",
+        "blurb": null,
+        "link": "https://www.toyota.com/",
+        "position": 5,
+        "logos": {
+          "white": {
+            "url": "/images/b06ebe60-c6de-4244-be65-48fd9494d630/640",
+            "alt": "Toyota",
+            "width": 2000,
+            "height": 535
+          },
+          "color": {
+            "url": "/images/64d244fb-57c6-41d9-bce0-c97e9ae782a4/640",
+            "alt": "Toyota",
+            "width": 755,
+            "height": 202
+          },
+          "dark": null
+        }
+      }
+    },
+    {
+      "id": "d1701039-11c7-458f-9d2f-c9b54e7c995a",
+      "version_id": "aef3ff9463346f772f783d716d2dd343432413cc401246067c547e89b9a98ac6",
+      "schema_version": "1",
+      "payload": {
+        "key": "bmw",
+        "name": "MINI",
+        "lockup_key": null,
+        "tier": "partner",
+        "blurb": null,
+        "link": "https://www.miniusa.com/",
+        "position": 6,
+        "logos": {
+          "white": {
+            "url": "/images/52602291-eba2-4c22-91bf-8a28fec51fbe/640",
+            "alt": "MINI",
+            "width": 2433,
+            "height": 639
+          },
+          "color": {
+            "url": "/images/8d482231-0921-45f6-852b-99e21922951e/640",
+            "alt": "MINI",
+            "width": 3500,
+            "height": 908
+          },
+          "dark": null
+        }
+      }
+    },
+    {
+      "id": "cbe1ee6c-52fd-4f9b-9b02-65c9d1cad4e2",
+      "version_id": "b5db2d5ef2a6ce66e2fb83d52f5d0e07e20766144d907fbac09778b1203fd436",
+      "schema_version": "1",
+      "payload": {
+        "key": "synchrony",
+        "name": "Synchrony Bank",
+        "lockup_key": null,
+        "tier": "partner",
+        "blurb": null,
+        "link": "https://synchrony.com/",
+        "position": 19,
+        "logos": {
+          "white": {
+            "url": "/images/7ea5f624-8557-4421-beba-ec5bbe13322a/640",
+            "alt": "Synchrony Bank",
+            "width": 2000,
+            "height": 428
+          },
+          "color": {
+            "url": "/images/beb10cd0-9648-4b66-a106-1c544d81582e/640",
+            "alt": "Synchrony Bank"
+          },
+          "dark": null
+        }
+      }
+    },
+    {
+      "id": "c697af0c-0e6e-4a65-9865-476f2f9b2df8",
+      "version_id": "2b30a2b4daf27b321e3cca948f7044b40561b923ca9e538b86bc1dfbdb036134",
+      "schema_version": "1",
+      "payload": {
+        "key": "rally-navigator",
+        "name": "Rally Navigator",
+        "lockup_key": null,
+        "tier": "supporting partner",
+        "blurb": null,
+        "link": "https://www.rallynavigator.com/",
+        "position": 20,
+        "logos": {
+          "white": {
+            "url": "/images/df18148b-16a9-460e-8652-6140947b51c9/640",
+            "alt": "Rally Navigator",
+            "width": 1000,
+            "height": 378
+          },
+          "color": null,
+          "dark": null
+        }
+      }
+    },
+    {
+      "id": "e805940a-fc4b-458c-848f-077de2808727",
+      "version_id": "2869a04793dc39cbf7029dd1b55f647c434e22121c9341eab9d5fbd42a97c709",
+      "schema_version": "1",
+      "payload": {
+        "key": "hest",
+        "name": "HEST",
+        "lockup_key": null,
+        "tier": "supporting partner",
+        "blurb": null,
+        "link": "https://hest.com/",
+        "position": 28,
+        "logos": {
+          "white": {
+            "url": "/images/125abe0f-b85b-488d-a248-07b4649f46c3/640",
+            "alt": "HEST",
+            "width": 2000,
+            "height": 1740
+          },
+          "color": {
+            "url": "/images/3a45287c-60ef-4068-908c-4c47271a9b29/640",
+            "alt": "HEST"
+          },
+          "dark": null
+        }
+      }
+    }
+  ]
+}
