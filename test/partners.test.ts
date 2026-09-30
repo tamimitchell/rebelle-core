@@ -4,9 +4,8 @@ import { readFileSync } from 'node:fs';
 import { SponsorLogosSchema, SponsorSchema } from '../src/dispatch.ts';
 import { PARTNER_TIERS, PartnerSchema, PartnersFeedDocumentSchema } from '../src/partners.ts';
 
-// Hand-written from the studio's sponsor records of 2026-09-30 until studio #414's writer
-// emits the real document; that output replaces this file.
-const fixture = JSON.parse(readFileSync(new URL('./fixtures/partners-handwritten.json', import.meta.url), 'utf8'));
+// Emitted by the studio's writer (studio `spec/fixtures/feeds/rebelle_partners_feed.json`, #414).
+const fixture = JSON.parse(readFileSync(new URL('./fixtures/partners.json', import.meta.url), 'utf8'));
 const partner = fixture.records[0].payload;
 const withRecords = (records: unknown[]) => ({ ...fixture, records });
 
