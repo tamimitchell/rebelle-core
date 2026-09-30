@@ -267,6 +267,63 @@
                     "properties": {
                       "component": {
                         "type": "string",
+                        "const": "Photos"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "photos": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "image_id": {
+                                  "type": "string",
+                                  "format": "uuid"
+                                },
+                                "alt": {
+                                  "type": "string",
+                                  "maxLength": 1000,
+                                  "pattern": "\\S"
+                                },
+                                "caption": {
+                                  "type": "string",
+                                  "maxLength": 1000,
+                                  "pattern": "\\S"
+                                }
+                              },
+                              "required": [
+                                "image_id",
+                                "alt"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 2,
+                            "maxItems": 20
+                          },
+                          "caption": {
+                            "type": "string",
+                            "maxLength": 1000,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "photos"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
                         "const": "Video"
                       },
                       "content": {

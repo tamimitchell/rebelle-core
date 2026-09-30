@@ -16,8 +16,8 @@ test('the shared fixture is a release artifact carrying one story in one slot', 
   assert.equal(parsed.schema_version, RELEASE_ARTIFACT_VERSION);
   assert.equal(parsed.placements.length, 1);
   assert.equal(parsed.placements[0].slot, 'site:home-feature');
-  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Video', 'Video', 'Map']);
-  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Video', 'Map']);
+  assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Video', 'Video', 'Map', 'Photos']);
+  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Photos', 'Video', 'Map']);
 });
 
 test('an artifact under the previous version or with an unknown key is refused, not read partially', () => {
@@ -162,4 +162,18 @@ test('the as-of label reads the story\'s own offset and never the reader\'s zone
   assert.equal(asOfLabel('2026-10-10T14:02:00-07:00'), '10 Oct 2026, 14:02');
   assert.equal(asOfLabel('2026-10-10T21:02:00Z'), '10 Oct 2026, 21:02');
   assert.equal(asOfLabel('not a time'), 'not a time');
+});
+
+test('a photo set holds two to twenty photographs, each once and each with its alt (#40)', () => {
+  const set = story.telling[9].content;
+  const photos = (next: unknown[]) => StoryComponentSchema.safeParse({ component: 'Photos', content: { ...set, photos: next } }).success;
+  const one = set.photos[0];
+  const numbered = (count: number) => Array.from({ length: count }, (_, index) => ({ ...one, image_id: `6f1a2b3c-4d5e-4f60-8a71-${String(index).padStart(12, '0')}` }));
+  assert(photos(set.photos.slice(0, 2)), 'two');
+  assert(photos(numbered(20)), 'twenty');
+  assert(!photos(set.photos.slice(0, 1)), 'one is a Figure');
+  assert(!photos(numbered(21)), 'twenty-one');
+  assert(!photos([one, { ...one, image_id: one.image_id.toUpperCase() }]), 'the same photograph twice');
+  assert(!photos([one, { ...set.photos[1], alt: ' ' }]), 'a blank alt');
+  assert(!StoryComponentSchema.safeParse({ component: 'Photos', content: { ...set, html: '<b>no</b>' } }).success, 'an unknown key');
 });

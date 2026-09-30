@@ -58,6 +58,22 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
       const src = imageUrl(image_id.toLowerCase(), 960);
       return <figure className="rr-story__figure">{src ? <img src={src} alt={alt} loading="lazy" /> : <p role="status">Image unavailable: {alt}</p>}{caption && <figcaption>{caption}</figcaption>}</figure>;
     }
+    case 'Photos': {
+      // Every photograph is in the markup with its alt; the sixth onward are folded by CSS, and a host's viewer opens them.
+      const { photos, caption } = part.content;
+      const imageUrl = media.imageUrl ?? ((id: string, width: number) => `/images/${id}/${width}`);
+      const more = photos.length - 5;
+      return <figure className="rr-story__photos">
+        <ul>{photos.map((photo, index) => {
+          const src = imageUrl(photo.image_id.toLowerCase(), index === 0 ? 960 : 480);
+          return <li key={photo.image_id}>
+            {src ? <img src={src} alt={photo.alt} loading="lazy" /> : <p role="status">Image unavailable: {photo.alt}</p>}
+            {index === 4 && more > 0 && <span className="rr-story__more" aria-hidden="true">+{more}</span>}
+          </li>;
+        })}</ul>
+        {caption && <figcaption>{caption}</figcaption>}
+      </figure>;
+    }
     case 'Video': {
       const { title, duration } = part.content;
       const urls = videoUrls(part.content);

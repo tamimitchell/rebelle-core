@@ -68,6 +68,18 @@ export const FigureContentSchema = z.object({
 export type FigureContent = z.infer<typeof FigureContentSchema>;
 
 /**
+ * A set of photographs as one part, drawn as one figure (#40). WordPress's
+ * carousels come over as sets of up to fifteen, so a set holds two to twenty;
+ * a photograph appears in a set once.
+ */
+export const PhotosContentSchema = z.object({
+  photos: z.array(FigureContentSchema).min(2).max(20)
+    .refine((photos) => new Set(photos.map((photo) => photo.image_id.toLowerCase())).size === photos.length, 'a photograph appears in a set once'),
+  caption: text(1000).optional(),
+}).strict();
+export type PhotosContent = z.infer<typeof PhotosContentSchema>;
+
+/**
  * A video, by provider: a YouTube clip, or one the site hosts from the
  * studio's media (studio #306). The id's shape and the address template are
  * both chosen by the provider, so nothing but a validated pair ever becomes
@@ -160,6 +172,7 @@ export const StoryComponentSchema = z.discriminatedUnion('component', [
   z.object({ component: z.literal('Prose'), content: ProseContentSchema }).strict(),
   z.object({ component: z.literal('Quote'), content: QuoteContentSchema }).strict(),
   z.object({ component: z.literal('Figure'), content: FigureContentSchema }).strict(),
+  z.object({ component: z.literal('Photos'), content: PhotosContentSchema }).strict(),
   z.object({ component: z.literal('Video'), content: VideoContentSchema }).strict(),
   z.object({ component: z.literal('Map'), content: MapContentSchema }).strict(),
 ]);

@@ -2,6 +2,7 @@ import React from 'react';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { readFileSync } from 'node:fs';
 import { StoryPart } from '../src/ui/story.tsx';
 
 test('the reader interprets only Prose; Paragraph and raw HTML stay literal', () => {
@@ -76,4 +77,18 @@ test('a map lists each route a day at a time, with each camp and the day\'s gree
   assert.match(html, /<li data-day="1" data-latitude="37.694" data-longitude="-118.759" data-greens="-118.9341,37.7918 -118.9171,37.827">Day 1 · Mammoth Lakes<\/li>/);
   assert.match(html, /<li data-day="2" data-latitude="37.3545" data-longitude="-117.365" data-greens="">Day 2 · Gold &lt;Point&gt;<\/li>/);
   assert.match(html, /<li data-day="3" data-latitude="37.9616" data-longitude="-117.7594" data-greens="">Day 3<\/li>/, 'a camp no one named is the day alone');
+});
+
+test('a photo set draws every photograph with its alt, the first large, and counts the ones folded past the fifth (#40)', () => {
+  const artifact = JSON.parse(readFileSync(new URL('./fixtures/release-placements.json', import.meta.url), 'utf8'));
+  const part = artifact.placements[0].story.telling.find((item: { component: string }) => item.component === 'Photos');
+  const html = renderToStaticMarkup(<StoryPart part={part} media={{ imageUrl: (id, width) => `https://example.com/images/${id}/${width}` }} />);
+  assert.equal(html.match(/<img /g)?.length, 7);
+  for (const photo of part.content.photos) assert.match(html, new RegExp(`alt="${photo.alt}"`));
+  assert.match(html, /6f1a2b3c-4d5e-4f60-8a71-b2c3d4e5f601\/960/);
+  assert.match(html, /6f1a2b3c-4d5e-4f60-8a71-b2c3d4e5f602\/480/);
+  assert.match(html, /<span class="rr-story__more" aria-hidden="true">\+2<\/span>/);
+  assert.match(html, /<figcaption>Illustrative set of seven\.<\/figcaption>/);
+  const pair = { component: 'Photos' as const, content: { photos: part.content.photos.slice(0, 2) } };
+  assert.doesNotMatch(renderToStaticMarkup(<StoryPart part={pair} />), /rr-story__more/);
 });
