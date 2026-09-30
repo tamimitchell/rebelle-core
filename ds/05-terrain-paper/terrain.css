@@ -1,6 +1,6 @@
 /* Terrain Paper — the field notebook ground. 🟡 derived, refined 2026-08-20 against the cost book + site mockups.
    The metaphor: a real printed sheet in desert light. Warm uncoated stock with tooth you feel more than see,
-   survey marks squaring the page, and topo contours surfacing only where the page is empty.
+   edges worn from handling, and topo contours surfacing only where the page is empty.
    Contours retuned wide 2026-08-21: ten levels, not forty. Large and minimal reads as survey; dense reads as wallpaper.
    THE LAW OF RESTRAINT: texture is felt, not read. Nothing here is meant to be noticed on its own —
    if you can see a layer at a glance it is turned up too far and the page reads cheap. Strengths are
@@ -62,13 +62,14 @@
 /* the sheet — a fill plus the shadow at its own edges. Two stops, no more; a busy vignette looks printed wrong. */
 --tp-sheet:radial-gradient(135% 120% at 50% 38%,var(--paper-sand) 52%,var(--paper-sand-edge) 100%);/* @kind other */
 /* linework ink is WARM, not navy — these are printed marks on paper, not interface chrome.
-   Navy at any alpha reads as UI; warm taupe recedes into the sheet the way real print does.
-   The crosses sit lighter still: they are the quietest thing on the page. */
+   Navy at any alpha reads as UI; warm taupe recedes into the sheet the way real print does. */
 --tp-mark:rgba(122,103,70,.38);
---tp-cross:rgba(122,103,70,.3);
 --tp-tick:rgba(122,103,70,.4);/* ruler ticks on the ink rules */
 --tp-tick-live:rgba(24,159,218,.62);/* the measured run — cyan, the one annotation color */
-/* how far every decoration sits off the trim — crosses AND rules share it, so they always align.
+/* the worn edges — the sides of a handled sheet darkened, and a few faint age spots near them */
+--tp-wear:inset 30px 0 44px -26px rgba(120,92,50,.18),inset -30px 0 44px -26px rgba(120,92,50,.18);/* @kind other */
+--tp-foxing:radial-gradient(circle at 5% 24%,rgba(140,100,50,.045) 0 3px,transparent 6.6px),radial-gradient(circle at 95% 62%,rgba(140,100,50,.04) 0 4px,transparent 8.8px),radial-gradient(circle at 3% 80%,rgba(140,100,50,.035) 0 5px,transparent 11px),radial-gradient(circle at 97% 14%,rgba(140,100,50,.035) 0 3px,transparent 6.6px);/* @kind other */
+/* how far the linework sits off the trim.
    Generous on purpose: decoration crowded against an edge reads as a UI border. */
 --tp-margin:24px;/* @kind spacing */
 --tp-dot:repeating-linear-gradient(180deg,var(--tp-mark) 0 1px,transparent 1px 3px);/* @kind other */
@@ -101,26 +102,20 @@
 .terrain.on-cards::after{opacity:.8}
 .terrain.tp-cracks.on-cards::after{opacity:.22}
 
-/* SURVEY MARKS ----------------------------------------------------------------------------------
-   Plus marks, not corner brackets: registration crosses from a printed sheet. Set on the ground element. */
-.tp-marks>.tp-mark{position:absolute;width:13px;height:13px;z-index:1}
-.tp-mark::before,.tp-mark::after{content:'';position:absolute;background:var(--tp-cross)}
-.tp-mark::before{left:0;right:0;top:6px;height:1px}
-.tp-mark::after{top:0;bottom:0;left:6px;width:1px}
-.tp-mark.tl{top:var(--tp-margin);left:var(--tp-margin)}.tp-mark.tr{top:var(--tp-margin);right:var(--tp-margin)}
-.tp-mark.bl{bottom:var(--tp-margin);left:var(--tp-margin)}.tp-mark.br{bottom:var(--tp-margin);right:var(--tp-margin)}
+/* WORN EDGES ------------------------------------------------------------------------------------
+   The old-map feel lives in the paper, never in a mark on it: a mark in a corner reads as a control on
+   a phone. Sides only — a darkened top or bottom edge reads as a band border. Set on the ground element. */
+.terrain.tp-worn{background:var(--tp-foxing),var(--tp-mottle),var(--tp-sheet);background-blend-mode:multiply,multiply,normal;background-color:var(--paper-sand);box-shadow:var(--tp-wear)}
 
 /* THE LINEWORK ------------------------------------------------------------------------------------
    THE LAW: vertical lines are DOTTED, horizontal lines are SOLID. That asymmetry is the whole paper-map
    feel — a dotted vertical reads as a fold or a graticule, a solid horizontal reads as a trim or a scale.
    Never mix: a solid vertical looks like a table border, a dotted horizontal looks like a coupon.
    Both primitives serve two roles: page margin rules AND interior section separators. Same line, same law.
-   Rules run BETWEEN the corner survey crosses — the crosses are their terminals, so don't add more.
-   The gap is built in and it is GENEROUS: --tp-rule-gap holds every line well clear of the cross, so a
+   The gap is built in and it is GENEROUS: --tp-rule-gap holds every line well clear of the corner, so a
    caller can position a rule corner-to-corner and still get real air. These lines are not a frame —
    they should read as an elegant fragment of a margin, never as a box around the content. When in doubt
-   make them shorter: a rule that nearly reaches its terminal is boxing the page in.
-   Widths are 13px to match .tp-mark, so the line lands on the cross centre. */
+   make them shorter: a rule that nearly reaches the corner is boxing the page in. */
 
 /* Dotted vertical — left margin rule, or the separator between columns.
    Fine dots, not dashes: 1px on, 2px off. A dash reads as a border; a dot reads as a graticule. */
