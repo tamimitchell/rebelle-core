@@ -814,6 +814,10 @@
       "value": "rgba(255,255,255,.92)"
     },
     {
+      "name": "--fgi-frost-glow",
+      "value": "0 0 0 1px rgba(255,255,255,.35),0 0 24px rgba(255,255,255,.6)"
+    },
+    {
       "name": "--paper-sand",
       "value": "var(--desert-sand)"
     },
