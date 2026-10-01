@@ -90,5 +90,8 @@ test('a photo set draws every photograph with its alt, the first large, and coun
   assert.match(html, /<span class="rr-story__more" aria-hidden="true">\+2<\/span>/);
   assert.match(html, /<figcaption>Illustrative set of seven\.<\/figcaption>/);
   const pair = { component: 'Photos' as const, content: { photos: part.content.photos.slice(0, 2) } };
-  assert.doesNotMatch(renderToStaticMarkup(<StoryPart part={pair} />), /rr-story__more/);
+  assert.match(html, /<ul data-shown="5">/);
+  const drawn = renderToStaticMarkup(<StoryPart part={pair} />);
+  assert.doesNotMatch(drawn, /rr-story__more/);
+  assert.match(drawn, /<ul data-shown="2">/, 'a pair is drawn side by side, not as a lead with a gap beside it');
 });

@@ -64,7 +64,7 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
       const imageUrl = media.imageUrl ?? ((id: string, width: number) => `/images/${id}/${width}`);
       const more = photos.length - 5;
       return <figure className="rr-story__photos">
-        <ul>{photos.map((photo, index) => {
+        <ul data-shown={Math.min(photos.length, 5)}>{photos.map((photo, index) => {
           const src = imageUrl(photo.image_id.toLowerCase(), index === 0 ? 960 : 480);
           return <li key={photo.image_id}>
             {src ? <img src={src} alt={photo.alt} loading="lazy" /> : <p role="status">Image unavailable: {photo.alt}</p>}
