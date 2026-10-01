@@ -769,7 +769,7 @@
 /* ── CHIP — reports, never acts. The inverse of the Button on every axis: mono not Oswald, pill not
    radius-6, hairline or tint not solid fill, and it MAY carry one leading icon (a Button never does).
    One size only — a chip that needs to be bigger is a heading. ───────────────────────────────── */
-.rr-chip{display:inline-flex;align-items:center;gap:var(--sp-6);font-family:var(--font-mono);font-size:var(--fs-mono-micro);letter-spacing:.14em;text-transform:uppercase;padding:var(--sp-6) var(--sp-12);border-radius:999px;line-height:1;white-space:nowrap;box-sizing:border-box;border:1px solid transparent}
+.rr-chip{display:inline-flex;align-items:center;gap:var(--sp-6);font-family:var(--font-mono);font-size:var(--fs-mono-micro);letter-spacing:.12em;text-transform:uppercase;padding:var(--sp-4) 10px;border-radius:999px;line-height:1;white-space:nowrap;box-sizing:border-box;border:1px solid transparent}
 .rr-chip>i{font-size:var(--icon-chip);line-height:1;flex:none}
 /* dark grounds — navy, photo, glass */
 .rr-chip--neutral{color:rgba(255,255,255,.88);border-color:var(--control-hairline)}
