@@ -27,7 +27,8 @@ shipping: never publish a number that was guessed.
 ## The event ◆
 
 - The longest competitive off-road rally in the United States, and the first
-  for women. Eight days, no GPS, no phones: maps, compass and roadbook.
+  for women. Nine days on course (the Prologue, then Days 1–8), no GPS, no
+  phones: maps, compass and roadbook.
   Founded 2016; 2026 is the **11th edition**.
 - **2026:** October 7–17, Las Vegas, NV to the Imperial Sand Dunes, CA. A
   ceremonial start at Las Vegas Motor Speedway on October 8; a finish open to
