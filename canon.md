@@ -32,7 +32,8 @@ shipping: never publish a number that was guessed.
   Founded 2016; 2026 is the **11th edition**.
 - **2026:** October 7–17, Las Vegas, NV to the Imperial Sand Dunes, CA. A
   ceremonial start at Las Vegas Motor Speedway on October 8; a finish open to
-  the public in the Imperial Sand Dunes on October 17, then Rebellation.
+  the public in the Imperial Sand Dunes on Friday, October 16, then Rebellation
+  on Saturday, October 17.
 - **Mileage ❓:** well over a thousand miles; the exact 2026 figure is
   unconfirmed.
 - **The mission, in its own words:** *"Beyond Competition"* · *"elevate women
