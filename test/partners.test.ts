@@ -8,7 +8,7 @@ import { DEFAULT_BAND, DEFAULT_PARTNERS_PAGE, PARTNER_TIERS, PartnerSchema, Part
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/partners.json', import.meta.url), 'utf8'));
 // Schema 3: the band's settings and each partner's band_scale (studio #638).
 const third = JSON.parse(readFileSync(new URL('./fixtures/partners.v3.json', import.meta.url), 'utf8'));
-// Schema 4: the Partners page's words and each partner's profile (studio #641).
+// Schema 4: the Partners page's words and each partner's profile, emitted by the studio's writer (studio #641).
 const fourth = JSON.parse(readFileSync(new URL('./fixtures/partners.v4.json', import.meta.url), 'utf8'));
 const partner = fourth.records[0].payload;
 const withRecords = (records: unknown[]) => ({ ...fourth, records });
