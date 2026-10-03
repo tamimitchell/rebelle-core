@@ -1,0 +1,251 @@
+/* The Partners page's sections (`partners-page.tsx`). Leans on system.css for
+   `.photo-ground`, `.terrain`, `.navy-flat`, `.rr-sechead` and `.rr-btn`,
+   and on its tokens. */
+
+.rr-pp-hero,
+.rr-pp-profiles,
+.rr-pp-roster {
+  container-type: inline-size;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.rr-pp-hero *,
+.rr-pp-profiles *,
+.rr-pp-roster * {
+  box-sizing: border-box;
+}
+
+/* Hero: the photograph, the page's name and its lead, the Official Partners badge beside them. */
+.rr-pp-hero {
+  background: var(--navy-night);
+  min-height: max(600px, 80svh);
+  display: flex;
+  flex-direction: column;
+}
+
+.rr-pp-hero > img {
+  object-position: 40% 55%;
+}
+
+.rr-pp-hero__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--navy-night) 78%, transparent) 0%, color-mix(in srgb, var(--navy-night) 40%, transparent) 48%, transparent 72%),
+    linear-gradient(180deg, color-mix(in srgb, var(--navy-night) 45%, transparent) 0%, transparent 22%, transparent 55%, var(--navy-night) 100%);
+  pointer-events: none;
+}
+
+.rr-pp-hero__in {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-wide, 1408px);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--sp-24) var(--sp-24) var(--sp-48);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rr-pp-hero__body {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--sp-48);
+}
+
+.rr-pp-hero__head > h1 {
+  font-size: clamp(44px, 6.4cqw, 92px);
+  line-height: 0.98;
+  letter-spacing: var(--ls-hero);
+  text-shadow: 0 2px 18px color-mix(in srgb, var(--black) 45%, transparent);
+}
+
+.rr-pp-hero__head em {
+  padding-top: 2px;
+}
+
+.rr-pp-hero__lead {
+  margin: 20px 0 0;
+  max-width: 600px;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-reading);
+  color: var(--white);
+  text-wrap: pretty;
+  text-shadow: 0 1px 3px color-mix(in srgb, var(--navy-night) 90%, transparent), 0 2px 12px color-mix(in srgb, var(--navy-night) 70%, transparent);
+}
+
+.rr-pp-hero__mark {
+  display: block;
+  width: clamp(220px, 24cqw, 340px);
+  height: auto;
+  filter: drop-shadow(0 8px 24px color-mix(in srgb, var(--navy-night) 55%, transparent));
+}
+
+@container (max-width: 860px) {
+  .rr-pp-hero__body { grid-template-columns: 1fr; gap: var(--sp-24); }
+  .rr-pp-hero__mark { grid-row: 1; width: clamp(160px, 40cqw, 240px); }
+  .rr-pp-hero__head > h1 { font-size: clamp(44px, 10cqw, 72px); }
+}
+
+@container (max-width: 680px) {
+  .rr-pp-hero__in { padding-bottom: var(--sp-32); }
+  .rr-pp-hero__head > h1 { font-size: clamp(40px, 12cqw, 56px); }
+}
+
+/* Gold profiles. */
+.rr-pp-profiles__head {
+  background: var(--navy-night);
+  border-top: 1px solid var(--hairline-inverse);
+  border-bottom: 1px solid var(--hairline-inverse);
+}
+
+.rr-pp-profiles__head > h2 {
+  max-width: var(--container-wide, 1408px);
+  margin: 0 auto;
+  padding: var(--sp-24);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-feature);
+  letter-spacing: var(--ls-title);
+  text-transform: uppercase;
+  line-height: var(--lh-snug);
+  text-align: center;
+  color: var(--white);
+}
+
+.rr-pp-profile__in {
+  max-width: var(--container-wide, 1408px);
+  margin: 0 auto;
+  padding: clamp(64px, 7cqw, 112px) var(--sp-24);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  align-items: center;
+  gap: clamp(40px, 6cqw, 96px);
+}
+
+.rr-pp-profile__logo {
+  display: flex;
+  justify-content: center;
+}
+
+.rr-pp-profile__logo .rr-pp-mark img {
+  width: auto;
+  max-width: min(100%, 440px);
+  max-height: 220px;
+}
+
+.rr-pp-profile__words > h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-subsection);
+  letter-spacing: var(--ls-display);
+  text-transform: uppercase;
+  line-height: var(--lh-display);
+}
+
+.rr-pp-profile__words > p {
+  max-width: var(--measure-article, 68ch);
+  margin: var(--sp-16) 0 0;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-reading);
+  text-wrap: pretty;
+}
+
+.rr-pp--paper .rr-pp-profile__words > p {
+  color: var(--ink);
+}
+
+.rr-pp--navy .rr-pp-profile__words > p {
+  color: var(--white-soft);
+}
+
+.rr-pp-profile__words > .rr-btn {
+  margin-top: var(--sp-24);
+  text-decoration: none;
+}
+
+@container (max-width: 860px) {
+  .rr-pp-profile__in { grid-template-columns: 1fr; gap: var(--sp-32); padding: 64px 20px; }
+  .rr-pp-profile__logo { justify-content: flex-start; }
+  .rr-pp-profile__logo .rr-pp-mark img { max-width: min(100%, 320px); max-height: 160px; }
+}
+
+/* The other levels, a row each. */
+.rr-pp-level__in {
+  max-width: var(--container-wide, 1408px);
+  margin: 0 auto;
+  padding: clamp(48px, 5cqw, 72px) var(--sp-24);
+}
+
+.rr-pp-level__logos {
+  --cols: var(--cols-wide);
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: calc(var(--cols) * var(--cell));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  row-gap: var(--sp-24);
+}
+
+/* Each logo takes a line's share, so a level that wraps splits evenly. */
+.rr-pp-level__logos > li {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 calc(100% / var(--cols));
+  max-width: calc(100% / var(--cols));
+  padding: 0 calc(var(--sp-24) / 2);
+}
+
+@container (max-width: 1100px) {
+  .rr-pp-level__logos { --cols: var(--cols-mid); }
+}
+
+@container (max-width: 620px) {
+  .rr-pp-level__logos { --cols: var(--cols-narrow); max-width: none; }
+}
+
+.rr-pp-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: var(--radius-well);
+  transition: background 0.2s ease;
+}
+
+.rr-pp-mark img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.rr-pp--paper .rr-pp-mark:hover,
+.rr-pp--paper .rr-pp-mark:focus-visible {
+  background: color-mix(in srgb, var(--navy) 6%, transparent);
+}
+
+.rr-pp--navy .rr-pp-mark:hover,
+.rr-pp--navy .rr-pp-mark:focus-visible {
+  background: color-mix(in srgb, var(--white) 7%, transparent);
+}
+
+/* A partner with no color logo shows its dark-ground one on a navy plate. */
+.rr-pp-plate > .rr-pp-mark,
+.rr-pp-plate.rr-pp-profile__logo .rr-pp-mark {
+  background: var(--navy);
+  padding: 14px 18px;
+}
+
+@container (max-width: 680px) {
+  .rr-pp-level__in { padding: 48px 20px; }
+  .rr-pp-level__logos { row-gap: var(--sp-16); }
+}

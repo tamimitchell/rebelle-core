@@ -1,0 +1,77 @@
+import React from 'react';
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { PartnersFeedDocumentSchema, partnersOf, type Partner } from '../src/partners.ts';
+import { PartnerProfiles, PartnerRoster, PartnersHero } from '../src/ui/partners-page.tsx';
+
+// Schema 4 (studio #641): Pennzoil is Gold with a profile; MINI and Synchrony Silver OEM; HEST a supplier.
+const fourth = JSON.parse(readFileSync(new URL('./fixtures/partners.v4.json', import.meta.url), 'utf8'));
+const { partners, band, page } = partnersOf(PartnersFeedDocumentSchema.parse(fourth));
+const [pennzoil, mini, synchrony, hest] = partners;
+const gold = (key: string, extra: Partial<Partner> = {}): Partner => ({ ...pennzoil, key, name: key, ...extra });
+
+test('the hero draws the page\'s name, its lead where an editor can find it, and what it is given above the heading', () => {
+  const html = renderToStaticMarkup(
+    <PartnersHero lineA="Our" lineB="Partners" lead={page.lead}>
+      <nav>crumbs</nav>
+    </PartnersHero>,
+  );
+  assert.match(html, /<h1 id="partners-title">Our<em>Partners<\/em><\/h1>/);
+  assert.match(html, /<p class="rr-pp-hero__lead" data-field="lead">All Rebelle Rally partners/);
+  assert.ok(html.indexOf('<nav>crumbs</nav>') < html.indexOf('<h1'));
+});
+
+test('each Gold partner gets a profile: its color logo on paper, its name, its profile and a door to its site in a new tab', () => {
+  const html = renderToStaticMarkup(<PartnerProfiles partners={partners} />);
+  assert.equal((html.match(/<article /g) ?? []).length, 1, 'only Gold partners have profiles');
+  assert.match(html, /<article class="rr-pp-profile terrain tp-worn rr-pp--paper" aria-labelledby="partner-pennzoil" data-partner="pennzoil">/);
+  assert.ok(html.includes(`src="${pennzoil.logos.color?.url}"`));
+  assert.match(html, /<h3 id="partner-pennzoil">Pennzoil<\/h3><p>Pennzoil is an all-encompassing partner/);
+  assert.match(html, /<a class="rr-btn rr-btn--md rr-btn--primary" href="https:\/\/www.pennzoil.com\/" target="_blank" rel="noopener">Visit Pennzoil ↗<\/a>/);
+});
+
+test('the profiles alternate paper and navy, a navy one drawing the dark-ground logo', () => {
+  const html = renderToStaticMarkup(<PartnerProfiles partners={[gold('one'), gold('two'), gold('three')]} />);
+  assert.deepEqual([...html.matchAll(/rr-pp--(paper|navy)/g)].map((match) => match[1]), ['paper', 'navy', 'paper']);
+  assert.ok(html.includes(`src="${pennzoil.logos.dark?.url}"`));
+  assert.match(html, /rr-btn--secondary/);
+});
+
+test('a Gold partner without a profile or a link keeps its name and logo, and the logo opens the fallback page', () => {
+  const html = renderToStaticMarkup(<PartnerProfiles partners={[gold('quiet', { profile: null, link: null })]} />);
+  assert.doesNotMatch(html, /<p>/);
+  assert.doesNotMatch(html, /Visit/);
+  assert.match(html, /<a class="rr-pp-mark" href="\/partners" data-partner="quiet">/);
+  assert.equal(renderToStaticMarkup(<PartnerProfiles partners={[mini, hest]} />), '', 'no Gold partners, no section');
+});
+
+test('the roster draws every level after Gold, a row each, carrying on the alternation from the profiles', () => {
+  const html = renderToStaticMarkup(<PartnerRoster partners={partners} band={band} />);
+  assert.deepEqual([...html.matchAll(/rr-pp-level--([a-z-]+) [a-z -]*rr-pp--(paper|navy)/g)].map((match) => [match[1], match[2]]), [
+    ['silver-oem', 'navy'],
+    ['supplier', 'paper'],
+  ]);
+  assert.doesNotMatch(html, /data-partner="pennzoil"/);
+  assert.match(html, /data-partner="bmw"/);
+  assert.doesNotMatch(html, /<h3/, 'the levels are not named, as on WordPress');
+});
+
+test('on paper the roster draws a color logo, puts a logo with no color version on a navy plate, and skips a partner with no logo', () => {
+  const colored = { ...mini, logos: { ...mini.logos, color: pennzoil.logos.color } };
+  const colorless = { ...hest, tier: 'silver-oem' as const };
+  const html = renderToStaticMarkup(<PartnerRoster partners={[colored, synchrony, colorless]} />);
+  assert.match(html, /rr-pp-level--silver-oem terrain/, 'with no Gold partners, the first row is paper');
+  assert.ok(html.includes(`src="${pennzoil.logos.color?.url}"`));
+  assert.match(html, /<li class="rr-pp-plate"><a class="rr-pp-mark" href="https:\/\/hest.com\/"/);
+  assert.doesNotMatch(html, /data-partner="synchrony"/);
+});
+
+test('the roster shares a wrapping level evenly and sizes its logos by the band\'s settings', () => {
+  const nine = Array.from({ length: 9 }, (_, index) => ({ ...hest, key: `supplier-${index}` }));
+  const html = renderToStaticMarkup(<PartnerRoster partners={nine} />);
+  assert.match(html, /--cols-wide:5;--cols-mid:3;--cols-narrow:3/);
+  const width = (sizes: typeof band.sizes) => Number(renderToStaticMarkup(<PartnerRoster partners={[hest]} band={{ ...band, sizes }} />).match(/width="(\d+)"/)?.[1]);
+  assert.ok(width({ ...band.sizes, supplier: 140 }) > width({ ...band.sizes, supplier: 70 }));
+});
