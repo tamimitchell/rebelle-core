@@ -22,6 +22,9 @@ export interface PartnersBandPhoto {
  * Without partners the band keeps its head and link, and no panel. `band`
  * carries the feed's settings: color or white, and each level's size.
  */
+// A partner's own site opens in a new tab; the fallback page is the site's own.
+const away = (href: string) => /^https?:\/\//.test(href);
+
 export function PartnersBand({
   partners,
   head,
@@ -70,7 +73,7 @@ export function PartnersBand({
               >
                 {row.logos.map((logo) => (
                   <li key={logo.key} style={logo.scale === 1 ? undefined : ({ '--scale': logo.scale } as React.CSSProperties)}>
-                    <a className="rr-partners__mark" href={logo.href} data-partner={logo.key}>
+                    <a className="rr-partners__mark" href={logo.href} data-partner={logo.key} {...(away(logo.href) ? { target: '_blank', rel: 'noopener' } : {})}>
                       <img src={logo.src} alt={logo.name} width={logo.width} height={logo.height} loading="lazy" decoding="async" />
                     </a>
                   </li>

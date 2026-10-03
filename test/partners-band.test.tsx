@@ -115,6 +115,13 @@ test('bandRows in white draws the white mark where a partner has one, else its d
 test('PartnersBand sets each row\'s cell from its level\'s size, and a scaled mark\'s --scale for the narrow caps', () => {
   const html = renderToStaticMarkup(<PartnersBand band={{ ...band, sizes: { ...band.sizes, gold: 150 } }} head={head} partners={partners} />);
   assert.match(html, /--cell:592px/);
-  assert.match(html, /<li style="--scale:1.5"><a class="rr-partners__mark" href="[^"]*" data-partner="pennzoil">/);
-  assert.match(renderToStaticMarkup(<PartnersBand head={head} partners={partners} />), /<li><a class="rr-partners__mark" href="[^"]*" data-partner="pennzoil">/, 'no --scale at the defaults');
+  assert.match(html, /<li style="--scale:1.5"><a class="rr-partners__mark" href="[^"]*" data-partner="pennzoil"/);
+  assert.match(renderToStaticMarkup(<PartnersBand head={head} partners={partners} />), /<li><a class="rr-partners__mark" href="[^"]*" data-partner="pennzoil"/, 'no --scale at the defaults');
+});
+
+test('a partner\'s own site opens in a new tab, and the partners page in the same one', () => {
+  const unlinked = partners.map((each) => (each.key === 'hest' ? { ...each, link: null } : each));
+  const html = renderToStaticMarkup(<PartnersBand head={head} partners={unlinked} />);
+  assert.match(html, /<a class="rr-partners__mark" href="https:\/\/www\.pennzoil\.com\/" data-partner="pennzoil" target="_blank" rel="noopener">/);
+  assert.match(html, /<a class="rr-partners__mark" href="\/partners" data-partner="hest">/);
 });
