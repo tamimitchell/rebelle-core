@@ -100,6 +100,31 @@
   .rr-sechead.rr-pp-hero__head > h1 { font-size: clamp(40px, 12cqw, 56px); }
 }
 
+/* The film over the photograph, cropped to fill the hero; it fades in once it plays. */
+.photo-ground.rr-pp-hero > .rr-pp-hero__video {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.photo-ground.rr-pp-hero > .rr-pp-hero__video[data-playing] {
+  opacity: 1;
+}
+
+.rr-pp-hero__video > iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100cqw, 177.78cqh);
+  height: max(56.25cqw, 100cqh);
+  border: 0;
+}
+
 /* Gold profiles. */
 .rr-pp-profiles__head {
   background: var(--navy-night);
@@ -138,8 +163,8 @@
 
 .rr-pp-profile__logo .rr-pp-mark img {
   width: auto;
-  max-width: min(100%, 440px);
-  max-height: 220px;
+  max-width: min(100%, 500px);
+  max-height: 300px;
 }
 
 .rr-pp-profile__words > h3 {
@@ -222,23 +247,29 @@
   justify-content: center;
   padding: 10px;
   border-radius: var(--radius-well);
-  transition: background 0.2s ease;
 }
 
 .rr-pp-mark img {
   display: block;
   max-width: 100%;
   height: auto;
+  transition: transform 0.3s ease;
 }
 
-.rr-pp--paper a.rr-pp-mark:hover,
-.rr-pp--paper a.rr-pp-mark:focus-visible {
-  background: color-mix(in srgb, var(--navy) 6%, transparent);
+/* A linked logo grows a tenth under the pointer, as WordPress's did. */
+a.rr-pp-mark:hover img,
+a.rr-pp-mark:focus-visible img {
+  transform: scale(1.1);
 }
 
-.rr-pp--navy a.rr-pp-mark:hover,
-.rr-pp--navy a.rr-pp-mark:focus-visible {
-  background: color-mix(in srgb, var(--white) 7%, transparent);
+a.rr-pp-mark:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-pp-mark img { transition: none; }
+  .photo-ground.rr-pp-hero > .rr-pp-hero__video { transition: none; }
 }
 
 /* A logo drawn for the other ground sits on a plate of that ground: a partner

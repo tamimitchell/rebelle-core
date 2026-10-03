@@ -8,7 +8,7 @@ import { PartnerProfiles, PartnerRoster, PartnersHero } from '../src/ui/partners
 
 // Schema 4 (studio #641): Pennzoil is Gold with a profile; MINI and Synchrony Silver OEM; HEST a supplier.
 const fourth = JSON.parse(readFileSync(new URL('./fixtures/partners.v4.json', import.meta.url), 'utf8'));
-const { partners, band, page } = partnersOf(PartnersFeedDocumentSchema.parse(fourth));
+const { partners, page } = partnersOf(PartnersFeedDocumentSchema.parse(fourth));
 const [pennzoil, mini, synchrony, hest] = partners;
 const gold = (key: string, extra: Partial<Partner> = {}): Partner => ({ ...pennzoil, key, name: key, ...extra });
 
@@ -49,7 +49,7 @@ test('a partner without a profile or a site keeps its name and its logo, unlinke
 });
 
 test('the roster draws every level after Gold, a row each, carrying on the alternation from the profiles', () => {
-  const html = renderToStaticMarkup(<PartnerRoster partners={partners} band={band} />);
+  const html = renderToStaticMarkup(<PartnerRoster partners={partners} />);
   assert.deepEqual([...html.matchAll(/rr-pp-level--([a-z-]+) [a-z -]*rr-pp--(paper|navy)/g)].map((match) => [match[1], match[2]]), [
     ['silver-oem', 'navy'],
     ['supplier', 'paper'],
@@ -80,10 +80,27 @@ test('on navy a partner with only a color logo keeps it, on a paper plate, and a
   assert.match(html, /<li class="rr-pp-plate"><a class="rr-pp-mark" href="https:\/\/www.miniusa.com\/" data-partner="bmw"/);
 });
 
-test('the roster shares a wrapping level evenly and sizes its logos by the band\'s settings', () => {
+test('the roster shares a wrapping level evenly, sizes logos as WordPress did, and takes each partner\'s own nudge', () => {
   const nine = Array.from({ length: 9 }, (_, index) => ({ ...hest, key: `supplier-${index}` }));
   const html = renderToStaticMarkup(<PartnerRoster partners={nine} />);
   assert.match(html, /--cols-wide:5;--cols-mid:3;--cols-narrow:3/);
-  const width = (sizes: typeof band.sizes) => Number(renderToStaticMarkup(<PartnerRoster partners={[hest]} band={{ ...band, sizes }} />).match(/width="(\d+)"/)?.[1]);
-  assert.ok(width({ ...band.sizes, supplier: 140 }) > width({ ...band.sizes, supplier: 70 }));
+  const width = (partner: Partner) => Number(renderToStaticMarkup(<PartnerRoster partners={[partner]} />).match(/width="(\d+)"/)?.[1]);
+  const square = { url: '/images/x/640', alt: 'x', width: 1000, height: 1000 };
+  const wordmark = { url: '/images/x/640', alt: 'x', width: 4000, height: 400 };
+  assert.equal(width({ ...hest, tier: 'bronze', band_scale: 100, logos: { white: square, color: square, dark: null } }), Math.round(Math.sqrt(17000)), 'a square bronze logo covers the level\'s area');
+  assert.equal(width({ ...hest, tier: 'bronze', band_scale: 100, logos: { white: wordmark, color: wordmark, dark: null } }), 200, 'a long wordmark stops at the level\'s widest');
+  assert.equal(width({ ...hest, tier: 'bronze', band_scale: 150, logos: { white: square, color: square, dark: null } }), Math.round(Math.sqrt(17000) * 1.5));
+});
+
+test('a Gold logo fills its column, as WordPress\'s did, unless it would stand taller than the column allows', () => {
+  const at = (mark: { width: number; height: number }) =>
+    Number(renderToStaticMarkup(<PartnerProfiles partners={[gold('g', { logos: { ...pennzoil.logos, color: { url: '/images/g/640', alt: 'g', ...mark } } })]} />).match(/width="(\d+)"/)?.[1]);
+  assert.equal(at({ width: 2000, height: 1134 }), 500);
+  assert.equal(at({ width: 1000, height: 1000 }), 300);
+});
+
+test('the hero marks the film\'s place for the page to play, and draws none without one', () => {
+  const html = renderToStaticMarkup(<PartnersHero lead={page.lead} lineA="Our" video={{ vimeo: '886564623', start: 20, end: 60 }} />);
+  assert.match(html, /<div class="rr-pp-hero__video" aria-hidden="true" data-vimeo="886564623" data-start="20" data-end="60"><\/div>/);
+  assert.doesNotMatch(renderToStaticMarkup(<PartnersHero lead={page.lead} lineA="Our" />), /rr-pp-hero__video|iframe/);
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { balancedColumns, logoWidth, PARTNER_TIERS, type BandSettings, type Partner } from '../partners.ts';
+import { balancedColumns, PARTNER_TIERS, type Partner, type PartnerTier } from '../partners.ts';
 import type { Mark } from '../dispatch.ts';
 
 /**
@@ -14,8 +14,32 @@ import type { Mark } from '../dispatch.ts';
 /** The most logos a level's line holds on a wide page, under 1100px and under 620px. */
 const ROSTER_LINE = { wide: 5, mid: 4, narrow: 3 };
 const ROSTER_GAP = 56;
-/** The roster's logos read larger than the band's, which shares a panel with every level. */
-const ROSTER_SCALE = 1.25;
+
+/**
+ * Each level's logos at the size Rebelle's WordPress page showed them (Tami,
+ * 2026-10-03), measured there at 1440px: every logo in a row covers the same
+ * area, so a square badge and a long wordmark read as equals, and none runs
+ * wider than `max`. A Gold logo fills its column, as there.
+ */
+const LOGO_SIZING: Record<Exclude<PartnerTier, 'gold'>, { area: number; max: number }> = {
+  'silver-oem': { area: 14000, max: 210 },
+  silver: { area: 18000, max: 240 },
+  bronze: { area: 17000, max: 200 },
+  supplier: { area: 1800, max: 100 },
+};
+const GOLD = { width: 500, height: 300 };
+/** A wordmark's typical shape, for a mark sent without its pixels. */
+const FALLBACK_ASPECT = 3;
+
+const aspectOf = (mark: Mark) => (mark.width && mark.height ? mark.width / mark.height : FALLBACK_ASPECT);
+
+// A partner's own nudge (its `band_scale`) carries here too; the band's level sizes do not.
+function rosterWidth(mark: Mark, tier: Exclude<PartnerTier, 'gold'>, scale: number): number {
+  const { area, max } = LOGO_SIZING[tier];
+  return Math.round(Math.min(max, Math.sqrt(area * aspectOf(mark))) * scale);
+}
+
+const goldWidth = (mark: Mark) => Math.round(Math.min(GOLD.width, GOLD.height * aspectOf(mark)));
 
 type Ground = 'paper' | 'navy';
 const GROUND: Record<Ground, string> = { paper: 'terrain tp-worn rr-pp--paper', navy: 'navy-flat rr-pp--navy' };
@@ -53,16 +77,23 @@ export interface PartnersHeroProps {
   lineB?: string;
   lead: string;
   photo?: { src: string; srcSet?: string; alt: string };
+  /**
+   * A Vimeo film to play over the photograph, from `start` to `end` seconds
+   * and round again. The hero draws only its place (`data-vimeo`); the page
+   * mounts the player, so a still stays for reduced motion and in an editor.
+   */
+  video?: { vimeo: string; start?: number; end?: number };
   mark?: { src: string; alt: string; width: number; height: number };
   headingId?: string;
   /** Drawn above the heading: the site's breadcrumb. */
   children?: React.ReactNode;
 }
 
-export function PartnersHero({ lineA, lineB, lead, photo, mark, headingId = 'partners-title', children }: PartnersHeroProps) {
+export function PartnersHero({ lineA, lineB, lead, photo, video, mark, headingId = 'partners-title', children }: PartnersHeroProps) {
   return (
     <header className="photo-ground rr-pp-hero" aria-labelledby={headingId}>
       {photo && <img src={photo.src} srcSet={photo.srcSet} sizes="100vw" fetchPriority="high" alt={photo.alt} />}
+      {video && <div className="rr-pp-hero__video" aria-hidden="true" data-vimeo={video.vimeo} data-start={video.start} data-end={video.end} />}
       <span className="rr-pp-hero__wash" aria-hidden="true" />
       <div className="rr-pp-hero__in">
         {children}
@@ -103,7 +134,7 @@ export function PartnerProfiles({ partners, heading = 'Official partners', headi
           <article key={partner.key} className={`rr-pp-profile ${GROUND[ground]}`} aria-labelledby={`partner-${partner.key}`} data-partner={partner.key}>
             <div className="rr-pp-profile__in">
               <div className={`rr-pp-profile__logo${plated(partner, ground) ? ' rr-pp-plate' : ''}`}>
-                {mark && <Logo partner={partner} mark={mark} width={logoWidth(mark, 'gold') * 2} />}
+                {mark && <Logo partner={partner} mark={mark} width={goldWidth(mark)} />}
               </div>
               <div className="rr-pp-profile__words">
                 <h3 id={`partner-${partner.key}`}>{partner.name}</h3>
@@ -124,10 +155,9 @@ export function PartnerProfiles({ partners, heading = 'Official partners', headi
 
 /**
  * Every level after Gold, a row each, its grounds carrying on from the
- * profiles' so the page alternates all the way down. Sizes follow the band's
- * settings, so the levels keep the proportions the studio gave them.
+ * profiles' so the page alternates all the way down.
  */
-export function PartnerRoster({ partners, band }: { partners: readonly Partner[]; band?: BandSettings }) {
+export function PartnerRoster({ partners }: { partners: readonly Partner[] }) {
   const gold = partners.filter((partner) => partner.tier === 'gold').length;
   // Only levels with a logo to draw take a row, so the grounds keep turning about.
   const tiers = PARTNER_TIERS.filter((tier) => tier !== 'gold' && partners.some((partner) => partner.tier === tier && drawn(partner)));
@@ -136,10 +166,9 @@ export function PartnerRoster({ partners, band }: { partners: readonly Partner[]
     <section className="rr-pp-roster" aria-label="Partners">
       {tiers.map((tier, index) => {
         const ground: Ground = (gold + index) % 2 === 0 ? 'paper' : 'navy';
-        const level = (band?.sizes[tier] ?? 100) / 100;
         const logos = partners.flatMap((partner) => {
           const mark = partner.tier === tier ? markOn(partner, ground) : null;
-          return mark ? [{ partner, mark, width: logoWidth(mark, tier, level * (partner.band_scale / 100) * ROSTER_SCALE) }] : [];
+          return mark ? [{ partner, mark, width: rosterWidth(mark, tier as Exclude<PartnerTier, 'gold'>, partner.band_scale / 100) }] : [];
         });
         // Each logo takes a line's share, so a level that wraps splits evenly.
         const line = {
