@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { bandRows, type Partner } from '../partners.ts';
+import { bandRows, type BandSettings, type Partner } from '../partners.ts';
 
 export interface PartnersBandHead {
   kicker?: string;
@@ -19,13 +19,15 @@ export interface PartnersBandPhoto {
  * the photograph, the section's head and its link, and every partner on one
  * Field Glass panel, a row a level. Each mark carries `data-partner` with the
  * partner's key so an editor can find it; the band edits nothing itself.
- * Without partners the band keeps its head and link, and no panel.
+ * Without partners the band keeps its head and link, and no panel. `band`
+ * carries the feed's settings: color or white, and each level's size.
  */
 export function PartnersBand({
   partners,
   head,
   link,
   photo,
+  band,
   fallbackHref = '/partners',
   headingId = 'partners-title',
 }: {
@@ -33,10 +35,11 @@ export function PartnersBand({
   head: PartnersBandHead;
   link?: { href: string; label: string };
   photo?: PartnersBandPhoto;
+  band?: BandSettings;
   fallbackHref?: string;
   headingId?: string;
 }) {
-  const rows = bandRows(partners, { fallbackHref });
+  const rows = bandRows(partners, { fallbackHref, band });
   return (
     <section className="photo-ground rr-partners" aria-labelledby={headingId}>
       {photo && <img src={photo.src} srcSet={photo.srcSet} sizes="100vw" alt={photo.alt} loading="lazy" decoding="async" />}
@@ -63,10 +66,10 @@ export function PartnersBand({
               <ul
                 key={row.tier}
                 className={`rr-partners__row rr-partners__row--${row.tier}`}
-                style={{ '--cols-wide': row.columns.wide, '--cols-mid': row.columns.mid, '--cols-narrow': row.columns.narrow } as React.CSSProperties}
+                style={{ '--cols-wide': row.columns.wide, '--cols-mid': row.columns.mid, '--cols-narrow': row.columns.narrow, '--cell': `${row.cell}px` } as React.CSSProperties}
               >
                 {row.logos.map((logo) => (
-                  <li key={logo.key}>
+                  <li key={logo.key} style={logo.scale === 1 ? undefined : ({ '--scale': logo.scale } as React.CSSProperties)}>
                     <a className="rr-partners__mark" href={logo.href} data-partner={logo.key}>
                       <img src={logo.src} alt={logo.name} width={logo.width} height={logo.height} loading="lazy" decoding="async" />
                     </a>

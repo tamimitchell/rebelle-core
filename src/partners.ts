@@ -28,35 +28,62 @@ export const PartnerLogosSchema = z
   .strict();
 export type PartnerLogos = z.infer<typeof PartnerLogosSchema>;
 
-export const PartnerSchema = SponsorSchema.extend({
+/** A band setting's share of its default, in percent. */
+const BandPercentSchema = z.number().int().min(50).max(200);
+
+const PartnerV2Schema = SponsorSchema.extend({
   tier: z.enum(PARTNER_TIERS),
   /** The partner's place on the site, 1 first. */
   position: z.number().int().positive(),
   logos: PartnerLogosSchema,
 }).strict();
+
+/**
+ * A partner as schema 3 carries it (studio #638): schema 2's fields and
+ * `band_scale`, its logo's size on the band as a share of its level's.
+ */
+export const PartnerSchema = PartnerV2Schema.extend({ band_scale: BandPercentSchema }).strict();
 export type Partner = z.infer<typeof PartnerSchema>;
 
-const PartnerRecordSchema = z
+/** The band's own settings (studio #638): every logo in color or in white, and each level's size. */
+export const BandSettingsSchema = z
   .object({
-    id: z.string().uuid(),
-    /** The payload's own digest, as the rally days feed writes its records'. */
-    version_id: z.string().regex(/^[0-9a-f]{64}$/, 'a version id is the payload digest'),
-    schema_version: z.literal('2'),
-    payload: PartnerSchema,
+    logo_style: z.enum(['color', 'white']),
+    sizes: z.object({ gold: BandPercentSchema, 'silver-oem': BandPercentSchema, silver: BandPercentSchema, bronze: BandPercentSchema, supplier: BandPercentSchema }).strict(),
   })
   .strict();
+export type BandSettings = z.infer<typeof BandSettingsSchema>;
 
-/** Records arrive in the site's order, so a reader draws them as listed. */
+export const DEFAULT_BAND: BandSettings = { logo_style: 'color', sizes: { gold: 100, 'silver-oem': 100, silver: 100, bronze: 100, supplier: 100 } };
+
+const recordOf = <V extends string, P extends z.ZodTypeAny>(version: V, payload: P) =>
+  z
+    .object({
+      id: z.string().uuid(),
+      /** The payload's own digest, as the rally days feed writes its records'. */
+      version_id: z.string().regex(/^[0-9a-f]{64}$/, 'a version id is the payload digest'),
+      schema_version: z.literal(version),
+      payload,
+    })
+    .strict();
+
+const envelope = {
+  contract_version: z.literal('1'),
+  feed_key: z.literal(PARTNERS_FEED_KEY),
+  record_type_key: z.literal('rebelle.partner'),
+  sent_at: z.string().datetime({ offset: true }),
+};
+
+/**
+ * Records arrive in the site's order, so a reader draws them as listed.
+ * Schema 3 adds the band's settings and each partner's `band_scale`; a reader
+ * takes schema 2 as well, so the site reads 3 before the studio sends it.
+ */
 export const PartnersFeedDocumentSchema = z
-  .object({
-    contract_version: z.literal('1'),
-    feed_key: z.literal(PARTNERS_FEED_KEY),
-    record_type_key: z.literal('rebelle.partner'),
-    record_schema_version: z.literal('2'),
-    sent_at: z.string().datetime({ offset: true }),
-    records: z.array(PartnerRecordSchema),
-  })
-  .strict()
+  .discriminatedUnion('record_schema_version', [
+    z.object({ ...envelope, record_schema_version: z.literal('2'), records: z.array(recordOf('2', PartnerV2Schema)) }).strict(),
+    z.object({ ...envelope, record_schema_version: z.literal('3'), band: BandSettingsSchema, records: z.array(recordOf('3', PartnerSchema)) }).strict(),
+  ])
   .superRefine((document, context) => {
     const keys = new Set<string>();
     document.records.forEach(({ payload }, index) => {
@@ -71,6 +98,12 @@ export const PartnersFeedDocumentSchema = z
     });
   });
 export type PartnersFeedDocument = z.infer<typeof PartnersFeedDocumentSchema>;
+
+/** The band's partners and settings from either schema; schema 2 reads as the defaults. */
+export function partnersOf(document: PartnersFeedDocument): { partners: Partner[]; band: BandSettings } {
+  if (document.record_schema_version === '3') return { partners: document.records.map((record) => record.payload), band: document.band };
+  return { partners: document.records.map((record) => ({ ...record.payload, band_scale: 100 })), band: DEFAULT_BAND };
+}
 
 /**
  * Every logo in a row gets the same area, so a square badge and a long
@@ -111,6 +144,8 @@ export interface BandLogo {
   width: number;
   /** Only when the mark's pixels are known; the browser keeps the natural shape otherwise. */
   height?: number;
+  /** The level's size times the partner's `band_scale`, 1 at the defaults; a narrow band's caps scale by it. */
+  scale: number;
 }
 
 export interface BandRow {
@@ -118,6 +153,8 @@ export interface BandRow {
   logos: BandLogo[];
   /** Marks a line at each width, so a level that wraps splits evenly rather than leave one alone. */
   columns: BandColumns;
+  /** The row's widest possible mark with its gap, in px: how wide a line's place is on a wide band. */
+  cell: number;
 }
 
 /** The fewest lines `count` marks fit on at `most` a line, shared out evenly. */
@@ -125,24 +162,31 @@ export function balancedColumns(count: number, most: number): number {
   return Math.ceil(count / Math.ceil(count / most));
 }
 
-/** Width in px for a mark at a tier's shared area, capped at its max. */
-export function logoWidth(mark: Mark, tier: PartnerTier): number {
+/** Width in px for a mark at a tier's shared area, capped at its max, times `scale`. */
+export function logoWidth(mark: Mark, tier: PartnerTier, scale = 1): number {
   const { area, max } = BAND_SIZING[tier];
   const aspect = mark.width && mark.height ? mark.width / mark.height : FALLBACK_ASPECT;
-  return Math.round(Math.min(max, Math.sqrt(area * aspect)));
+  return Math.round(Math.min(max, Math.sqrt(area * aspect)) * scale);
 }
 
 /**
- * The band's rows, one a level, top level first. Each draws its mark for a
- * dark ground, else its white one; a partner with neither has nothing to show
- * on glass. A partner without a link points at `fallbackHref`.
+ * The band's rows, one a level, top level first. In color each draws its mark
+ * for a dark ground, else its white one; all white draws the white one where
+ * it has one. A partner with neither has nothing to show on glass; one without
+ * a link points at `fallbackHref`. Each level's size and each partner's
+ * `band_scale` scale its mark.
  */
-export function bandRows(partners: readonly Partner[], { fallbackHref = '/partners' }: { fallbackHref?: string } = {}): BandRow[] {
+export function bandRows(
+  partners: readonly Partner[],
+  { fallbackHref = '/partners', band = DEFAULT_BAND }: { fallbackHref?: string; band?: BandSettings } = {},
+): BandRow[] {
   return PARTNER_TIERS.map((tier) => {
+    const level = band.sizes[tier] / 100;
     const logos = partners.flatMap((partner) => {
-      const mark = partner.logos.dark ?? partner.logos.white;
+      const mark = band.logo_style === 'white' ? (partner.logos.white ?? partner.logos.dark) : (partner.logos.dark ?? partner.logos.white);
       if (partner.tier !== tier || !mark) return [];
-      const width = logoWidth(mark, tier);
+      const scale = level * (partner.band_scale / 100);
+      const width = logoWidth(mark, tier, scale);
       return [{
         key: partner.key,
         name: partner.name,
@@ -150,10 +194,13 @@ export function bandRows(partners: readonly Partner[], { fallbackHref = '/partne
         src: mark.url,
         width,
         height: mark.width && mark.height ? Math.round((width * mark.height) / mark.width) : undefined,
+        scale,
       }];
     });
     const { wide, mid, narrow } = BAND_LINE[tier];
     const columns = { wide: balancedColumns(logos.length, wide), mid: balancedColumns(logos.length, mid), narrow: balancedColumns(logos.length, narrow) };
-    return { tier, logos, columns };
+    const widest = Math.max(level, ...logos.map((logo) => logo.scale));
+    const cell = Math.round(BAND_SIZING[tier].max * widest) + (tier === 'supplier' ? 44 : 52);
+    return { tier, logos, columns, cell };
   }).filter((row) => row.logos.length > 0);
 }

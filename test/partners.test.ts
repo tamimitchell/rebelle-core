@@ -2,12 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { SponsorLogosSchema, SponsorSchema } from '../src/dispatch.ts';
-import { PARTNER_TIERS, PartnerSchema, PartnersFeedDocumentSchema } from '../src/partners.ts';
+import { DEFAULT_BAND, PARTNER_TIERS, PartnerSchema, PartnersFeedDocumentSchema, partnersOf } from '../src/partners.ts';
 
 // Emitted by the studio's writer (studio `spec/fixtures/feeds/rebelle_partners_feed.json`, #414).
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/partners.json', import.meta.url), 'utf8'));
-const partner = fixture.records[0].payload;
-const withRecords = (records: unknown[]) => ({ ...fixture, records });
+// Schema 3: the band's settings and each partner's band_scale (studio #638).
+const third = JSON.parse(readFileSync(new URL('./fixtures/partners.v3.json', import.meta.url), 'utf8'));
+const partner = third.records[0].payload;
+const withRecords = (records: unknown[]) => ({ ...third, records });
 
 test('the partners document parses: level by level, in order, each with three marks or null', () => {
   const document = PartnersFeedDocumentSchema.parse(fixture);
@@ -27,17 +29,41 @@ test('a tier outside the levels, a missing mark or a stray day is refused', () =
   assert.equal(PartnerSchema.safeParse({ ...partner, position: 0 }).success, false);
 });
 
-test('each partner is listed once, in its place', () => {
-  const [first, second] = fixture.records;
+test('each partner is listed once, in its place, in either schema', () => {
+  const [first, second] = third.records;
   assert.equal(PartnersFeedDocumentSchema.safeParse(withRecords([second, first])).success, false, 'out of order');
   assert.equal(PartnersFeedDocumentSchema.safeParse(withRecords([first, { ...second, payload: { ...second.payload, position: first.payload.position } }])).success, false, 'a shared place');
   assert.equal(PartnersFeedDocumentSchema.safeParse(withRecords([first, { ...second, payload: { ...second.payload, key: first.payload.key } }])).success, false, 'a partner twice');
+  const [older, next] = fixture.records;
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...fixture, records: [next, older] }).success, false, 'out of order in schema 2');
 });
 
 test('the rally days sponsor keeps its two marks: a dark mark there is still refused', () => {
   const white = partner.logos.white;
   assert.equal(SponsorLogosSchema.safeParse({ white, color: null, dark: null }).success, false);
-  const { position: _position, ...sponsor } = partner;
+  const { position: _position, band_scale: _scale, ...sponsor } = partner;
   assert.equal(SponsorSchema.safeParse(sponsor).success, false);
   assert.equal(SponsorSchema.safeParse({ ...sponsor, logos: { white, color: null } }).success, true);
+});
+
+test('schema 3 carries the band\'s settings and each partner\'s band_scale; schema 2 reads as the defaults', () => {
+  const read = partnersOf(PartnersFeedDocumentSchema.parse(third));
+  assert.deepEqual(read.band, { logo_style: 'white', sizes: { gold: 150, 'silver-oem': 115, silver: 95, bronze: 80, supplier: 70 } });
+  assert.deepEqual(read.partners.map((each) => each.band_scale), [100, 100, 100, 140]);
+
+  const older = partnersOf(PartnersFeedDocumentSchema.parse(fixture));
+  assert.deepEqual(older.band, DEFAULT_BAND);
+  assert.ok(older.partners.every((each) => each.band_scale === 100));
+});
+
+test('a band setting or a band_scale outside 50 to 200, or a schema 2 record carrying one, is refused', () => {
+  assert.equal(PartnerSchema.safeParse({ ...partner, band_scale: 49 }).success, false);
+  assert.equal(PartnerSchema.safeParse({ ...partner, band_scale: 201 }).success, false);
+  assert.equal(PartnerSchema.safeParse({ ...partner, band_scale: 1.5 }).success, false);
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...third, band: { ...third.band, logo_style: 'black' } }).success, false);
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...third, band: { ...third.band, sizes: { ...third.band.sizes, gold: 300 } } }).success, false);
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...third, band: undefined }).success, false, 'schema 3 names its band');
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...fixture, band: third.band }).success, false, 'schema 2 has no band');
+  const [first] = fixture.records;
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...fixture, records: [{ ...first, payload: { ...first.payload, band_scale: 100 } }] }).success, false, 'a schema 2 record has no band_scale');
 });
