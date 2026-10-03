@@ -73,12 +73,12 @@
   padding: 40px 36px 32px;
 }
 
-/* Centered, with the same gap between every pair of marks. --cols-* come
-   from the row, and --cell is a level's widest mark with its gap, so a line
-   holds about --cols marks and a level that wraps splits evenly. */
+/* Centered, with the same gap between every pair of marks. --cols-* and
+   --cell come from the row (`bandRows`): --cell is the level's widest mark
+   with its gap, so a line holds about --cols marks and a level that wraps
+   splits evenly. */
 .rr-partners__row {
   --cols: var(--cols-wide);
-  --cell: 117px;
   list-style: none;
   margin: 0 auto;
   padding: 0;
@@ -88,11 +88,6 @@
   justify-content: center;
   column-gap: 28px;
 }
-
-.rr-partners__row--gold { --cell: 412px; }
-.rr-partners__row--silver-oem { --cell: 257px; }
-.rr-partners__row--silver { --cell: 204px; }
-.rr-partners__row--bronze { --cell: 167px; }
 
 .rr-partners__row > li {
   display: flex;

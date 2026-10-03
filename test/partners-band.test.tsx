@@ -3,12 +3,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { PARTNER_TIERS, PartnersFeedDocumentSchema, balancedColumns, bandRows, logoWidth } from '../src/partners.ts';
+import { DEFAULT_BAND, PARTNER_TIERS, PartnersFeedDocumentSchema, balancedColumns, bandRows, logoWidth, partnersOf } from '../src/partners.ts';
 import { PartnersBand } from '../src/ui/partners.tsx';
 
 // Emitted by the studio's writer (studio `spec/fixtures/feeds/rebelle_partners_feed.json`, #414).
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/partners.json', import.meta.url), 'utf8'));
-const partners = PartnersFeedDocumentSchema.parse(fixture).records.map((record) => record.payload);
+const partners = partnersOf(PartnersFeedDocumentSchema.parse(fixture)).partners;
+const band = DEFAULT_BAND;
 const head = { kicker: 'Partners', lineA: 'Powered by', lineB: 'the best.' };
 
 test('bandRows draws a row for each level with a mark to show, top level first, each with its dark mark or its white one', () => {
@@ -74,7 +75,7 @@ test('PartnersBand draws the head, the link and a row a level, each mark carryin
   assert.match(html, /<a class="rr-link rr-partners__link" href="\/partners"><span>Meet our partners<\/span>/);
   assert.deepEqual([...html.matchAll(/rr-partners__row--([\w-]+)/g)].map((match) => match[1]), ['gold', 'silver-oem', 'supplier']);
   assert.deepEqual([...html.matchAll(/data-partner="([\w-]+)"/g)].map((match) => match[1]), ['pennzoil', 'bmw', 'hest']);
-  assert.match(html, /style="--cols-wide:1;--cols-mid:1;--cols-narrow:1"/);
+  assert.match(html, /style="--cols-wide:1;--cols-mid:1;--cols-narrow:1;--cell:412px"/);
   assert.match(html, /alt="Mountains"/);
 });
 
@@ -83,4 +84,33 @@ test('PartnersBand without partners keeps its head and link and draws no panel',
   assert.match(html, /Powered by/);
   assert.doesNotMatch(html, /rr-partners__glass/);
   assert.doesNotMatch(html, /<img/);
+});
+
+test('bandRows scales each mark by its level\'s size and its own band_scale, and widens the level\'s cell with it', () => {
+  const [plain] = bandRows(partners);
+  const [doubled] = bandRows(partners, { band: { ...band, sizes: { ...band.sizes, gold: 200 } } });
+  const mark = partners[0].logos.dark!;
+  assert.equal(plain.logos[0].width, logoWidth(mark, 'gold'));
+  assert.equal(doubled.logos[0].width, logoWidth(mark, 'gold', 2));
+  assert.ok(Math.abs(doubled.logos[0].width - plain.logos[0].width * 2) <= 1, 'twice the size, rounded once');
+  assert.equal(plain.cell, 412);
+  assert.equal(doubled.cell, 772);
+  const nudged = partners.map((each) => (each.key === 'pennzoil' ? { ...each, band_scale: 150 } : each));
+  assert.equal(bandRows(nudged)[0].logos[0].width, logoWidth(mark, 'gold', 1.5));
+  assert.equal(bandRows(nudged, { band: { ...band, sizes: { ...band.sizes, gold: 200 } } })[0].logos[0].width, logoWidth(mark, 'gold', 3), 'a level\'s size and a nudge multiply');
+});
+
+test('bandRows in white draws the white mark where a partner has one, else its dark one', () => {
+  const [pennzoil] = partners;
+  const [colored] = bandRows(partners);
+  const [white] = bandRows(partners, { band: { ...band, logo_style: 'white' } });
+  assert.equal(colored.logos[0].src, pennzoil.logos.dark?.url);
+  assert.equal(white.logos[0].src, pennzoil.logos.white?.url);
+  const darkOnly = { ...pennzoil, logos: { ...pennzoil.logos, white: null } };
+  assert.equal(bandRows([darkOnly], { band: { ...band, logo_style: 'white' } })[0].logos[0].src, pennzoil.logos.dark?.url);
+});
+
+test('PartnersBand sets each row\'s cell from its level\'s size', () => {
+  const html = renderToStaticMarkup(<PartnersBand band={{ ...band, sizes: { ...band.sizes, gold: 150 } }} head={head} partners={partners} />);
+  assert.match(html, /--cell:592px/);
 });
