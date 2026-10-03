@@ -69,6 +69,17 @@ test('on paper the roster draws a color logo, puts a logo with no color version 
   assert.doesNotMatch(html, /data-partner="synchrony"/);
 });
 
+test('on navy a partner with only a color logo keeps it, on a paper plate, and a level with nothing to draw takes no row', () => {
+  const colorOnly = { ...mini, tier: 'supplier' as const, logos: { white: null, dark: null, color: pennzoil.logos.color } };
+  const blank = { ...synchrony, tier: 'silver' as const };
+  const html = renderToStaticMarkup(<PartnerRoster partners={[{ ...hest, tier: 'bronze' as const }, blank, colorOnly]} />);
+  assert.deepEqual([...html.matchAll(/rr-pp-level--([a-z-]+) [a-z -]*rr-pp--(paper|navy)/g)].map((match) => [match[1], match[2]]), [
+    ['bronze', 'paper'],
+    ['supplier', 'navy'],
+  ]);
+  assert.match(html, /<li class="rr-pp-plate"><a class="rr-pp-mark" href="https:\/\/www.miniusa.com\/" data-partner="bmw"/);
+});
+
 test('the roster shares a wrapping level evenly and sizes its logos by the band\'s settings', () => {
   const nine = Array.from({ length: 9 }, (_, index) => ({ ...hest, key: `supplier-${index}` }));
   const html = renderToStaticMarkup(<PartnerRoster partners={nine} />);

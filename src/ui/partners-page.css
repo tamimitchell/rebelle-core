@@ -17,7 +17,10 @@
   box-sizing: border-box;
 }
 
-/* Hero: the photograph, the page's name and its lead, the Official Partners badge beside them. */
+/* Hero: the photograph, the page's name and its lead, the Official Partners badge beside them.
+   ⚠️ Its rules name `.photo-ground.rr-pp-hero` and `.rr-sechead`: system.css's
+   `.photo-ground>*:not(img):not(.scrim)` and `.rr-sechead>h1` would otherwise
+   outrank them, or tie and win by import order. */
 .rr-pp-hero {
   background: var(--navy-night);
   min-height: max(600px, 80svh);
@@ -25,11 +28,11 @@
   flex-direction: column;
 }
 
-.rr-pp-hero > img {
+.photo-ground.rr-pp-hero > img {
   object-position: 40% 55%;
 }
 
-.rr-pp-hero__wash {
+.photo-ground.rr-pp-hero > .rr-pp-hero__wash {
   position: absolute;
   inset: 0;
   background:
@@ -58,14 +61,14 @@
   gap: var(--sp-48);
 }
 
-.rr-pp-hero__head > h1 {
+.rr-sechead.rr-pp-hero__head > h1 {
   font-size: clamp(44px, 6.4cqw, 92px);
   line-height: 0.98;
   letter-spacing: var(--ls-hero);
   text-shadow: 0 2px 18px color-mix(in srgb, var(--black) 45%, transparent);
 }
 
-.rr-pp-hero__head em {
+.rr-sechead.rr-pp-hero__head em {
   padding-top: 2px;
 }
 
@@ -89,12 +92,12 @@
 @container (max-width: 860px) {
   .rr-pp-hero__body { grid-template-columns: 1fr; gap: var(--sp-24); }
   .rr-pp-hero__mark { grid-row: 1; width: clamp(160px, 40cqw, 240px); }
-  .rr-pp-hero__head > h1 { font-size: clamp(44px, 10cqw, 72px); }
+  .rr-sechead.rr-pp-hero__head > h1 { font-size: clamp(44px, 10cqw, 72px); }
 }
 
 @container (max-width: 680px) {
   .rr-pp-hero__in { padding-bottom: var(--sp-32); }
-  .rr-pp-hero__head > h1 { font-size: clamp(40px, 12cqw, 56px); }
+  .rr-sechead.rr-pp-hero__head > h1 { font-size: clamp(40px, 12cqw, 56px); }
 }
 
 /* Gold profiles. */
@@ -238,11 +241,17 @@
   background: color-mix(in srgb, var(--white) 7%, transparent);
 }
 
-/* A partner with no color logo shows its dark-ground one on a navy plate. */
+/* A logo drawn for the other ground sits on a plate of that ground: a partner
+   with no color logo on paper, one with only a color logo on navy. */
 .rr-pp-plate > .rr-pp-mark,
 .rr-pp-plate.rr-pp-profile__logo .rr-pp-mark {
   background: var(--navy);
   padding: 14px 18px;
+}
+
+.rr-pp--navy .rr-pp-plate > .rr-pp-mark,
+.rr-pp--navy .rr-pp-plate.rr-pp-profile__logo .rr-pp-mark {
+  background: var(--paper-cool);
 }
 
 @container (max-width: 680px) {

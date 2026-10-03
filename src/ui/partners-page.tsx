@@ -23,13 +23,14 @@ const GROUND: Record<Ground, string> = { paper: 'terrain tp-worn rr-pp--paper', 
 const outside = (href: string) => (/^https?:\/\//.test(href) ? { target: '_blank', rel: 'noopener' } : {});
 
 // Paper draws the brand's own colors; navy draws its dark-ground mark, else white.
+// Either falls back to what there is, on a plate of the other ground (`plated`).
 function markOn(partner: Partner, ground: Ground): Mark | null {
   const { color, dark, white } = partner.logos;
-  return ground === 'paper' ? (color ?? dark ?? white) : (dark ?? white);
+  return ground === 'paper' ? (color ?? dark ?? white) : (dark ?? white ?? color);
 }
 
-// A mark with no color version sits on a navy plate when the ground is paper.
-const plated = (partner: Partner, ground: Ground) => ground === 'paper' && !partner.logos.color;
+const plated = (partner: Partner, ground: Ground) => (ground === 'paper' ? !partner.logos.color : !partner.logos.dark && !partner.logos.white);
+const drawn = (partner: Partner) => Boolean(partner.logos.color ?? partner.logos.dark ?? partner.logos.white);
 
 // A partner without a site keeps its logo, unlinked: on this page there is nowhere else to send it.
 function Logo({ partner, mark, width }: { partner: Partner; mark: Mark; width: number }) {
@@ -128,7 +129,8 @@ export function PartnerProfiles({ partners, heading = 'Official partners', headi
  */
 export function PartnerRoster({ partners, band }: { partners: readonly Partner[]; band?: BandSettings }) {
   const gold = partners.filter((partner) => partner.tier === 'gold').length;
-  const tiers = PARTNER_TIERS.filter((tier) => tier !== 'gold' && partners.some((partner) => partner.tier === tier));
+  // Only levels with a logo to draw take a row, so the grounds keep turning about.
+  const tiers = PARTNER_TIERS.filter((tier) => tier !== 'gold' && partners.some((partner) => partner.tier === tier && drawn(partner)));
   if (tiers.length === 0) return null;
   return (
     <section className="rr-pp-roster" aria-label="Partners">
@@ -139,7 +141,6 @@ export function PartnerRoster({ partners, band }: { partners: readonly Partner[]
           const mark = partner.tier === tier ? markOn(partner, ground) : null;
           return mark ? [{ partner, mark, width: logoWidth(mark, tier, level * (partner.band_scale / 100) * ROSTER_SCALE) }] : [];
         });
-        if (logos.length === 0) return null;
         // Each logo takes a line's share, so a level that wraps splits evenly.
         const line = {
           '--cols-wide': balancedColumns(logos.length, ROSTER_LINE.wide),
