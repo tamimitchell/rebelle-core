@@ -98,6 +98,8 @@ test('bandRows scales each mark by its level\'s size and its own band_scale, and
   const nudged = partners.map((each) => (each.key === 'pennzoil' ? { ...each, band_scale: 150 } : each));
   assert.equal(bandRows(nudged)[0].logos[0].width, logoWidth(mark, 'gold', 1.5));
   assert.equal(bandRows(nudged, { band: { ...band, sizes: { ...band.sizes, gold: 200 } } })[0].logos[0].width, logoWidth(mark, 'gold', 3), 'a level\'s size and a nudge multiply');
+  assert.equal(bandRows(nudged)[0].cell, 592, 'a nudged mark widens its row\'s cell');
+  assert.equal(bandRows(nudged.map((each) => ({ ...each, band_scale: 50 })))[0].cell, 412, 'a smaller mark leaves the level\'s cell');
 });
 
 test('bandRows in white draws the white mark where a partner has one, else its dark one', () => {
@@ -110,7 +112,9 @@ test('bandRows in white draws the white mark where a partner has one, else its d
   assert.equal(bandRows([darkOnly], { band: { ...band, logo_style: 'white' } })[0].logos[0].src, pennzoil.logos.dark?.url);
 });
 
-test('PartnersBand sets each row\'s cell from its level\'s size', () => {
+test('PartnersBand sets each row\'s cell from its level\'s size, and a scaled mark\'s --scale for the narrow caps', () => {
   const html = renderToStaticMarkup(<PartnersBand band={{ ...band, sizes: { ...band.sizes, gold: 150 } }} head={head} partners={partners} />);
   assert.match(html, /--cell:592px/);
+  assert.match(html, /<li style="--scale:1.5"><a class="rr-partners__mark" href="[^"]*" data-partner="pennzoil">/);
+  assert.match(renderToStaticMarkup(<PartnersBand head={head} partners={partners} />), /<li><a class="rr-partners__mark" href="[^"]*" data-partner="pennzoil">/, 'no --scale at the defaults');
 });

@@ -29,11 +29,13 @@ test('a tier outside the levels, a missing mark or a stray day is refused', () =
   assert.equal(PartnerSchema.safeParse({ ...partner, position: 0 }).success, false);
 });
 
-test('each partner is listed once, in its place', () => {
-  const [first, second] = fixture.records;
+test('each partner is listed once, in its place, in either schema', () => {
+  const [first, second] = third.records;
   assert.equal(PartnersFeedDocumentSchema.safeParse(withRecords([second, first])).success, false, 'out of order');
   assert.equal(PartnersFeedDocumentSchema.safeParse(withRecords([first, { ...second, payload: { ...second.payload, position: first.payload.position } }])).success, false, 'a shared place');
   assert.equal(PartnersFeedDocumentSchema.safeParse(withRecords([first, { ...second, payload: { ...second.payload, key: first.payload.key } }])).success, false, 'a partner twice');
+  const [older, next] = fixture.records;
+  assert.equal(PartnersFeedDocumentSchema.safeParse({ ...fixture, records: [next, older] }).success, false, 'out of order in schema 2');
 });
 
 test('the rally days sponsor keeps its two marks: a dark mark there is still refused', () => {

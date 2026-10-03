@@ -69,7 +69,7 @@ export function PartnersBand({
                 style={{ '--cols-wide': row.columns.wide, '--cols-mid': row.columns.mid, '--cols-narrow': row.columns.narrow, '--cell': `${row.cell}px` } as React.CSSProperties}
               >
                 {row.logos.map((logo) => (
-                  <li key={logo.key}>
+                  <li key={logo.key} style={logo.scale === 1 ? undefined : ({ '--scale': logo.scale } as React.CSSProperties)}>
                     <a className="rr-partners__mark" href={logo.href} data-partner={logo.key}>
                       <img src={logo.src} alt={logo.name} width={logo.width} height={logo.height} loading="lazy" decoding="async" />
                     </a>

@@ -143,7 +143,8 @@
 }
 
 /* ⚠️ A narrow band shares the line out in columns: an auto-width cell takes its
-   mark's full width, and a wide mark would hold a line to itself. */
+   mark's full width, and a wide mark would hold a line to itself. Each mark's
+   cap scales by its --scale (`bandRows`), so the studio's sizes show here too. */
 @container (max-width: 900px) {
   .rr-partners__row {
     max-width: none;
@@ -168,11 +169,11 @@
   }
 
   .rr-partners__row:not(.rr-partners__row--supplier) .rr-partners__mark img {
-    max-width: min(100%, 112px);
+    max-width: min(100%, calc(112px * var(--scale, 1)));
   }
 
   .rr-partners__row--gold .rr-partners__mark img {
-    max-width: min(100%, 156px);
+    max-width: min(100%, calc(156px * var(--scale, 1)));
   }
 }
 
@@ -182,7 +183,7 @@
   }
 
   .rr-partners__row:not(.rr-partners__row--supplier) .rr-partners__mark img {
-    max-width: min(100%, 96px);
+    max-width: min(100%, calc(96px * var(--scale, 1)));
   }
 
   .rr-partners__row--gold .rr-partners__mark {
@@ -190,11 +191,11 @@
   }
 
   .rr-partners__row--gold .rr-partners__mark img {
-    max-width: min(100%, 120px);
+    max-width: min(100%, calc(120px * var(--scale, 1)));
   }
 
   .rr-partners__row--supplier .rr-partners__mark img {
-    max-width: min(100%, 76px);
+    max-width: min(100%, calc(76px * var(--scale, 1)));
   }
 }
 
