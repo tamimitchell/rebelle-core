@@ -228,13 +228,13 @@
   height: auto;
 }
 
-.rr-pp--paper .rr-pp-mark:hover,
-.rr-pp--paper .rr-pp-mark:focus-visible {
+.rr-pp--paper a.rr-pp-mark:hover,
+.rr-pp--paper a.rr-pp-mark:focus-visible {
   background: color-mix(in srgb, var(--navy) 6%, transparent);
 }
 
-.rr-pp--navy .rr-pp-mark:hover,
-.rr-pp--navy .rr-pp-mark:focus-visible {
+.rr-pp--navy a.rr-pp-mark:hover,
+.rr-pp--navy a.rr-pp-mark:focus-visible {
   background: color-mix(in srgb, var(--white) 7%, transparent);
 }
 

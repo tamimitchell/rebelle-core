@@ -31,13 +31,18 @@ function markOn(partner: Partner, ground: Ground): Mark | null {
 // A mark with no color version sits on a navy plate when the ground is paper.
 const plated = (partner: Partner, ground: Ground) => ground === 'paper' && !partner.logos.color;
 
-function Logo({ partner, mark, width, fallbackHref }: { partner: Partner; mark: Mark; width: number; fallbackHref: string }) {
+// A partner without a site keeps its logo, unlinked: on this page there is nowhere else to send it.
+function Logo({ partner, mark, width }: { partner: Partner; mark: Mark; width: number }) {
   const height = mark.width && mark.height ? Math.round((width * mark.height) / mark.width) : undefined;
-  const href = partner.link ?? fallbackHref;
-  return (
-    <a className="rr-pp-mark" href={href} data-partner={partner.key} {...outside(href)}>
-      <img src={mark.url} alt={partner.name} width={width} height={height} loading="lazy" decoding="async" />
+  const img = <img src={mark.url} alt={partner.name} width={width} height={height} loading="lazy" decoding="async" />;
+  return partner.link ? (
+    <a className="rr-pp-mark" href={partner.link} data-partner={partner.key} {...outside(partner.link)}>
+      {img}
     </a>
+  ) : (
+    <span className="rr-pp-mark" data-partner={partner.key}>
+      {img}
+    </span>
   );
 }
 
@@ -78,10 +83,9 @@ export function PartnersHero({ lineA, lineB, lead, photo, mark, headingId = 'par
 }
 
 /** Gold partners, each a band of its own: the logo, the name, the profile and a door to its site. */
-export function PartnerProfiles({ partners, heading = 'Official partners', fallbackHref = '/partners', headingId = 'official-partners' }: {
+export function PartnerProfiles({ partners, heading = 'Official partners', headingId = 'official-partners' }: {
   partners: readonly Partner[];
   heading?: string;
-  fallbackHref?: string;
   headingId?: string;
 }) {
   const gold = partners.filter((partner) => partner.tier === 'gold');
@@ -98,7 +102,7 @@ export function PartnerProfiles({ partners, heading = 'Official partners', fallb
           <article key={partner.key} className={`rr-pp-profile ${GROUND[ground]}`} aria-labelledby={`partner-${partner.key}`} data-partner={partner.key}>
             <div className="rr-pp-profile__in">
               <div className={`rr-pp-profile__logo${plated(partner, ground) ? ' rr-pp-plate' : ''}`}>
-                {mark && <Logo partner={partner} mark={mark} width={logoWidth(mark, 'gold') * 2} fallbackHref={fallbackHref} />}
+                {mark && <Logo partner={partner} mark={mark} width={logoWidth(mark, 'gold') * 2} />}
               </div>
               <div className="rr-pp-profile__words">
                 <h3 id={`partner-${partner.key}`}>{partner.name}</h3>
@@ -122,11 +126,7 @@ export function PartnerProfiles({ partners, heading = 'Official partners', fallb
  * profiles' so the page alternates all the way down. Sizes follow the band's
  * settings, so the levels keep the proportions the studio gave them.
  */
-export function PartnerRoster({ partners, band, fallbackHref = '/partners' }: {
-  partners: readonly Partner[];
-  band?: BandSettings;
-  fallbackHref?: string;
-}) {
+export function PartnerRoster({ partners, band }: { partners: readonly Partner[]; band?: BandSettings }) {
   const gold = partners.filter((partner) => partner.tier === 'gold').length;
   const tiers = PARTNER_TIERS.filter((tier) => tier !== 'gold' && partners.some((partner) => partner.tier === tier));
   if (tiers.length === 0) return null;
@@ -153,7 +153,7 @@ export function PartnerRoster({ partners, band, fallbackHref = '/partners' }: {
               <ul className="rr-pp-level__logos" style={line}>
                 {logos.map(({ partner, mark, width }) => (
                   <li key={partner.key} className={plated(partner, ground) ? 'rr-pp-plate' : undefined}>
-                    <Logo partner={partner} mark={mark} width={width} fallbackHref={fallbackHref} />
+                    <Logo partner={partner} mark={mark} width={width} />
                   </li>
                 ))}
               </ul>

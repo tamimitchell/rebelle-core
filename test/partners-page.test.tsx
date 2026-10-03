@@ -39,11 +39,12 @@ test('the profiles alternate paper and navy, a navy one drawing the dark-ground 
   assert.match(html, /rr-btn--secondary/);
 });
 
-test('a Gold partner without a profile or a link keeps its name and logo, and the logo opens the fallback page', () => {
+test('a partner without a profile or a site keeps its name and its logo, unlinked', () => {
   const html = renderToStaticMarkup(<PartnerProfiles partners={[gold('quiet', { profile: null, link: null })]} />);
   assert.doesNotMatch(html, /<p>/);
-  assert.doesNotMatch(html, /Visit/);
-  assert.match(html, /<a class="rr-pp-mark" href="\/partners" data-partner="quiet">/);
+  assert.doesNotMatch(html, /Visit|href=/);
+  assert.match(html, /<span class="rr-pp-mark" data-partner="quiet"><img /);
+  assert.match(renderToStaticMarkup(<PartnerRoster partners={[{ ...hest, link: null }]} />), /<span class="rr-pp-mark" data-partner="hest">/);
   assert.equal(renderToStaticMarkup(<PartnerProfiles partners={[mini, hest]} />), '', 'no Gold partners, no section');
 });
 
