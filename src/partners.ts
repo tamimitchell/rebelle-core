@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MarkSchema, SponsorSchema } from './dispatch.ts';
+import { MarkSchema, SponsorSchema, type Mark } from './dispatch.ts';
 
 /**
  * The partners feed (studio #610, #622): every sponsor the studio gives a
@@ -71,3 +71,89 @@ export const PartnersFeedDocumentSchema = z
     });
   });
 export type PartnersFeedDocument = z.infer<typeof PartnersFeedDocumentSchema>;
+
+/**
+ * Every logo in a row gets the same area, so a square badge and a long
+ * wordmark read as equals; the levels step down plainly, Gold the largest
+ * (site Decided #125).
+ */
+export const BAND_SIZING: Record<PartnerTier, { area: number; max: number }> = {
+  gold: { area: 18000, max: 360 },
+  'silver-oem': { area: 5800, max: 205 },
+  silver: { area: 3250, max: 152 },
+  bronze: { area: 1800, max: 115 },
+  supplier: { area: 735, max: 73 },
+};
+
+export interface BandColumns {
+  wide: number;
+  mid: number;
+  narrow: number;
+}
+
+/** The most marks a line holds: on a wide band, under 1100px, under 620px. */
+export const BAND_LINE: Record<PartnerTier, BandColumns> = {
+  gold: { wide: 4, mid: 4, narrow: 2 },
+  'silver-oem': { wide: 6, mid: 5, narrow: 3 },
+  silver: { wide: 6, mid: 5, narrow: 3 },
+  bronze: { wide: 6, mid: 5, narrow: 3 },
+  supplier: { wide: 9, mid: 5, narrow: 3 },
+};
+
+/** A wordmark's typical shape, for a mark the feed sends without its pixels. */
+const FALLBACK_ASPECT = 3;
+
+export interface BandLogo {
+  key: string;
+  name: string;
+  href: string;
+  src: string;
+  width: number;
+  /** Only when the mark's pixels are known; the browser keeps the natural shape otherwise. */
+  height?: number;
+}
+
+export interface BandRow {
+  tier: PartnerTier;
+  logos: BandLogo[];
+  /** Marks a line at each width, so a level that wraps splits evenly rather than leave one alone. */
+  columns: BandColumns;
+}
+
+/** The fewest lines `count` marks fit on at `most` a line, shared out evenly. */
+export function balancedColumns(count: number, most: number): number {
+  return Math.ceil(count / Math.ceil(count / most));
+}
+
+/** Width in px for a mark at a tier's shared area, capped at its max. */
+export function logoWidth(mark: Mark, tier: PartnerTier): number {
+  const { area, max } = BAND_SIZING[tier];
+  const aspect = mark.width && mark.height ? mark.width / mark.height : FALLBACK_ASPECT;
+  return Math.round(Math.min(max, Math.sqrt(area * aspect)));
+}
+
+/**
+ * The band's rows, one a level, top level first. Each draws its mark for a
+ * dark ground, else its white one; a partner with neither has nothing to show
+ * on glass. A partner without a link points at `fallbackHref`.
+ */
+export function bandRows(partners: readonly Partner[], { fallbackHref = '/partners' }: { fallbackHref?: string } = {}): BandRow[] {
+  return PARTNER_TIERS.map((tier) => {
+    const logos = partners.flatMap((partner) => {
+      const mark = partner.logos.dark ?? partner.logos.white;
+      if (partner.tier !== tier || !mark) return [];
+      const width = logoWidth(mark, tier);
+      return [{
+        key: partner.key,
+        name: partner.name,
+        href: partner.link ?? fallbackHref,
+        src: mark.url,
+        width,
+        height: mark.width && mark.height ? Math.round((width * mark.height) / mark.width) : undefined,
+      }];
+    });
+    const { wide, mid, narrow } = BAND_LINE[tier];
+    const columns = { wide: balancedColumns(logos.length, wide), mid: balancedColumns(logos.length, mid), narrow: balancedColumns(logos.length, narrow) };
+    return { tier, logos, columns };
+  }).filter((row) => row.logos.length > 0);
+}
