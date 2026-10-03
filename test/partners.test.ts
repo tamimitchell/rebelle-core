@@ -9,17 +9,18 @@ const fixture = JSON.parse(readFileSync(new URL('./fixtures/partners.json', impo
 const partner = fixture.records[0].payload;
 const withRecords = (records: unknown[]) => ({ ...fixture, records });
 
-test('the partners document parses: both tiers, in order, each with three marks or null', () => {
+test('the partners document parses: level by level, in order, each with three marks or null', () => {
   const document = PartnersFeedDocumentSchema.parse(fixture);
-  assert.deepEqual(PARTNER_TIERS, ['partner', 'supporting partner']);
-  assert.deepEqual([...new Set(document.records.map((record) => record.payload.tier))], ['partner', 'supporting partner']);
+  assert.deepEqual(PARTNER_TIERS, ['gold', 'silver-oem', 'silver', 'bronze', 'supplier']);
+  assert.deepEqual([...new Set(document.records.map((record) => record.payload.tier))], ['gold', 'silver-oem', 'supplier']);
   const positions = document.records.map((record) => record.payload.position);
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
   assert.deepEqual(Object.keys(document.records[0].payload.logos), ['white', 'color', 'dark']);
 });
 
-test('a tier outside the two rows, a missing mark or a stray day is refused', () => {
-  assert.equal(PartnerSchema.safeParse({ ...partner, tier: 'title partner' }).success, false);
+test('a tier outside the levels, a missing mark or a stray day is refused', () => {
+  assert.equal(PartnerSchema.safeParse({ ...partner, tier: 'partner' }).success, false, 'the two rows before the levels');
+  assert.equal(PartnerSchema.safeParse({ ...partner, tier: 'Silver OEM' }).success, false, 'a level by its key, not its name');
   assert.equal(PartnerSchema.safeParse({ ...partner, tier: null }).success, false);
   assert.equal(PartnerSchema.safeParse({ ...partner, logos: { white: null, color: null } }).success, false, 'all three marks are named');
   assert.equal(PartnerSchema.safeParse({ ...partner, presents: [{ rally_year: 2026, day: 8 }] }).success, false, 'no day rides in this feed');
