@@ -208,7 +208,7 @@
 .rr-pp-level__in {
   max-width: var(--container-wide, 1408px);
   margin: 0 auto;
-  padding: clamp(48px, 5cqw, 72px) var(--sp-24);
+  padding: clamp(56px, 6.5cqw, 96px) var(--sp-24);
 }
 
 .rr-pp-level__logos {

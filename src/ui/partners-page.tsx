@@ -13,7 +13,7 @@ import type { Mark } from '../dispatch.ts';
 
 /** The most logos a level's line holds on a wide page, under 1100px and under 620px. */
 const ROSTER_LINE = { wide: 5, mid: 4, narrow: 3 };
-const ROSTER_GAP = 56;
+const ROSTER_GAP = 96;
 
 /**
  * Each level's logos at the size Rebelle's WordPress page showed them (Tami,
