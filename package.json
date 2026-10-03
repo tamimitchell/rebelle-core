@@ -41,7 +41,9 @@
     "./black-diamond": "./src/black-diamond.ts",
     "./partners": "./src/partners.ts",
     "./ui/partners": "./src/ui/partners.tsx",
-    "./ui/partners.css": "./src/ui/partners.css"
+    "./ui/partners.css": "./src/ui/partners.css",
+    "./ui/partners-page": "./src/ui/partners-page.tsx",
+    "./ui/partners-page.css": "./src/ui/partners-page.css"
   },
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",

@@ -42,7 +42,14 @@ const PartnerV2Schema = SponsorSchema.extend({
  * A partner as schema 3 carries it (studio #638): schema 2's fields and
  * `band_scale`, its logo's size on the band as a share of its level's.
  */
-export const PartnerSchema = PartnerV2Schema.extend({ band_scale: BandPercentSchema }).strict();
+const PartnerV3Schema = PartnerV2Schema.extend({ band_scale: BandPercentSchema }).strict();
+
+/**
+ * A partner as schema 4 carries it (studio #641): schema 3's fields and
+ * `profile`, its paragraph on the Partners page. ⚠️ Not `blurb`: that one is
+ * the line a rally day's "presented by" post says.
+ */
+export const PartnerSchema = PartnerV3Schema.extend({ profile: z.string().min(1).max(1200).nullable() }).strict();
 export type Partner = z.infer<typeof PartnerSchema>;
 
 /** The band's own settings (studio #638): every logo in color or in white, and each level's size. */
@@ -55,6 +62,15 @@ export const BandSettingsSchema = z
 export type BandSettings = z.infer<typeof BandSettingsSchema>;
 
 export const DEFAULT_BAND: BandSettings = { logo_style: 'color', sizes: { gold: 100, 'silver-oem': 100, silver: 100, bronze: 100, supplier: 100 } };
+
+/** The Partners page's own words (studio #641): the sentence under its heading. */
+export const PartnersPageWordsSchema = z.object({ lead: z.string().min(1).max(600) }).strict();
+export type PartnersPageWords = z.infer<typeof PartnersPageWordsSchema>;
+
+/** WordPress's words, until the studio sends its own. */
+export const DEFAULT_PARTNERS_PAGE: PartnersPageWords = {
+  lead: 'All Rebelle Rally partners are deeply vetted for authenticity and quality. Our partners walk the walk and build the most superior, reliable products – our performance and safety depend on it. When making a purchasing decision, we ask that you support those that support the Rebelle.',
+};
 
 const recordOf = <V extends string, P extends z.ZodTypeAny>(version: V, payload: P) =>
   z
@@ -76,13 +92,15 @@ const envelope = {
 
 /**
  * Records arrive in the site's order, so a reader draws them as listed.
- * Schema 3 adds the band's settings and each partner's `band_scale`; a reader
- * takes schema 2 as well, so the site reads 3 before the studio sends it.
+ * Schema 3 adds the band's settings and each partner's `band_scale`; schema 4
+ * the Partners page's words and each partner's `profile`. A reader takes the
+ * older schemas as well, so the site reads a new one before the studio sends it.
  */
 export const PartnersFeedDocumentSchema = z
   .discriminatedUnion('record_schema_version', [
     z.object({ ...envelope, record_schema_version: z.literal('2'), records: z.array(recordOf('2', PartnerV2Schema)) }).strict(),
-    z.object({ ...envelope, record_schema_version: z.literal('3'), band: BandSettingsSchema, records: z.array(recordOf('3', PartnerSchema)) }).strict(),
+    z.object({ ...envelope, record_schema_version: z.literal('3'), band: BandSettingsSchema, records: z.array(recordOf('3', PartnerV3Schema)) }).strict(),
+    z.object({ ...envelope, record_schema_version: z.literal('4'), band: BandSettingsSchema, page: PartnersPageWordsSchema, records: z.array(recordOf('4', PartnerSchema)) }).strict(),
   ])
   .superRefine((document, context) => {
     const keys = new Set<string>();
@@ -99,10 +117,16 @@ export const PartnersFeedDocumentSchema = z
   });
 export type PartnersFeedDocument = z.infer<typeof PartnersFeedDocumentSchema>;
 
-/** The band's partners and settings from either schema; schema 2 reads as the defaults. */
-export function partnersOf(document: PartnersFeedDocument): { partners: Partner[]; band: BandSettings } {
-  if (document.record_schema_version === '3') return { partners: document.records.map((record) => record.payload), band: document.band };
-  return { partners: document.records.map((record) => ({ ...record.payload, band_scale: 100 })), band: DEFAULT_BAND };
+/** The partners, the band's settings and the page's words from any schema; what an older one lacks reads as the defaults. */
+export function partnersOf(document: PartnersFeedDocument): { partners: Partner[]; band: BandSettings; page: PartnersPageWords } {
+  switch (document.record_schema_version) {
+    case '4':
+      return { partners: document.records.map((record) => record.payload), band: document.band, page: document.page };
+    case '3':
+      return { partners: document.records.map((record) => ({ ...record.payload, profile: null })), band: document.band, page: DEFAULT_PARTNERS_PAGE };
+    case '2':
+      return { partners: document.records.map((record) => ({ ...record.payload, band_scale: 100, profile: null })), band: DEFAULT_BAND, page: DEFAULT_PARTNERS_PAGE };
+  }
 }
 
 /**
