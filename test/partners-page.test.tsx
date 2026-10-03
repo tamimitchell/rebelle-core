@@ -29,14 +29,14 @@ test('each Gold partner gets a profile: its color logo on paper, its name, its p
   assert.match(html, /<article class="rr-pp-profile terrain tp-worn rr-pp--paper" aria-labelledby="partner-pennzoil" data-partner="pennzoil">/);
   assert.ok(html.includes(`src="${pennzoil.logos.color?.url}"`));
   assert.match(html, /<h3 id="partner-pennzoil">Pennzoil<\/h3><p>Pennzoil is an all-encompassing partner/);
-  assert.match(html, /<a class="rr-btn rr-btn--md rr-btn--primary" href="https:\/\/www.pennzoil.com\/" target="_blank" rel="noopener">Visit Pennzoil ↗<\/a>/);
+  assert.match(html, /<a class="rr-btn rr-btn--md rr-btn--primary rr-g-terrain" href="https:\/\/www.pennzoil.com\/" target="_blank" rel="noopener">Visit Pennzoil <span aria-hidden="true">↗<\/span><\/a>/);
 });
 
 test('the profiles alternate paper and navy, a navy one drawing the dark-ground logo', () => {
   const html = renderToStaticMarkup(<PartnerProfiles partners={[gold('one'), gold('two'), gold('three')]} />);
   assert.deepEqual([...html.matchAll(/rr-pp--(paper|navy)/g)].map((match) => match[1]), ['paper', 'navy', 'paper']);
   assert.ok(html.includes(`src="${pennzoil.logos.dark?.url}"`));
-  assert.match(html, /rr-btn--secondary/);
+  assert.match(html, /class="rr-btn rr-btn--md rr-btn--primary" href/, 'on navy the primary is the cyan one');
 });
 
 test('a partner without a profile or a site keeps its name and its logo, unlinked', () => {

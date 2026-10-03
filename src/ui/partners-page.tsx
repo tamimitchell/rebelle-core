@@ -139,9 +139,10 @@ export function PartnerProfiles({ partners, heading = 'Official partners', headi
               <div className="rr-pp-profile__words">
                 <h3 id={`partner-${partner.key}`}>{partner.name}</h3>
                 {partner.profile && <p>{partner.profile}</p>}
+                {/* Each profile is its own band, so its door is that band's primary, drawn for the ground (Field Glass 08). */}
                 {partner.link && (
-                  <a className={`rr-btn rr-btn--md ${ground === 'paper' ? 'rr-btn--primary' : 'rr-btn--secondary'}`} href={partner.link} {...outside(partner.link)}>
-                    Visit {partner.name} ↗
+                  <a className={`rr-btn rr-btn--md rr-btn--primary${ground === 'paper' ? ' rr-g-terrain' : ''}`} href={partner.link} {...outside(partner.link)}>
+                    Visit {partner.name} <span aria-hidden="true">↗</span>
                   </a>
                 )}
               </div>
