@@ -22,7 +22,7 @@ const ROSTER_GAP = 56;
  * wider than `max`. A Gold logo fills its column, as there.
  */
 const LOGO_SIZING: Record<Exclude<PartnerTier, 'gold'>, { area: number; max: number }> = {
-  'silver-oem': { area: 14000, max: 210 },
+  'silver-oem': { area: 14000, max: 190 },
   silver: { area: 18000, max: 240 },
   bronze: { area: 17000, max: 200 },
   supplier: { area: 1800, max: 100 },
