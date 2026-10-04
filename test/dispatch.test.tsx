@@ -60,6 +60,20 @@ test('photo resolution never falls back to an outbound URL in a private preview'
   assert.ok(!missing.includes('media.rebellerally.com'));
   const loaded = renderToStaticMarkup(<DispatchView dispatch={dispatch} photoUrl={() => 'data:image/jpeg;base64,/9j/'} />);
   assert.ok(loaded.includes('data:image/jpeg;base64,/9j/'));
+  const sized = renderToStaticMarkup(<DispatchView dispatch={dispatch} photoUrl={() => null} photoSources={() => ({ srcSet: 'a.jpg 640w', sizes: '100vw' })} />);
+  assert.ok(!sized.includes('<img'), 'a host\'s other sizes never stand in for a photo the preview could not resolve');
+});
+test('a host\'s other sizes let the browser pick a copy, and the photo\'s own address stays the fallback', () => {
+  const url = 'https://rebelle.example/images/f4e20456-d961-473d-8c3f-5b3d16db6abd/1280';
+  const sources = { srcSet: `${url.replace(/1280$/, '640')} 640w, ${url} 1280w`, sizes: '(max-width: 759px) calc(100vw - 32px), 553px' };
+  const gallery = { ...records[1].payload, photos: [{ url, credit: 'Regine Trias' }] };
+  const widget = { ...records[0].payload, photos: [{ url, credit: 'Regine Trias' }] };
+  for (const dispatch of [gallery, widget]) {
+    const html = renderToStaticMarkup(<DispatchView dispatch={dispatch} photoSources={(photo) => (photo.url === url ? sources : null)} />);
+    assert.ok(html.includes(`<img srcSet="${sources.srcSet}" sizes="${sources.sizes}" src="${url}"`), html);
+  }
+  const plain = renderToStaticMarkup(<DispatchView dispatch={gallery} />);
+  assert.ok(plain.includes(`<img src="${url}"`) && !plain.includes('srcSet') && !plain.includes('sizes='));
 });
 test('text is literal, generated authorship stays private, and unsafe URLs refuse', () => {
   const dispatch = {...records[0].payload, text:'<script>alert(1)</script> **literal**', authorship:'ai-assisted' as const};
