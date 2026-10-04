@@ -4,6 +4,8 @@ import { SponsorLockup, sponsorBrandClass, type SponsorChip } from './sponsor-lo
 export { SponsorLockup, brandClass, sponsorBrandClass, sponsorWords, type SponsorChip } from './sponsor-lockup.tsx';
 
 type Photo = NonNullable<DispatchPayload['photos']>[number];
+/** A photograph's copies at other widths, as the `<img>` attributes a browser picks one by. */
+export type PhotoSources = { srcSet: string; sizes: string };
 export type DispatchViewProps = {
   dispatch: DispatchPayload; timeLabel?: string; panelLabels?: Partial<Record<DispatchPanel, string>>;
   onViewPanel?: (panel: DispatchPanel) => void; onFilterTeam?: (team: string) => void;
@@ -12,6 +14,8 @@ export type DispatchViewProps = {
   onOpenVideo?: (video: NonNullable<DispatchPayload['video']>, trigger: HTMLButtonElement) => void;
   /** A preview host can resolve authenticated bytes or return null. Never stored. */
   photoUrl?: (photo: Photo) => string | null | undefined;
+  /** A host that serves a photograph at several widths lists them; the photo's own address stays the fallback `src`. */
+  photoSources?: (photo: Photo) => PhotoSources | null | undefined;
   /**
    * A host holding the sponsor roster names the chip and says which lockup it
    * wears; without one, the key draws the lockup it names or its own words.
@@ -47,7 +51,7 @@ function linkLabel(link: string): string {
   return 'OPEN LINK';
 }
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, sponsorFor }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
@@ -128,7 +132,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
               disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photos[0])}
               aria-label={`Open photo — ${photos[0].credit}`}
             >
-              <DispatchPhoto photo={photos[0]} url={photoUrl ? photoUrl(photos[0]) : photos[0].url} />
+              <DispatchPhoto photo={photos[0]} url={photoUrl ? photoUrl(photos[0]) : photos[0].url} sources={photoSources?.(photos[0])} />
             </button>
           )}
         </div>
@@ -148,7 +152,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
                 disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
                 aria-label={`Open photo — ${photo.credit}`}
               >
-                <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} />
+                <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo)} />
               </button>
             ))}
           </div>
@@ -184,10 +188,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 }
 
 /** A failed fetch must retain the credit, not leave a broken image icon. */
-function DispatchPhoto({ photo, url }: { photo: Photo; url: string | null | undefined }) {
+function DispatchPhoto({ photo, url, sources }: { photo: Photo; url: string | null | undefined; sources?: PhotoSources | null }) {
   const [failed, setFailed] = React.useState<string | null>(null);
   return <React.Fragment>{url && failed !== url
-    ? <img src={url} alt="" loading="lazy" decoding="async" onError={() => setFailed(url)} />
+    ? <img srcSet={sources?.srcSet} sizes={sources?.sizes} src={url} alt="" loading="lazy" decoding="async" onError={() => setFailed(url)} />
     : <span className="live-entry__missing">Photograph unavailable · {photo.credit}</span>}
   </React.Fragment>;
 }

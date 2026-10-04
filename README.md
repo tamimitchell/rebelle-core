@@ -203,6 +203,10 @@ Hosts own panel/team navigation, opening photos, recap jumps and story expansion
 A private preview supplies `photoUrl`; returning null shows the credit with an
 unavailable state and never falls back to fetching the stored URL. Failed image
 loads use the same state. Authorship is validated as data and never rendered.
+A host that serves each photograph at several widths supplies `photoSources`, a
+`srcSet` and the `sizes` it draws at; the photo's own address stays the `src`,
+and the host owns both, because the widths are its image route's and the width
+drawn is its layout's.
 
 A dispatch's `sponsor` is the studio's sponsor **key** (`SponsorKeySchema`),
 never a printed name. A host holding the roster — the rally days document
