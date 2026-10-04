@@ -17,15 +17,16 @@ const ROSTER_GAP = 96;
 
 /**
  * Each level's logos at the size Rebelle's WordPress page showed them (Tami,
- * 2026-10-03), measured there at 1440px: every logo in a row covers the same
- * area, so a square badge and a long wordmark read as equals, and none runs
- * wider than `max`. A Gold logo fills its column, as there.
+ * 2026-10-03), measured there at 1440px, the supporting partners about 1.7
+ * times as wide (Tami, after trying several): every logo in a row covers the
+ * same area, so a square badge and a long wordmark read as equals, and none
+ * runs wider than `max`. A Gold logo fills its column, as there.
  */
 const LOGO_SIZING: Record<Exclude<PartnerTier, 'gold'>, { area: number; max: number }> = {
   'silver-oem': { area: 14000, max: 190 },
   silver: { area: 18000, max: 240 },
   bronze: { area: 17000, max: 200 },
-  supplier: { area: 1800, max: 100 },
+  supplier: { area: 5200, max: 160 },
 };
 const GOLD = { width: 500, height: 300 };
 /** A wordmark's typical shape, for a mark sent without its pixels. */

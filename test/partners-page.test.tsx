@@ -90,6 +90,8 @@ test('the roster shares a wrapping level evenly, sizes logos as WordPress did, a
   assert.equal(width({ ...hest, tier: 'bronze', band_scale: 100, logos: { white: square, color: square, dark: null } }), Math.round(Math.sqrt(17000)), 'a square bronze logo covers the level\'s area');
   assert.equal(width({ ...hest, tier: 'bronze', band_scale: 100, logos: { white: wordmark, color: wordmark, dark: null } }), 200, 'a long wordmark stops at the level\'s widest');
   assert.equal(width({ ...hest, tier: 'bronze', band_scale: 150, logos: { white: square, color: square, dark: null } }), Math.round(Math.sqrt(17000) * 1.5));
+  assert.equal(width({ ...hest, tier: 'supplier', band_scale: 100, logos: { white: square, color: square, dark: null } }), Math.round(Math.sqrt(5200)), 'a supporting partner stands larger than WordPress drew it');
+  assert.equal(width({ ...hest, tier: 'supplier', band_scale: 100, logos: { white: wordmark, color: wordmark, dark: null } }), 160);
 });
 
 test('a Gold logo fills its column, as WordPress\'s did, unless it would stand taller than the column allows', () => {
