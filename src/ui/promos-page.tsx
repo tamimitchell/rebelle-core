@@ -24,7 +24,7 @@ const MARK = { area: 14000, max: 240 };
 const FALLBACK_ASPECT = 3;
 
 const ours = (href: string) => /^https:\/\/(www\.|wp\.)?rebellerally\.com(\/|$)/.test(href);
-const outside = (href: string) => (/^https?:\/\//.test(href) && !ours(href) ? { target: '_blank', rel: 'noopener' } : {});
+const outside = (href: string): Record<string, string> => (/^https?:\/\//.test(href) && !ours(href) ? { target: '_blank', rel: 'noopener' } : {});
 
 function SponsorMark({ sponsor }: { sponsor: NonNullable<Promo['sponsor']> }) {
   // The sheet is glass over a photograph: the brand's dark-ground mark, else its white one.
