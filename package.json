@@ -43,7 +43,10 @@
     "./ui/partners": "./src/ui/partners.tsx",
     "./ui/partners.css": "./src/ui/partners.css",
     "./ui/partners-page": "./src/ui/partners-page.tsx",
-    "./ui/partners-page.css": "./src/ui/partners-page.css"
+    "./ui/partners-page.css": "./src/ui/partners-page.css",
+    "./promos": "./src/promos.ts",
+    "./ui/promos-page": "./src/ui/promos-page.tsx",
+    "./ui/promos-page.css": "./src/ui/promos-page.css"
   },
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs && node --experimental-strip-types scripts/build-register.ts",

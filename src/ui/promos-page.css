@@ -1,0 +1,179 @@
+/* The Promos page's sections (`promos-page.tsx`). Leans on system.css for
+   `.photo-ground`, `.fgi`, `.rr-sechead` and `.rr-btn`, and on its tokens.
+   ⚠️ Rules name `.photo-ground.rr-promo-…` and `.rr-sechead.rr-promo-…`:
+   system.css's `.photo-ground>*:not(img):not(.scrim)` and `.rr-sechead>h1`
+   would otherwise outrank them, or tie and win by import order. */
+
+.rr-promo-hero,
+.rr-promo-band {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.rr-promo-hero *,
+.rr-promo-band * {
+  box-sizing: border-box;
+}
+
+/* An offer on the glass: who it is from, its words, how long it runs, its button. */
+.rr-promo {
+  padding: var(--sp-32);
+}
+
+.rr-promo__mark {
+  display: inline-block;
+}
+
+.rr-promo__mark img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.rr-promo__mark--plated {
+  padding: var(--sp-12) var(--sp-16);
+  background: var(--white);
+  border-radius: var(--radius-control, 6px);
+}
+
+.rr-promo__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: var(--ls-display);
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.rr-promo__words {
+  margin-top: var(--sp-24);
+}
+
+.rr-promo__words p {
+  margin: 0;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-reading);
+  color: var(--white);
+  text-wrap: pretty;
+}
+
+.rr-promo__words p + p {
+  margin-top: var(--sp-12);
+}
+
+.rr-promo__words a {
+  color: var(--white);
+}
+
+.rr-promo__valid {
+  margin: var(--sp-16) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono-label);
+  letter-spacing: var(--ls-label-wide);
+  text-transform: uppercase;
+  color: var(--white-soft);
+}
+
+.rr-promo__go {
+  margin-top: var(--sp-24);
+}
+
+/* Hero: the page's heading over the first offer's photograph, the first offer on the glass beside it. */
+.rr-promo-hero {
+  container-type: inline-size;
+  background: var(--navy-night);
+  min-height: max(720px, 88svh);
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-ground.rr-promo-hero > .rr-promo-hero__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--navy-night) 72%, transparent) 0%, color-mix(in srgb, var(--navy-night) 35%, transparent) 45%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--navy-night) 45%, transparent) 0%, transparent 22%, transparent 55%, var(--navy-night) 100%);
+  pointer-events: none;
+}
+
+.rr-promo-hero__in {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-wide, 1408px);
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--sp-24) var(--sp-24) 64px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rr-promo-hero__body {
+  margin-top: auto;
+  padding-top: var(--sp-48);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 560px);
+  align-items: end;
+  gap: 64px;
+}
+
+.rr-sechead.rr-promo-hero__head > h1 {
+  font-size: clamp(44px, 6.4cqw, 92px);
+  line-height: 0.98;
+  letter-spacing: var(--ls-hero);
+  text-shadow: 0 2px 18px color-mix(in srgb, var(--black) 45%, transparent);
+}
+
+.rr-sechead.rr-promo-hero__head em {
+  padding-top: 2px;
+}
+
+@container (max-width: 960px) {
+  .rr-promo-hero__body { grid-template-columns: 1fr; gap: var(--sp-32); }
+  .rr-sechead.rr-promo-hero__head > h1 { font-size: clamp(44px, 10cqw, 72px); }
+}
+
+@container (max-width: 680px) {
+  .rr-promo-hero__in { padding: var(--sp-24) 20px var(--sp-32); }
+  .rr-promo-hero__body { padding-top: 160px; }
+  .rr-sechead.rr-promo-hero__head > h1 { font-size: clamp(40px, 12cqw, 56px); }
+  .rr-promo { padding: var(--sp-24); }
+}
+
+/* A later offer, on the glass over its own photograph. */
+.rr-promo-band {
+  background: var(--navy-night);
+  min-height: max(720px, 88svh);
+  display: flex;
+}
+
+.photo-ground.rr-promo-band > .rr-promo-band__in {
+  max-width: var(--container-wide, 1408px);
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(88px, 9vw, 136px) var(--sp-24);
+  display: flex;
+  align-items: flex-end;
+}
+
+.rr-promo-band__sheet {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* The photograph's subject sits mid-frame, under any sheet laid over it, so a narrow screen draws the photograph whole and the sheet under it. */
+@media (max-width: 960px) {
+  .rr-promo-band { min-height: 0; flex-direction: column; }
+  .photo-ground.rr-promo-band > img { position: relative; height: auto; aspect-ratio: 16 / 9; }
+  .photo-ground.rr-promo-band > .rr-promo-band__in { margin-top: -96px; padding: 0 var(--sp-24) var(--sp-48); }
+  .rr-promo-band__sheet { max-width: none; }
+}
+
+@media (max-width: 680px) {
+  .photo-ground.rr-promo-band > img { aspect-ratio: 4 / 3; }
+  .photo-ground.rr-promo-band > .rr-promo-band__in { margin-top: -64px; padding: 0 20px var(--sp-32); }
+  .rr-promo { padding: var(--sp-24); }
+}

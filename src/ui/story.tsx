@@ -185,25 +185,28 @@ function Standings({ content }: { content: StandingsContent }) {
   );
 }
 
-function ProseInline({ nodes }: { nodes: Inline[] }) {
+/** Extra attributes for a link, by its address: a host's rule for which links open a new tab. */
+type LinkProps = (href: string) => Record<string, string>;
+
+function ProseInline({ nodes, linkProps }: { nodes: Inline[]; linkProps?: LinkProps }) {
   return nodes.map((node, index) => {
     switch (node.type) {
       case 'text': return node.text;
       case 'break': return <br key={index} />;
-      case 'strong': return <strong key={index}><ProseInline nodes={node.children} /></strong>;
-      case 'emphasis': return <em key={index}><ProseInline nodes={node.children} /></em>;
-      case 'link': return <a key={index} href={node.href} title={node.title}><ProseInline nodes={node.children} /></a>;
+      case 'strong': return <strong key={index}><ProseInline nodes={node.children} linkProps={linkProps} /></strong>;
+      case 'emphasis': return <em key={index}><ProseInline nodes={node.children} linkProps={linkProps} /></em>;
+      case 'link': return <a key={index} href={node.href} title={node.title} {...linkProps?.(node.href)}><ProseInline nodes={node.children} linkProps={linkProps} /></a>;
     }
   });
 }
 
-export function ProseBlocks({ document }: { document: ProseDocument }) {
+export function ProseBlocks({ document, linkProps }: { document: ProseDocument; linkProps?: LinkProps }) {
   return document.map((block, index) => {
     switch (block.type) {
-      case 'paragraph': return <p key={index}><ProseInline nodes={block.children} /></p>;
-      case 'heading': return React.createElement(`h${block.level}`, { key: index }, <ProseInline nodes={block.children} />);
+      case 'paragraph': return <p key={index}><ProseInline nodes={block.children} linkProps={linkProps} /></p>;
+      case 'heading': return React.createElement(`h${block.level}`, { key: index }, <ProseInline nodes={block.children} linkProps={linkProps} />);
       case 'list': {
-        const items = block.items.map((item, itemIndex) => <li key={itemIndex}><ProseBlocks document={item} /></li>);
+        const items = block.items.map((item, itemIndex) => <li key={itemIndex}><ProseBlocks document={item} linkProps={linkProps} /></li>);
         return block.ordered ? <ol key={index} start={block.start}>{items}</ol> : <ul key={index}>{items}</ul>;
       }
     }
