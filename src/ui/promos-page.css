@@ -143,18 +143,23 @@
   .rr-promo { padding: var(--sp-24); }
 }
 
-/* A later offer, on the glass over its own photograph. */
+/* A later offer, on the glass over its own photograph. The band is its own
+   container, so a preview drawn at a phone's width stacks as a phone does. */
 .rr-promo-band {
+  container-type: inline-size;
+}
+
+.rr-promo-band__ground {
   background: var(--navy-night);
   min-height: max(720px, 88svh);
   display: flex;
 }
 
-.photo-ground.rr-promo-band > .rr-promo-band__in {
+.photo-ground.rr-promo-band__ground > .rr-promo-band__in {
   max-width: var(--container-wide, 1408px);
   width: 100%;
   margin: 0 auto;
-  padding: clamp(88px, 9vw, 136px) var(--sp-24);
+  padding: clamp(88px, 9cqw, 136px) var(--sp-24);
   display: flex;
   align-items: flex-end;
 }
@@ -164,16 +169,16 @@
   max-width: 560px;
 }
 
-/* The photograph's subject sits mid-frame, under any sheet laid over it, so a narrow screen draws the photograph whole and the sheet under it. */
-@media (max-width: 960px) {
-  .rr-promo-band { min-height: 0; flex-direction: column; }
-  .photo-ground.rr-promo-band > img { position: relative; height: auto; aspect-ratio: 16 / 9; }
-  .photo-ground.rr-promo-band > .rr-promo-band__in { margin-top: -96px; padding: 0 var(--sp-24) var(--sp-48); }
+/* The photograph's subject sits mid-frame, under any sheet laid over it, so a narrow band draws the photograph whole and the sheet under it. */
+@container (max-width: 960px) {
+  .rr-promo-band__ground { min-height: 0; flex-direction: column; }
+  .photo-ground.rr-promo-band__ground > img { position: relative; height: auto; aspect-ratio: 16 / 9; }
+  .photo-ground.rr-promo-band__ground > .rr-promo-band__in { margin-top: -96px; padding: 0 var(--sp-24) var(--sp-48); }
   .rr-promo-band__sheet { max-width: none; }
 }
 
-@media (max-width: 680px) {
-  .photo-ground.rr-promo-band > img { aspect-ratio: 4 / 3; }
-  .photo-ground.rr-promo-band > .rr-promo-band__in { margin-top: -64px; padding: 0 20px var(--sp-32); }
+@container (max-width: 680px) {
+  .photo-ground.rr-promo-band__ground > img { aspect-ratio: 4 / 3; }
+  .photo-ground.rr-promo-band__ground > .rr-promo-band__in { margin-top: -64px; padding: 0 20px var(--sp-32); }
   .rr-promo { padding: var(--sp-24); }
 }

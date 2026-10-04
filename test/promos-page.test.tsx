@@ -24,7 +24,13 @@ test('the hero draws the page\'s heading, what it is given above it, and the fir
 
 test('a sponsor\'s offer opens on its mark for a dark ground, linked to its site in a new tab', () => {
   const html = renderToStaticMarkup(<PromoSheet promo={giftCard} />);
-  assert.match(html, /^<div class="fgi fgi--settle rr-promo" data-promo="1"><a class="rr-promo__mark" href="https:\/\/www.jiffylube.com\/" target="_blank" rel="noopener"><img src="\/images\/bf62abeb-[^"]+" alt="Jiffy Lube" width="240" height="57"/);
+  assert.match(html, /^<div class="fgi fgi--settle rr-promo" data-promo="1"><a class="rr-promo__mark" href="https:\/\/www.jiffylube.com\/" target="_blank" rel="noopener"><img src="\/images\/bf62abeb-[^"]+" alt="Jiffy Lube" width="145" height="97"/);
+});
+
+test('every mark covers about the same area, and a long wordmark stops at 240 wide', () => {
+  const white = { ...giftCard.sponsor!.logos.white!, width: 2560, height: 605 };
+  const wide = { ...giftCard, sponsor: { ...giftCard.sponsor!, logos: { ...giftCard.sponsor!.logos, white } } };
+  assert.match(renderToStaticMarkup(<PromoSheet promo={wide} />), /alt="Jiffy Lube" width="240" height="57"/);
 });
 
 test('the words keep WordPress\'s bold code and its link, and the line and button follow', () => {
@@ -50,6 +56,6 @@ test('a sponsor with only a color mark draws it on a plate, and one with no mark
 
 test('a later offer is a band over its own photograph, named for who it is from', () => {
   const html = renderToStaticMarkup(<PromoBand promo={hat} photo={{ src: '/images/50bc8657-e859-4fbd-88ba-3c9982dc62e7/1920', alt: 'Dunes' }} />);
-  assert.match(html, /^<section class="photo-ground rr-promo-band" aria-label="Jiffy Lube"><img src="\/images\/50bc8657[^"]+" sizes="100vw" loading="lazy" decoding="async" alt="Dunes"\/>/);
+  assert.match(html, /^<section class="rr-promo-band" aria-label="Jiffy Lube"><div class="photo-ground rr-promo-band__ground"><img src="\/images\/50bc8657[^"]+" sizes="100vw" loading="lazy" decoding="async" alt="Dunes"\/>/);
   assert.match(html, /<p class="rr-promo__valid">Offer valid through 8\/20\/2027.<\/p>/);
 });

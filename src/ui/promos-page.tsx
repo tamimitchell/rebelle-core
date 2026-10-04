@@ -100,11 +100,13 @@ export function PromosHero({ lineA, lineB, promo, photo, headingId = 'promos-tit
 /** A later offer, on the glass over its own photograph. */
 export function PromoBand({ promo, photo }: { promo: Promo; photo: PromoPhoto }) {
   return (
-    <section className="photo-ground rr-promo-band" aria-label={promo.sponsor?.name ?? promo.heading ?? undefined}>
-      <img src={photo.src} srcSet={photo.srcSet} sizes="100vw" loading="lazy" decoding="async" alt={photo.alt} />
-      <div className="rr-promo-band__in">
-        <div className="rr-promo-band__sheet">
-          <PromoSheet promo={promo} />
+    <section className="rr-promo-band" aria-label={promo.sponsor?.name ?? promo.heading ?? undefined}>
+      <div className="photo-ground rr-promo-band__ground">
+        <img src={photo.src} srcSet={photo.srcSet} sizes="100vw" loading="lazy" decoding="async" alt={photo.alt} />
+        <div className="rr-promo-band__in">
+          <div className="rr-promo-band__sheet">
+            <PromoSheet promo={promo} />
+          </div>
         </div>
       </div>
     </section>
