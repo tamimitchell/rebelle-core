@@ -42,14 +42,30 @@ function quoted(text: string): string {
   return /^["“‘']/.test(text) ? text : `“${text}”`;
 }
 
-function linkLabel(link: string): string {
+/** Where a post's link goes, said plainly: the place, the show, the sponsor, the day's update. */
+export function linkLabel(link: string, payload: DispatchPayload, sponsor: SponsorChip | null): string {
+  let url: URL;
   try {
-    if (new URL(link).hostname.endsWith('instagram.com')) return 'VIEW STORY ON INSTAGRAM';
+    url = new URL(link);
   } catch {
-    /* an unparseable link still opens; it just gets the plain label */
+    return 'OPEN THE LINK';
   }
-  return 'OPEN LINK';
+  const host = url.hostname.replace(/^www\./, '');
+  if (payload.source === 'sponsor' && sponsor) return `VISIT ${(sponsor.name ?? sponsor.key).toUpperCase()}`;
+  if (/(^|\.)(youtube\.com|youtu\.be)$/.test(host)) return url.searchParams.has('t') ? 'WATCH THIS MOMENT ON THE BROADCAST' : 'WATCH THE SHOW';
+  if (host.endsWith('instagram.com')) return 'SEE IT ON INSTAGRAM';
+  const fieldUpdate = `READ THE ${payload.day === 0 ? 'PROLOGUE' : `DAY ${payload.day}`} FIELD UPDATE`;
+  if (host === 'mailchi.mp') return fieldUpdate;
+  // The site answers at its own name and at its stand-in.
+  if (host.endsWith('rebellerally.com') || host === 'rebelle.elementalsugar.com') {
+    return url.pathname.includes('field-update') ? fieldUpdate : 'READ THE FULL STORY';
+  }
+  return `READ MORE ON ${host.toUpperCase()}`;
 }
+
+/** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn. */
+const LEAVES = <span className="live-entry__arrow" aria-hidden="true">↗</span>;
+const OPENS = <span className="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>;
 
 export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
@@ -82,7 +98,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             disabled={!onViewPanel}
             onClick={() => onViewPanel?.(payload.panel as DispatchPanel)}
           >
-            VIEW · {panelLabels[payload.panel] ?? payload.panel.toUpperCase()} <span aria-hidden="true">→</span>
+            SEE {panelLabels[payload.panel] ?? payload.panel.toUpperCase()} {OPENS}
           </button>
         )}
       </header>
@@ -99,10 +115,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         <p className="live-entry__caption">{payload.video.duration ? Math.floor(payload.video.duration / 60) + ':' + String(payload.video.duration % 60).padStart(2, '0') : 'Video'}
           {payload.video.video_id == null && ' · Coming soon'}</p>
         {payload.video.video_id && onOpenVideo
-          ? <button type="button" className="live-entry__link" onClick={(event) => onOpenVideo(payload.video!, event.currentTarget)}>Watch video →</button>
+          ? <button type="button" className="live-entry__link" onClick={(event) => onOpenVideo(payload.video!, event.currentTarget)}>Watch the video {OPENS}</button>
           : null}
         {payload.video.provider === 'youtube' && payload.video.video_id && !onOpenVideo &&
-          <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch video →</a>}
+          <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch on YouTube {LEAVES}</a>}
         {payload.video.provider === 'hosted' && payload.video.video_id && !onOpenVideo && <p className="live-entry__caption">Clip preview unavailable</p>}
       </div>}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
@@ -165,7 +181,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 
       {payload.link && (
         <a className="live-entry__link" href={payload.link} target="_blank" rel="noopener noreferrer">
-          {linkLabel(payload.link)} <span aria-hidden="true">→</span>
+          {linkLabel(payload.link, payload, sponsor)} {LEAVES}
         </a>
       )}
 

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
-import { DispatchView, SponsorLockup } from '../src/ui/dispatch.tsx';
+import { DispatchView, SponsorLockup, linkLabel } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
 test('the Studio schema-2 writer fixture draws all six operational kinds', () => {
@@ -101,12 +101,12 @@ test('a reader can open YouTube clips in its media pane; previews retain the ext
   assert.ok(preview.includes('href="https://www.youtube.com/watch?v=7hq77WoZA-w"'));
   assert.ok(preview.includes('target="_blank"'));
   const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
-  assert.ok(reader.includes('<button type="button" class="live-entry__link">Watch video'));
+  assert.ok(reader.includes('<button type="button" class="live-entry__link">Watch the video'));
   assert.ok(!reader.includes('youtube.com/watch'));
   for (const video_id of [null, undefined]) {
     const placeholder = renderToStaticMarkup(<DispatchView dispatch={{...dispatch, video:{...video, video_id}}} onOpenVideo={() => {}} />);
     assert.ok(placeholder.includes('Coming soon'));
-    assert.ok(!placeholder.includes('Watch video'));
+    assert.ok(!placeholder.includes('Watch the video'));
   }
 });
 
@@ -196,4 +196,20 @@ test('a badge wears the white mark on a dark ground, presented by wears the colo
   const base = {...records[0].payload, source:'sponsor' as const, sponsor: 'ford'};
   const card = renderToStaticMarkup(<DispatchView dispatch={base} sponsorFor={() => ford} />);
   assert.ok(card.includes('live-entry--partner') && card.includes('class="live-lockup live-lockup--mark"') && card.includes(white.url), card);
+});
+
+test('a link says where it goes, and its arrow says it leaves the page', () => {
+  const post = (fields: object) => parseDispatchDraft({ posted_at: '2025-10-17T19:30:00-07:00', source: 'team', kind: 'update', text: 'Hi', day: 8, authorship: 'human', ...fields });
+  assert.equal(linkLabel('https://mailchi.mp/rebellerally/2025-rebelle-rally-day-8', post({}), null), 'READ THE DAY 8 FIELD UPDATE');
+  assert.equal(linkLabel('https://mailchi.mp/rebellerally/prologue', post({ day: 0 }), null), 'READ THE PROLOGUE FIELD UPDATE');
+  assert.equal(linkLabel('https://www.youtube.com/watch?v=HDuIcnS81dA&t=409s', post({ source: 'hq' }), null), 'WATCH THIS MOMENT ON THE BROADCAST');
+  assert.equal(linkLabel('https://www.youtube.com/watch?v=HDuIcnS81dA', post({ source: 'hq' }), null), 'WATCH THE SHOW');
+  assert.equal(linkLabel('https://www.instagram.com/p/abc/', post({}), null), 'SEE IT ON INSTAGRAM');
+  assert.equal(linkLabel('https://www.rebellerally.com/news/day-8', post({}), null), 'READ THE FULL STORY');
+  assert.equal(linkLabel('https://rebelle.elementalsugar.com/blog/2025-rebelle-rally-field-update-day-8-presented-by-pennzoil/', post({}), null), 'READ THE DAY 8 FIELD UPDATE');
+  assert.equal(linkLabel('https://pennzoil.com/rebelle', post({ source: 'sponsor', sponsor: 'pennzoil' }), { key: 'pennzoil', name: 'Pennzoil' }), 'VISIT PENNZOIL');
+  assert.equal(linkLabel('https://example.org/x', post({}), null), 'READ MORE ON EXAMPLE.ORG');
+  const html = renderToStaticMarkup(<DispatchView dispatch={post({ link: 'https://mailchi.mp/rebellerally/day-8', panel: 'media' })} />);
+  assert.ok(html.includes('READ THE DAY 8 FIELD UPDATE <span class="live-entry__arrow" aria-hidden="true">↗</span>'));
+  assert.ok(html.includes('SEE MEDIA <span class="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>'));
 });
