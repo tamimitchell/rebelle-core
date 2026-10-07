@@ -63,6 +63,28 @@ export function linkLabel(link: string, payload: DispatchPayload, sponsor: Spons
   return `READ MORE ON ${host.toUpperCase()}`;
 }
 
+/** A clip's length as a clock: 0:16, 12:05, 1:11:55. */
+export function clipLength(seconds: number): string {
+  const h = Math.floor(seconds / 3600), m = Math.floor((seconds % 3600) / 60), s = String(seconds % 60).padStart(2, '0');
+  return h ? `${h}:${String(m).padStart(2, '0')}:${s}` : `${m}:${s}`;
+}
+
+type Video = NonNullable<DispatchPayload['video']>;
+/** What kind of YouTube clip it is, from what the channel itself writes in the title. */
+export function clipKind(video: Video): 'SHORT' | 'LIVE SHOW' | 'VIDEO' {
+  if (/#shorts\b/i.test(video.title) || (video.duration != null && video.duration <= 60)) return 'SHORT';
+  return /\bLIVE\b/.test(video.title) ? 'LIVE SHOW' : 'VIDEO';
+}
+
+/** A YouTube title without the hashtags the channel trails it with. */
+function clipTitle(title: string): string {
+  return title.replace(/(\s*#[\w-]+)+\s*$/, '').trim() || title;
+}
+
+const isYouTube = (link: string) => {
+  try { return /(^|\.)(youtube\.com|youtu\.be)$/.test(new URL(link).hostname); } catch { return false; }
+};
+
 /** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn. */
 const LEAVES = <span className="live-entry__arrow" aria-hidden="true">↗</span>;
 const OPENS = <span className="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>;
@@ -81,6 +103,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const brand = partner ? sponsorBrandClass(sponsor) : null;
   // A quote is its own band on a fresh navy ground, unless a partner card already frames it.
   const band = isQuote && !partner;
+  // A YouTube clip is one row that plays in the host's media pane: it carries its own
+  // way in, so the header's panel link and a link to the same show on YouTube go (site Decided #220).
+  const clip = payload.video?.provider === 'youtube' ? payload.video : null;
+  const sameAsClip = clip !== null && payload.text.trim() === clip.title.trim();
 
   return (
     <React.Fragment><article className={`live-entry${band ? ' live-entry--quote navy-flat' : ''}${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
@@ -91,7 +117,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         <time className="live-entry__time" dateTime={payload.posted_at}>
           {timeLabel ?? payload.posted_at}
         </time>
-        {payload.panel && (
+        {payload.panel && !clip && (
           <button
             type="button"
             className="live-entry__panel-link"
@@ -109,16 +135,15 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             <blockquote>{quoted(payload.text)}</blockquote>
             <cite>{payload.attribution}</cite>
           </figure>
-        : <p className="live-entry__text">{payload.text}</p>}
-      {payload.video && <div className="live-widget rr-card rr-card--lit live-entry__video">
+        : !sameAsClip && <p className="live-entry__text">{payload.text}</p>}
+      {clip && <YouTubeClip video={clip} onOpenVideo={onOpenVideo} />}
+      {payload.video && !clip && <div className="live-widget rr-card rr-card--lit live-entry__video">
         <p className="live-widget__title">{payload.video.title}</p>
-        <p className="live-entry__caption">{payload.video.duration ? Math.floor(payload.video.duration / 60) + ':' + String(payload.video.duration % 60).padStart(2, '0') : 'Video'}
+        <p className="live-entry__caption">{payload.video.duration ? clipLength(payload.video.duration) : 'Video'}
           {payload.video.video_id == null && ' · Coming soon'}</p>
         {payload.video.video_id && onOpenVideo
           ? <button type="button" className="live-entry__link" onClick={(event) => onOpenVideo(payload.video!, event.currentTarget)}>Watch the video {OPENS}</button>
           : null}
-        {payload.video.provider === 'youtube' && payload.video.video_id && !onOpenVideo &&
-          <a className="live-entry__link" href={'https://www.youtube.com/watch?v=' + payload.video.video_id} target="_blank" rel="noopener noreferrer">Watch on YouTube {LEAVES}</a>}
         {payload.video.provider === 'hosted' && payload.video.video_id && !onOpenVideo && <p className="live-entry__caption">Clip preview unavailable</p>}
       </div>}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
@@ -179,7 +204,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         </>
       )}
 
-      {payload.link && (
+      {payload.link && !(clip && isYouTube(payload.link)) && (
         <a className="live-entry__link" href={payload.link} target="_blank" rel="noopener noreferrer">
           {linkLabel(payload.link, payload, sponsor)} {LEAVES}
         </a>
@@ -201,6 +226,32 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
       )}
     </article></React.Fragment>
   );
+}
+
+/**
+ * The still, the kind and length, the title and WATCH, as one control: a reader plays
+ * it in its media pane; a host without one (a studio preview) links to YouTube.
+ */
+function YouTubeClip({ video, onOpenVideo }: { video: Video; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
+  const title = clipTitle(video.title);
+  const meta = [clipKind(video), video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
+  const body = <React.Fragment>
+    <span className="live-clip__still">
+      {video.video_id && <img src={`https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />}
+      {video.video_id && <span className="live-clip__play" aria-hidden="true" />}
+    </span>
+    <span className="live-clip__words">
+      <span className="live-clip__meta">{meta}</span>
+      <span className="live-clip__title">{title}</span>
+      {video.video_id && (onOpenVideo
+        ? <span className="live-entry__link live-clip__watch">Watch {OPENS}</span>
+        : <span className="live-entry__link live-clip__watch">Watch on YouTube {LEAVES}</span>)}
+    </span>
+  </React.Fragment>;
+  if (!video.video_id) return <div className="live-clip">{body}</div>;
+  return onOpenVideo
+    ? <button type="button" className="live-clip" onClick={(event) => onOpenVideo(video, event.currentTarget)}>{body}</button>
+    : <a className="live-clip" href={`https://www.youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">{body}</a>;
 }
 
 /** A failed fetch must retain the credit, not leave a broken image icon. */
