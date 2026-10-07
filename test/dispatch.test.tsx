@@ -147,30 +147,27 @@ test('the live envelope names its year and day, including an empty day', () => {
   assert.equal(DispatchesFeedDocumentSchema.safeParse({...fixture, feed_key:'rebelle_live.dispatches.2025'}).success, false);
 });
 
-test('a sponsor is a key on the wire, and every sponsor dispatch is a partner card', () => {
+test('a sponsor is a key on the wire, and every sponsor dispatch is a partner highlight', () => {
   const base = {...records[0].payload, source:'sponsor' as const};
   for (const word of ['BILSTEIN', 'jiffy lube', 'jiffy_lube', '-ford', 'ford-', '']) {
     assert.equal(DispatchPayloadSchema.safeParse({...base, sponsor: word}).success, false, word);
   }
   const drawn = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'bilstein'}} />);
-  assert.ok(drawn.includes('live-entry--partner live-brand--bilstein'));
-  assert.ok(drawn.includes('>BILSTEIN<') && drawn.includes('PARTNER'));
+  assert.ok(drawn.includes('<article class="live-entry live-entry--partner">'));
+  assert.ok(drawn.includes('<h3 class="live-entry__highlight">Partner highlight<span>BILSTEIN</span></h3>'));
+  assert.ok(!drawn.includes('live-lockup') && !drawn.includes('rr-chip'), 'the heading names the partner; no pill, no lockup');
   const plain = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'storyteller-overland'}} />);
-  assert.ok(plain.includes('live-entry--partner') && !plain.includes('live-brand--'));
-  assert.ok(plain.includes('STORYTELLER OVERLAND') && plain.includes('PARTNER'));
+  assert.ok(plain.includes('<span>STORYTELLER OVERLAND</span>'));
   const hq = renderToStaticMarkup(<DispatchView dispatch={{...base, source:'hq', sponsor:'bilstein'}} />);
-  assert.ok(hq.includes('live-brand--bilstein') && !hq.includes('live-entry--partner') && !hq.includes('PARTNER'));
+  assert.ok(hq.includes('live-brand--bilstein') && !hq.includes('live-entry--partner') && !hq.includes('Partner highlight'));
 });
-test('a host holding the roster names the chip and says which lockup it wears', () => {
+test('a host holding the roster names the partner as it is printed', () => {
   const base = {...records[0].payload, source:'sponsor' as const};
   const named = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'warner-ineos'}}
     sponsorFor={(key) => ({ key, name: 'INEOS Grenadier', lockup_key: null })} />);
-  assert.ok(named.includes('INEOS GRENADIER') && !named.includes('WARNER INEOS'));
-  const relabelled = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'stryten-energy'}}
-    sponsorFor={(key) => ({ key, name: 'Stryten Energy', lockup_key: 'stryten' })} />);
-  assert.ok(relabelled.includes('live-entry--partner live-brand--stryten') && relabelled.includes('>STRYTEN<'));
+  assert.ok(named.includes('<span>INEOS Grenadier</span>') && !named.includes('WARNER INEOS'));
   const unknown = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'bilstein'}} sponsorFor={() => null} />);
-  assert.ok(unknown.includes('live-brand--bilstein'));
+  assert.ok(unknown.includes('<span>BILSTEIN</span>'));
   assert.deepEqual(Object.keys(SPONSOR_LOCKUPS).length, 9);
 });
 const white = { url: '/images/7c1f4b0e-2f2a-4c3e-9a1d-0b5e6f7a8c9d/640', alt: 'Ford', width: 2000, height: 750 };
@@ -223,7 +220,7 @@ test('a badge wears the white mark on a dark ground, presented by wears the colo
   assert.ok(chip.includes('rr-chip rr-chip--neutral') && chip.includes('JEEP'));
   const base = {...records[0].payload, source:'sponsor' as const, sponsor: 'ford'};
   const card = renderToStaticMarkup(<DispatchView dispatch={base} sponsorFor={() => ford} />);
-  assert.ok(card.includes('live-entry--partner') && card.includes('class="live-lockup live-lockup--mark"') && card.includes(white.url), card);
+  assert.ok(card.includes('<span>Ford</span>') && !card.includes(white.url), 'a partner highlight wears no mark; the sponsor strip does');
 });
 
 test('a link says where it goes, and its arrow says it leaves the page', () => {
