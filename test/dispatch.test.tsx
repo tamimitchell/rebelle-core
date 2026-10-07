@@ -238,6 +238,23 @@ test('a link says where it goes, and its arrow says it leaves the page', () => {
   assert.equal(linkLabel('https://pennzoil.com/rebelle', post({ source: 'sponsor', sponsor: 'pennzoil' }), { key: 'pennzoil', name: 'Pennzoil' }), 'VISIT PENNZOIL');
   assert.equal(linkLabel('https://example.org/x', post({}), null), 'READ MORE ON EXAMPLE.ORG');
   const html = renderToStaticMarkup(<DispatchView dispatch={post({ link: 'https://mailchi.mp/rebellerally/day-8', panel: 'media' })} />);
-  assert.ok(html.includes('READ THE DAY 8 FIELD UPDATE <span class="live-entry__arrow" aria-hidden="true">↗</span>'));
-  assert.ok(html.includes('SEE MEDIA <span class="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>'));
+  assert.ok(/READ THE DAY 8 FIELD UPDATE <svg class="live-entry__arrow" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
+  assert.ok(/SEE MEDIA <svg class="live-entry__arrow live-entry__arrow--panel" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
+});
+
+test('a team with a page is a link to it in a new tab, with its crew; without one the chip filters', () => {
+  const dispatch = {...records[0].payload, teams:['156', '999']};
+  const html = renderToStaticMarkup(<DispatchView dispatch={dispatch} onFilterTeam={() => {}}
+    teamFor={(team) => team === '156' ? { href:'/teams/2025/156/', crew:'Chang / McAdoo' } : null} />);
+  assert.ok(html.includes('<a class="live-entry__team" href="/teams/2025/156/" target="_blank" rel="noopener noreferrer"'));
+  assert.ok(html.includes('<span class="live-entry__team-crew">Chang / McAdoo</span>'));
+  assert.ok(html.replaceAll('<!-- -->', '').includes('<button type="button" class="rr-chip rr-chip--neutral live-entry__team-chip">#999</button>'));
+});
+
+test('a photograph carries its credit, and only a fan repost says what it is', () => {
+  const photo = { url:'https://example.com/a.jpg', credit:'Regine Trias' };
+  const field = renderToStaticMarkup(<DispatchView dispatch={{...records[1].payload, stats:null, source:'media', photos:[photo]}} />).replaceAll('<!-- -->', '');
+  assert.ok(field.includes('Photo · Regine Trias'));
+  assert.ok(!field.includes('FIELD DISPATCH'));
+  assert.ok(renderToStaticMarkup(<DispatchView dispatch={{...records[1].payload, stats:null, source:'fans', photos:[photo]}} />).includes('FAN REPOST'));
 });

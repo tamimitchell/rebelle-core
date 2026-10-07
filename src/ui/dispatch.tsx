@@ -23,7 +23,11 @@ export type DispatchViewProps = {
   sponsorFor?: (key: string) => SponsorChip | null | undefined;
   /** Where the host serves a hosted clip's still; without one the row shows no picture. */
   videoPoster?: (video: NonNullable<DispatchPayload['video']>) => string | null | undefined;
+  /** A host with team pages names where a team's chip leads, and its crew; without one, the chip filters. */
+  teamFor?: (team: string) => TeamLink | null | undefined;
 };
+/** A team's page and the surnames its chip carries. */
+export type TeamLink = { href: string; crew?: string | null };
 function sourceChipClass(source: DispatchRecord['payload']['source']): string {
   // hq = live cyan, media = warm dune, fans = gain green; sponsor stays
   // neutral ON PURPOSE — the brand lockup beside it carries the color
@@ -89,11 +93,18 @@ const isClipCopy = (link: string) => {
   try { return /(^|\.)(youtube\.com|youtu\.be|instagram\.com)$/.test(new URL(link).hostname); } catch { return false; }
 };
 
-/** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn. */
-const LEAVES = <span className="live-entry__arrow" aria-hidden="true">↗</span>;
-const OPENS = <span className="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>;
+/** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn; → goes elsewhere on it.
+ * Drawn, not typed: a font's arrow glyph sits on the baseline, below the middle of a capital. */
+const arrow = (d: string, panel = false) => (
+  <svg className={panel ? 'live-entry__arrow live-entry__arrow--panel' : 'live-entry__arrow'} viewBox="0 0 16 16" aria-hidden="true">
+    <path d={d} fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const LEAVES = arrow('M4.5 11.5l7-7M6 4.5h5.5V10');
+const OPENS = arrow('M3 8h10M9 4l4 4-4 4', true);
+const GOES = arrow('M3 8h10M9 4l4 4-4 4');
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
@@ -108,7 +119,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   // A quote is its own band on a fresh navy ground, unless a partner card already frames it.
   const band = isQuote && !partner;
   // A clip is one row that plays in the host's media pane: it carries its own way in, so the
-  // header's panel link and a link to the same clip on YouTube or Instagram go (site Decided #220, #221).
+  // header's panel link and a link to the same clip on YouTube or Instagram go (site Decided #226, #227).
   // A hosted clip's title is the studio's shelf name, so its row reads the post's words instead.
   const clip = payload.video;
   const clipWords = clip?.provider === 'hosted' ? payload.text : clip ? clipTitle(clip.title) : null;
@@ -144,9 +155,9 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         : !sameAsClip && <p className="live-entry__text">{payload.text}</p>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
-        {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} →</button> : <span>{moment.label}</span>}
+        {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} {GOES}</button> : <span>{moment.label}</span>}
       </li>)}</ol>}
-      {payload.story && <button type="button" className="live-entry__link" disabled={!onOpenStory} onClick={() => onOpenStory?.(payload.story!)}>OPEN · THE STORY →</button>}
+      {payload.story && <button type="button" className="live-entry__link" disabled={!onOpenStory} onClick={() => onOpenStory?.(payload.story!)}>OPEN · THE STORY {GOES}</button>}
 
       {stats && hasWidget && (
         <div className="live-widget rr-card rr-card--lit">
@@ -195,7 +206,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             ))}
           </div>
           <p className="live-entry__caption">
-            <span className="live-entry__media">{payload.source === 'fans' ? 'FAN REPOST' : 'FIELD DISPATCH'}</span>
+            {payload.source === 'fans' && <span className="live-entry__media">FAN REPOST</span>}
             <span className="live-entry__credit">Photo · {credits}</span>
           </p>
         </>
@@ -209,16 +220,21 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 
       {(payload.teams?.length ?? 0) > 0 && (
         <div className="live-entry__teams">
-          {(payload.teams ?? []).map((team) => (
-            <button
-              key={team}
-              type="button"
-              className="rr-chip rr-chip--neutral live-entry__team-chip"
-              disabled={!onFilterTeam} onClick={() => onFilterTeam?.(team)}
-            >
-              #{team}
-            </button>
-          ))}
+          {(payload.teams ?? []).map((team) => {
+            const link = teamFor?.(team);
+            // A team with a page is a link to it, in a new tab so the feed keeps its place (site Decided #229).
+            return link
+              ? <a key={team} className="live-entry__team" href={link.href} target="_blank" rel="noopener noreferrer"
+                  aria-label={`Team ${team}${link.crew ? `, ${link.crew}` : ''}: team page, opens in a new tab`}>
+                  <span className="live-entry__team-number">#{team}</span>
+                  {link.crew && <span className="live-entry__team-crew">{link.crew}</span>}
+                  {LEAVES}
+                </a>
+              : <button key={team} type="button" className="rr-chip rr-chip--neutral live-entry__team-chip"
+                  disabled={!onFilterTeam} onClick={() => onFilterTeam?.(team)}>
+                  #{team}
+                </button>;
+          })}
         </div>
       )}
     </article></React.Fragment>
@@ -263,8 +279,14 @@ function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: s
 /** A failed fetch must retain the credit, not leave a broken image icon. */
 function DispatchPhoto({ photo, url, sources }: { photo: Photo; url: string | null | undefined; sources?: PhotoSources | null }) {
   const [failed, setFailed] = React.useState<string | null>(null);
+  const [tall, setTall] = React.useState(false);
+  const image = React.useRef<HTMLImageElement>(null);
+  const measure = (img: HTMLImageElement) => setTall(img.naturalHeight > img.naturalWidth);
+  // A photograph that finished loading before the page hydrated fired its load unheard.
+  React.useEffect(() => { if (image.current?.complete && image.current.naturalWidth) measure(image.current); }, []);
   return <React.Fragment>{url && failed !== url
-    ? <img srcSet={sources?.srcSet} sizes={sources?.sizes} src={url} alt="" loading="lazy" decoding="async" onError={() => setFailed(url)} />
+    ? <img ref={image} className={tall ? 'live-entry__photo-tall' : undefined} srcSet={sources?.srcSet} sizes={sources?.sizes} src={url} alt="" loading="lazy" decoding="async"
+        onLoad={(event) => measure(event.currentTarget)} onError={() => setFailed(url)} />
     : <span className="live-entry__missing">Photograph unavailable · {photo.credit}</span>}
   </React.Fragment>;
 }
