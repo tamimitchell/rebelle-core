@@ -118,7 +118,27 @@
 }
 
 .live-entry__photo:only-child {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: auto;
+  border-radius: var(--radius-crystal);
+}
+
+/* One photograph keeps its own shape (site Decided #228): a wide one fills the column to a
+ * height cap, and a tall one, measured as it loads, stands at the cap at its own width. */
+.live-entry__photo:only-child img {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 560px;
+}
+
+.live-entry__photo:only-child:has(.live-entry__photo-tall) {
+  flex: 0 1 auto;
+}
+
+.live-entry__photo:only-child img.live-entry__photo-tall {
+  width: auto;
+  max-width: 100%;
 }
 
 .live-entry__photo img {
@@ -145,7 +165,6 @@
 }
 
 .live-entry__credit {
-  margin-left: auto;
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -190,6 +209,43 @@
   border-color: color-mix(in srgb, var(--cyan) 70%, transparent);
   background: color-mix(in srgb, var(--cyan) 14%, transparent);
   box-shadow: inset 0 0 12px color-mix(in srgb, var(--cyan) 55%, transparent);
+}
+
+.live-entry__team {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid var(--hairline-inverse);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--white) 4%, transparent);
+  color: var(--white);
+  text-decoration: none;
+}
+
+.live-entry__team:hover {
+  border-color: color-mix(in srgb, var(--cyan) 70%, transparent);
+  background: color-mix(in srgb, var(--cyan) 14%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--cyan) 55%, transparent);
+}
+
+.live-entry__team-number {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+
+.live-entry__team-crew {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: color-mix(in srgb, var(--white) 75%, transparent);
+}
+
+.live-entry__team .live-entry__arrow {
+  color: var(--cyan);
 }
 
 .live-entry__team-chip::after {
