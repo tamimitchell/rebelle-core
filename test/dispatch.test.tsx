@@ -27,7 +27,7 @@ test('a quote is the navy band: the star, its words in one pair of marks, and wh
   const quote = records[2].payload;
   const typed = renderToStaticMarkup(<DispatchView dispatch={quote} />);
   assert.ok(typed.includes('<article class="live-entry live-entry--quote navy-flat">'));
-  assert.ok(typed.includes('<figure class="rr-quote on-dark live-entry__quote"><span class="rr-star live-entry__star" aria-hidden="true"></span><blockquote>“Now she hands me the map and says find this ridge.”</blockquote><cite>Sabrina Howells, #172</cite></figure>'));
+  assert.ok(typed.includes('<figure class="rr-quote on-dark live-entry__quote"><span class="rr-star live-entry__star" aria-hidden="true"></span><blockquote>“Now she hands me the map and says find this ridge.”</blockquote><cite><span class="live-entry__speaker">Sabrina Howells, #172</span></cite></figure>'));
   const transcribed = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, text: 'What is a road? What is a topo line?' }} />);
   assert.ok(transcribed.includes('<blockquote>“What is a road? What is a topo line?”</blockquote>'));
   const partner = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, source: 'sponsor', sponsor: 'pirelli' }} />);
@@ -249,6 +249,18 @@ test('a team with a page is a link to it in a new tab, with its crew; without on
   assert.ok(html.includes('<a class="live-entry__team" href="/teams/2025/156/" target="_blank" rel="noopener noreferrer"'));
   assert.ok(html.includes('<span class="live-entry__team-crew">Chang / McAdoo</span>'));
   assert.ok(html.replaceAll('<!-- -->', '').includes('<button type="button" class="rr-chip rr-chip--neutral live-entry__team-chip">#999</button>'));
+});
+
+test('a quote names its speaker\'s team on the speaker line, and that team leaves the tag row', () => {
+  const quote = records[2].payload; // Sabrina Howells, #172
+  const html = renderToStaticMarkup(<DispatchView dispatch={quote}
+    teamFor={(team) => ({ href:`/teams/2026/${team}/`, crew:'Howells / Pike' })} />).replaceAll('<!-- -->', '');
+  assert.ok(html.includes('<cite><span class="live-entry__speaker">Sabrina Howells</span><a class="live-entry__speaker-team" href="/teams/2026/172/" target="_blank"'));
+  assert.ok(html.includes('Team #172 <svg'));
+  assert.ok(!html.includes('live-entry__teams'));
+  const preview = renderToStaticMarkup(<DispatchView dispatch={quote} />);
+  assert.ok(preview.includes('<cite><span class="live-entry__speaker">Sabrina Howells, #172</span></cite>'));
+  assert.ok(preview.includes('live-entry__team-chip'));
 });
 
 test('a photograph carries its credit, and only a fan repost says what it is', () => {
