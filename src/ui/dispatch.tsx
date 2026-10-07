@@ -238,7 +238,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             return link
               ? <a key={team} className="live-entry__team" href={link.href} target="_blank" rel="noopener noreferrer"
                   aria-label={`Team ${team}${link.crew ? `, ${link.crew}` : ''}: team page, opens in a new tab`}>
-                  <span className="live-entry__team-number">#{team}</span>
+                  <span className="live-entry__team-number">Team #{team}</span>
                   {link.crew && <span className="live-entry__team-crew">{link.crew}</span>}
                   {LEAVES}
                 </a>
