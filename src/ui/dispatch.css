@@ -89,6 +89,26 @@
   white-space: pre-line;
 }
 
+.live-entry__quote > cite:has(.live-entry__speaker-team) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.live-entry__speaker-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.live-entry__speaker-team:hover {
+  color: var(--cyan-lift);
+}
+
 .live-entry--quote .live-entry__photos {
   margin-top: 22px;
 }

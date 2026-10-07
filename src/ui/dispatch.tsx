@@ -38,10 +38,6 @@ function sourceChipClass(source: DispatchRecord['payload']['source']): string {
   return 'rr-chip rr-chip--neutral';
 }
 
-function sourceLabel(payload: DispatchRecord['payload']): string {
-  if (payload.source === 'team') return `#${payload.teams?.[0] ?? '—'}`;
-  return payload.source.toUpperCase();
-}
 
 /** Transcribed excerpts arrive bare and typed ones often carry their own marks; draw one pair either way. */
 function quoted(text: string): string {
@@ -124,11 +120,16 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const clip = payload.video;
   const clipWords = clip?.provider === 'hosted' ? payload.text : clip ? clipTitle(clip.title) : null;
   const sameAsClip = clip != null && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
+  // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
+  const teams = (payload.teams ?? []).map((team) => ({ team, link: teamFor?.(team) ?? null }));
+  const spoken = isQuote ? teams.filter((t) => t.link) : [];
+  const tagged = isQuote ? teams.filter((t) => !t.link) : teams;
+  const speaker = spoken.length > 0 ? payload.attribution?.replace(/,?\s*#\d+$/, '') : payload.attribution;
 
   return (
     <React.Fragment><article className={`live-entry${band ? ' live-entry--quote navy-flat' : ''}${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
       <header className="live-entry__meta">
-        <span className={sourceChipClass(payload.source)}>{sourceLabel(payload)}</span>
+        <span className={sourceChipClass(payload.source)}>{payload.source.toUpperCase()}</span>
         {sponsor && <SponsorLockup sponsor={sponsor} />}
         {partner && <span className="live-entry__partner">PARTNER</span>}
         <time className="live-entry__time" dateTime={payload.posted_at}>
@@ -150,7 +151,15 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         ? <figure className="rr-quote on-dark live-entry__quote">
             <span className="rr-star live-entry__star" aria-hidden="true"></span>
             <blockquote>{quoted(payload.text)}</blockquote>
-            <cite>{payload.attribution}</cite>
+            {(speaker || spoken.length > 0) && <cite>
+              {speaker && <span className="live-entry__speaker">{speaker}</span>}
+              {spoken.map(({ team, link }) => (
+                <a key={team} className="live-entry__speaker-team" href={link!.href} target="_blank" rel="noopener noreferrer"
+                  aria-label={`Team ${team}${link!.crew ? `, ${link!.crew}` : ''}: team page, opens in a new tab`}>
+                  Team #{team} {LEAVES}
+                </a>
+              ))}
+            </cite>}
           </figure>
         : !sameAsClip && <p className="live-entry__text">{payload.text}</p>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
@@ -218,10 +227,9 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         </a>
       )}
 
-      {(payload.teams?.length ?? 0) > 0 && (
+      {tagged.length > 0 && (
         <div className="live-entry__teams">
-          {(payload.teams ?? []).map((team) => {
-            const link = teamFor?.(team);
+          {tagged.map(({ team, link }) => {
             // A team with a page is a link to it, in a new tab so the feed keeps its place (site Decided #229).
             return link
               ? <a key={team} className="live-entry__team" href={link.href} target="_blank" rel="noopener noreferrer"
