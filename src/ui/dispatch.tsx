@@ -44,8 +44,11 @@ function quoted(text: string): string {
   return /^["“‘']/.test(text) ? text : `“${text}”`;
 }
 
+/** How long a post pointing at an Instagram Live says the Live is on; after that the address shows the profile. */
+export const INSTAGRAM_LIVE_WINDOW_MS = 90 * 60_000;
+
 /** Where a post's link goes, said plainly: the place, the show, the sponsor, the day's update. */
-export function linkLabel(link: string, payload: DispatchPayload, sponsor: SponsorChip | null): string {
+export function linkLabel(link: string, payload: DispatchPayload, sponsor: SponsorChip | null, now = Date.now()): string {
   let url: URL;
   try {
     url = new URL(link);
@@ -55,7 +58,10 @@ export function linkLabel(link: string, payload: DispatchPayload, sponsor: Spons
   const host = url.hostname.replace(/^www\./, '');
   if (payload.source === 'sponsor' && sponsor) return `VISIT ${(sponsor.name ?? sponsor.key).toUpperCase()}`;
   if (/(^|\.)(youtube\.com|youtu\.be)$/.test(host)) return url.searchParams.has('t') ? 'WATCH THIS MOMENT ON THE BROADCAST' : 'WATCH THE SHOW';
-  if (host.endsWith('instagram.com')) return 'SEE IT ON INSTAGRAM';
+  if (host.endsWith('instagram.com')) {
+    const liveNow = /\/live\/?$/.test(url.pathname) && now - Date.parse(payload.posted_at) < INSTAGRAM_LIVE_WINDOW_MS;
+    return liveNow ? 'WATCH LIVE ON INSTAGRAM' : 'SEE IT ON INSTAGRAM';
+  }
   const fieldUpdate = `READ THE ${payload.day === 0 ? 'PROLOGUE' : `DAY ${payload.day}`} FIELD UPDATE`;
   if (host === 'mailchi.mp') return fieldUpdate;
   // The site answers at its own name and at its stand-in.
