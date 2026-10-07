@@ -40,6 +40,14 @@ function sourceChipClass(source: DispatchRecord['payload']['source']): string {
 
 
 /** Transcribed excerpts arrive bare and typed ones often carry their own marks; draw one pair either way. */
+/** A post's last paragraph that opens "Watch for" is its kicker, drawn bold under the words. */
+export function watchFor(text: string): { body: string; watch: string | null } {
+  const at = text.lastIndexOf('\n\n');
+  const last = text.slice(at + 2).trim();
+  if (at < 0 || !/^watch for\b/i.test(last)) return { body: text, watch: null };
+  return { body: text.slice(0, at).trimEnd(), watch: last };
+}
+
 function quoted(text: string): string {
   return /^["“‘']/.test(text) ? text : `“${text}”`;
 }
@@ -123,6 +131,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   // header's panel link and a link to the same clip on YouTube or Instagram go (site Decided #226, #227).
   // A hosted clip's title is the studio's shelf name, so its row reads the post's words instead.
   const clip = payload.video;
+  const told = watchFor(payload.text);
   const clipWords = clip?.provider === 'hosted' ? payload.text : clip ? clipTitle(clip.title) : null;
   const sameAsClip = clip != null && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
   // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
@@ -184,7 +193,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
               ))}
             </cite>}
           </figure>
-        : !sameAsClip && <p className="live-entry__text">{payload.text}</p>}
+        : !sameAsClip && <>
+            <p className="live-entry__text">{told.body}</p>
+            {told.watch && <p className="live-entry__watch"><strong>{told.watch}</strong></p>}
+          </>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
         {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} {GOES}</button> : <span>{moment.label}</span>}
