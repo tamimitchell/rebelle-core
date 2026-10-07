@@ -108,7 +108,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   // A quote is its own band on a fresh navy ground, unless a partner card already frames it.
   const band = isQuote && !partner;
   // A clip is one row that plays in the host's media pane: it carries its own way in, so the
-  // header's panel link and a link to the same clip on YouTube or Instagram go (site Decided #220, #221).
+  // header's panel link and a link to the same clip on YouTube or Instagram go (site Decided #226, #227).
   // A hosted clip's title is the studio's shelf name, so its row reads the post's words instead.
   const clip = payload.video;
   const clipWords = clip?.provider === 'hosted' ? payload.text : clip ? clipTitle(clip.title) : null;
