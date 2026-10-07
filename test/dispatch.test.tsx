@@ -85,13 +85,24 @@ test('text is literal, generated authorship stays private, and unsafe URLs refus
     assert.throws(() => parseDispatchDraft({...dispatch, photos:[{url,credit:'Fixture'}]}));
   }
 });
-test('video placeholders stay useful without a media request', () => {
-  const dispatch = {...records[4].payload, video:{provider:'hosted' as const, video_id:null, title:'A fixture clip', duration:81}};
-  const html = renderToStaticMarkup(<DispatchView dispatch={dispatch} />);
-  assert.ok(html.includes('A fixture clip'));
-  assert.ok(html.includes('1:21'));
-  assert.ok(html.includes('Coming soon'));
-  assert.ok(!html.includes('<iframe') && !html.includes('<video'));
+test('a hosted clip is the same row, titled by the post, its still from the host', () => {
+  const video = {provider:'hosted' as const, video_id:'c207246a-b190-4890-ae77-b0ddde8efac3', title:'Instagram story · Oct 12, 2025 · 6:15 PM', duration:61};
+  const dispatch = {...records[4].payload, text:'Chrissie Beavis on Day 2', link:'https://www.instagram.com/stories/highlights/1/', panel:'media' as const, video};
+  const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} videoPoster={(clip) => `/videos/${clip.video_id}/poster`} />);
+  assert.ok(reader.includes('<button type="button" class="live-clip">'));
+  assert.ok(reader.includes('src="/videos/c207246a-b190-4890-ae77-b0ddde8efac3/poster"'));
+  assert.ok(reader.includes('STORY · 1:01'));
+  assert.ok(reader.includes('<span class="live-clip__title">Chrissie Beavis on Day 2</span>'));
+  assert.ok(!reader.includes('Instagram story ·'), 'the shelf name stays in the studio');
+  assert.ok(!reader.includes('instagram.com'), 'no link out to the same clip');
+  const placeholder = renderToStaticMarkup(<DispatchView dispatch={{...dispatch, video:{...video, video_id:null}}} />);
+  assert.ok(placeholder.includes('Coming soon'));
+  assert.ok(!placeholder.includes('<iframe') && !placeholder.includes('<video') && !placeholder.includes('<button type="button" class="live-clip'));
+});
+
+test('a YouTube Short stands tall', () => {
+  const dispatch = {...records[4].payload, video:{provider:'youtube' as const, video_id:'lZZpREBCc_M', title:'Entered the chat. #shorts', duration:16}};
+  assert.ok(renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />).includes('class="live-clip live-clip--portrait"'));
 });
 
 test('a YouTube clip is one row that plays in the reader; previews link to YouTube', () => {
@@ -118,6 +129,7 @@ test('a clip says what kind it is and drops its trailing hashtags', () => {
   assert.equal(clipKind({provider:'youtube', video_id:'lZZpREBCc_M', title:'Entered the chat. #shorts #ineos', duration:16}), 'SHORT');
   assert.equal(clipKind({provider:'youtube', video_id:'lZZpREBCc_M', title:'2025 Rebelle Rally LIVE', duration:3412}), 'LIVE SHOW');
   assert.equal(clipKind({provider:'youtube', video_id:'lZZpREBCc_M', title:'The Day 3 course from above', duration:81}), 'VIDEO');
+  assert.equal(clipKind({provider:'hosted', video_id:null, title:'Flyover · Day 3 course', duration:30}), 'VIDEO');
   assert.equal(clipLength(16), '0:16');
   assert.equal(clipLength(4315), '1:11:55');
   const dispatch = {...records[4].payload, text:'From the INEOS team', video:{provider:'youtube' as const, video_id:'lZZpREBCc_M', title:'@Warner-INEOS has entered the chat. #shorts #ineos #offroad', duration:16}};

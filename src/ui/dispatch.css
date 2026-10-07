@@ -432,8 +432,6 @@
 .live-entry button:disabled { cursor: default; }
 .live-entry__text { white-space: pre-wrap; }
 .live-entry__moments { font-family: var(--font-body); font-size: 13px; color: var(--desert-dune); }
-.live-entry__video { padding: 12px 16px; }
-.live-entry__video .live-widget__title { padding: 0; }
 .live-entry__missing { display: block; padding: 16px; color: var(--white); font-family: var(--font-body); }
 .live-entry__team-chip { background: transparent; }
 .live-entry__moments button { border: 0; background: transparent; text-align: left; }
@@ -445,7 +443,7 @@ button.live-entry__link { border: 0; background: transparent; padding: 0; cursor
   border-color: color-mix(in srgb, var(--desert-dune) 55%, transparent);
 }
 
-/* ── a YouTube clip: one row, the still beside its kind, length and title ── */
+/* ── a clip: one row, the still beside its kind, length and title ── */
 
 .live-clip {
   display: grid;
@@ -537,6 +535,14 @@ a.live-clip:hover .live-clip__watch {
   font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.45;
+}
+
+.live-clip--portrait {
+  grid-template-columns: 96px 1fr;
+}
+
+.live-clip--portrait .live-clip__still {
+  aspect-ratio: 9 / 16;
 }
 
 .live-clip .live-clip__watch {

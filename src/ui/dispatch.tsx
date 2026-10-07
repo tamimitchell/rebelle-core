@@ -21,6 +21,8 @@ export type DispatchViewProps = {
    * wears; without one, the key draws the lockup it names or its own words.
    */
   sponsorFor?: (key: string) => SponsorChip | null | undefined;
+  /** Where the host serves a hosted clip's still; without one the row shows no picture. */
+  videoPoster?: (video: NonNullable<DispatchPayload['video']>) => string | null | undefined;
 };
 function sourceChipClass(source: DispatchRecord['payload']['source']): string {
   // hq = live cyan, media = warm dune, fans = gain green; sponsor stays
@@ -70,8 +72,9 @@ export function clipLength(seconds: number): string {
 }
 
 type Video = NonNullable<DispatchPayload['video']>;
-/** What kind of YouTube clip it is, from what the channel itself writes in the title. */
-export function clipKind(video: Video): 'SHORT' | 'LIVE SHOW' | 'VIDEO' {
+/** What kind of clip it is, from what its title says: YouTube's own, or the studio's for a hosted one. */
+export function clipKind(video: Video): 'SHORT' | 'LIVE SHOW' | 'STORY' | 'VIDEO' {
+  if (video.provider === 'hosted') return /^instagram story\b/i.test(video.title) ? 'STORY' : 'VIDEO';
   if (/#shorts\b/i.test(video.title) || (video.duration != null && video.duration <= 60)) return 'SHORT';
   return /\bLIVE\b/.test(video.title) ? 'LIVE SHOW' : 'VIDEO';
 }
@@ -81,15 +84,16 @@ function clipTitle(title: string): string {
   return title.replace(/(\s*#[\w-]+)+\s*$/, '').trim() || title;
 }
 
-const isYouTube = (link: string) => {
-  try { return /(^|\.)(youtube\.com|youtu\.be)$/.test(new URL(link).hostname); } catch { return false; }
+/** The same clip on the platform it was posted to: a clip post plays it here instead. */
+const isClipCopy = (link: string) => {
+  try { return /(^|\.)(youtube\.com|youtu\.be|instagram\.com)$/.test(new URL(link).hostname); } catch { return false; }
 };
 
 /** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn. */
 const LEAVES = <span className="live-entry__arrow" aria-hidden="true">↗</span>;
 const OPENS = <span className="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>;
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
@@ -103,10 +107,12 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const brand = partner ? sponsorBrandClass(sponsor) : null;
   // A quote is its own band on a fresh navy ground, unless a partner card already frames it.
   const band = isQuote && !partner;
-  // A YouTube clip is one row that plays in the host's media pane: it carries its own
-  // way in, so the header's panel link and a link to the same show on YouTube go (site Decided #220).
-  const clip = payload.video?.provider === 'youtube' ? payload.video : null;
-  const sameAsClip = clip !== null && payload.text.trim() === clip.title.trim();
+  // A clip is one row that plays in the host's media pane: it carries its own way in, so the
+  // header's panel link and a link to the same clip on YouTube or Instagram go (site Decided #220, #221).
+  // A hosted clip's title is the studio's shelf name, so its row reads the post's words instead.
+  const clip = payload.video;
+  const clipWords = clip?.provider === 'hosted' ? payload.text : clip ? clipTitle(clip.title) : null;
+  const sameAsClip = clip != null && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
 
   return (
     <React.Fragment><article className={`live-entry${band ? ' live-entry--quote navy-flat' : ''}${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
@@ -136,16 +142,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             <cite>{payload.attribution}</cite>
           </figure>
         : !sameAsClip && <p className="live-entry__text">{payload.text}</p>}
-      {clip && <YouTubeClip video={clip} onOpenVideo={onOpenVideo} />}
-      {payload.video && !clip && <div className="live-widget rr-card rr-card--lit live-entry__video">
-        <p className="live-widget__title">{payload.video.title}</p>
-        <p className="live-entry__caption">{payload.video.duration ? clipLength(payload.video.duration) : 'Video'}
-          {payload.video.video_id == null && ' · Coming soon'}</p>
-        {payload.video.video_id && onOpenVideo
-          ? <button type="button" className="live-entry__link" onClick={(event) => onOpenVideo(payload.video!, event.currentTarget)}>Watch the video {OPENS}</button>
-          : null}
-        {payload.video.provider === 'hosted' && payload.video.video_id && !onOpenVideo && <p className="live-entry__caption">Clip preview unavailable</p>}
-      </div>}
+      {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
         {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} →</button> : <span>{moment.label}</span>}
       </li>)}</ol>}
@@ -204,7 +201,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         </>
       )}
 
-      {payload.link && !(clip && isYouTube(payload.link)) && (
+      {payload.link && !(clip && isClipCopy(payload.link)) && (
         <a className="live-entry__link" href={payload.link} target="_blank" rel="noopener noreferrer">
           {linkLabel(payload.link, payload, sponsor)} {LEAVES}
         </a>
@@ -229,29 +226,37 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 }
 
 /**
- * The still, the kind and length, the title and WATCH, as one control: a reader plays
- * it in its media pane; a host without one (a studio preview) links to YouTube.
+ * The still, the kind and length, the title and WATCH, as one control: a reader plays it in its
+ * media pane; a host without one links a YouTube clip out and leaves a hosted one still. The
+ * still keeps the clip's shape: a Short is tall, and a hosted still is tall when its picture is.
  */
-function YouTubeClip({ video, onOpenVideo }: { video: Video; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
-  const title = clipTitle(video.title);
-  const meta = [clipKind(video), video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
+function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: string; poster?: string | null; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
+  const kind = clipKind(video);
+  const [tall, setTall] = React.useState(false);
+  const image = React.useRef<HTMLImageElement>(null);
+  const measure = (img: HTMLImageElement) => setTall(img.naturalHeight > img.naturalWidth);
+  // A still that finished loading before the page hydrated fired its load unheard.
+  React.useEffect(() => { if (image.current?.complete && image.current.naturalWidth) measure(image.current); }, []);
+  const portrait = kind === 'SHORT' || tall;
+  const still = video.provider === 'youtube' && video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg` : poster;
+  const meta = [kind, video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
+  const youtube = video.provider === 'youtube' && video.video_id && !onOpenVideo;
   const body = <React.Fragment>
     <span className="live-clip__still">
-      {video.video_id && <img src={`https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />}
+      {video.video_id && still && <img ref={image} src={still} alt="" loading="lazy" decoding="async" onLoad={(event) => measure(event.currentTarget)} />}
       {video.video_id && <span className="live-clip__play" aria-hidden="true" />}
     </span>
     <span className="live-clip__words">
       <span className="live-clip__meta">{meta}</span>
       <span className="live-clip__title">{title}</span>
-      {video.video_id && (onOpenVideo
-        ? <span className="live-entry__link live-clip__watch">Watch {OPENS}</span>
-        : <span className="live-entry__link live-clip__watch">Watch on YouTube {LEAVES}</span>)}
+      {video.video_id && onOpenVideo && <span className="live-entry__link live-clip__watch">Watch {OPENS}</span>}
+      {youtube && <span className="live-entry__link live-clip__watch">Watch on YouTube {LEAVES}</span>}
     </span>
   </React.Fragment>;
-  if (!video.video_id) return <div className="live-clip">{body}</div>;
-  return onOpenVideo
-    ? <button type="button" className="live-clip" onClick={(event) => onOpenVideo(video, event.currentTarget)}>{body}</button>
-    : <a className="live-clip" href={`https://www.youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">{body}</a>;
+  const className = `live-clip${portrait ? ' live-clip--portrait' : ''}`;
+  if (video.video_id && onOpenVideo) return <button type="button" className={className} onClick={(event) => onOpenVideo(video, event.currentTarget)}>{body}</button>;
+  if (youtube) return <a className={className} href={`https://www.youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">{body}</a>;
+  return <div className={className}>{body}</div>;
 }
 
 /** A failed fetch must retain the credit, not leave a broken image icon. */
