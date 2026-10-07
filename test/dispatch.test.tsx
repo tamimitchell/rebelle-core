@@ -238,8 +238,8 @@ test('a link says where it goes, and its arrow says it leaves the page', () => {
   assert.equal(linkLabel('https://pennzoil.com/rebelle', post({ source: 'sponsor', sponsor: 'pennzoil' }), { key: 'pennzoil', name: 'Pennzoil' }), 'VISIT PENNZOIL');
   assert.equal(linkLabel('https://example.org/x', post({}), null), 'READ MORE ON EXAMPLE.ORG');
   const html = renderToStaticMarkup(<DispatchView dispatch={post({ link: 'https://mailchi.mp/rebellerally/day-8', panel: 'media' })} />);
-  assert.ok(html.includes('READ THE DAY 8 FIELD UPDATE <span class="live-entry__arrow" aria-hidden="true">↗</span>'));
-  assert.ok(html.includes('SEE MEDIA <span class="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>'));
+  assert.ok(/READ THE DAY 8 FIELD UPDATE <svg class="live-entry__arrow" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
+  assert.ok(/SEE MEDIA <svg class="live-entry__arrow live-entry__arrow--panel" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
 });
 
 test('a team with a page is a link to it in a new tab, with its crew; without one the chip filters', () => {

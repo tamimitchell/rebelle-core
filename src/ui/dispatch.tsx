@@ -93,9 +93,16 @@ const isClipCopy = (link: string) => {
   try { return /(^|\.)(youtube\.com|youtu\.be|instagram\.com)$/.test(new URL(link).hostname); } catch { return false; }
 };
 
-/** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn. */
-const LEAVES = <span className="live-entry__arrow" aria-hidden="true">↗</span>;
-const OPENS = <span className="live-entry__arrow live-entry__arrow--panel" aria-hidden="true">→</span>;
+/** ↗ leaves the page; a panel arrow points where the panel opens, which the host may turn; → goes elsewhere on it.
+ * Drawn, not typed: a font's arrow glyph sits on the baseline, below the middle of a capital. */
+const arrow = (d: string, panel = false) => (
+  <svg className={panel ? 'live-entry__arrow live-entry__arrow--panel' : 'live-entry__arrow'} viewBox="0 0 16 16" aria-hidden="true">
+    <path d={d} fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const LEAVES = arrow('M4.5 11.5l7-7M6 4.5h5.5V10');
+const OPENS = arrow('M3 8h10M9 4l4 4-4 4', true);
+const GOES = arrow('M3 8h10M9 4l4 4-4 4');
 
 export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
@@ -148,9 +155,9 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         : !sameAsClip && <p className="live-entry__text">{payload.text}</p>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
-        {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} →</button> : <span>{moment.label}</span>}
+        {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} {GOES}</button> : <span>{moment.label}</span>}
       </li>)}</ol>}
-      {payload.story && <button type="button" className="live-entry__link" disabled={!onOpenStory} onClick={() => onOpenStory?.(payload.story!)}>OPEN · THE STORY →</button>}
+      {payload.story && <button type="button" className="live-entry__link" disabled={!onOpenStory} onClick={() => onOpenStory?.(payload.story!)}>OPEN · THE STORY {GOES}</button>}
 
       {stats && hasWidget && (
         <div className="live-widget rr-card rr-card--lit">

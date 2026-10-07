@@ -187,6 +187,12 @@
   text-decoration: none;
 }
 
+.live-entry__arrow {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+}
+
 .live-entry__link:hover {
   color: var(--cyan-lift);
 }
@@ -214,7 +220,7 @@
 .live-entry__team {
   position: relative;
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
   min-height: 32px;
   padding: 5px 12px;
