@@ -241,6 +241,7 @@ test('a link says where it goes, and its arrow says it leaves the page', () => {
   assert.equal(linkLabel('https://www.youtube.com/watch?v=HDuIcnS81dA&t=409s', post({ source: 'hq' }), null), 'WATCH THIS MOMENT ON THE BROADCAST');
   assert.equal(linkLabel('https://www.youtube.com/watch?v=HDuIcnS81dA', post({ source: 'hq' }), null), 'WATCH THE SHOW');
   assert.equal(linkLabel('https://www.instagram.com/p/abc/', post({}), null), 'SEE IT ON INSTAGRAM');
+  assert.equal(linkLabel('https://www.instagram.com/rebellerally/live/', post({}), null), 'WATCH LIVE ON INSTAGRAM');
   assert.equal(linkLabel('https://www.rebellerally.com/news/day-8', post({}), null), 'READ THE FULL STORY');
   assert.equal(linkLabel('https://rebelle.elementalsugar.com/blog/2025-rebelle-rally-field-update-day-8-presented-by-pennzoil/', post({}), null), 'READ THE DAY 8 FIELD UPDATE');
   assert.equal(linkLabel('https://pennzoil.com/rebelle', post({ source: 'sponsor', sponsor: 'pennzoil' }), { key: 'pennzoil', name: 'Pennzoil' }), 'VISIT PENNZOIL');

@@ -55,7 +55,7 @@ export function linkLabel(link: string, payload: DispatchPayload, sponsor: Spons
   const host = url.hostname.replace(/^www\./, '');
   if (payload.source === 'sponsor' && sponsor) return `VISIT ${(sponsor.name ?? sponsor.key).toUpperCase()}`;
   if (/(^|\.)(youtube\.com|youtu\.be)$/.test(host)) return url.searchParams.has('t') ? 'WATCH THIS MOMENT ON THE BROADCAST' : 'WATCH THE SHOW';
-  if (host.endsWith('instagram.com')) return 'SEE IT ON INSTAGRAM';
+  if (host.endsWith('instagram.com')) return /\/live\/?$/.test(url.pathname) ? 'WATCH LIVE ON INSTAGRAM' : 'SEE IT ON INSTAGRAM';
   const fieldUpdate = `READ THE ${payload.day === 0 ? 'PROLOGUE' : `DAY ${payload.day}`} FIELD UPDATE`;
   if (host === 'mailchi.mp') return fieldUpdate;
   // The site answers at its own name and at its stand-in.
