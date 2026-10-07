@@ -161,6 +161,17 @@ test('a sponsor is a key on the wire, and every sponsor dispatch is a partner hi
   const hq = renderToStaticMarkup(<DispatchView dispatch={{...base, source:'hq', sponsor:'bilstein'}} />);
   assert.ok(hq.includes('live-brand--bilstein') && !hq.includes('live-entry--partner') && !hq.includes('Partner highlight'));
 });
+test('a post may carry a title the poster chose, drawn as its heading', () => {
+  const base = records[0].payload;
+  assert.ok(!('title' in base), 'a document sent before titles existed still parses');
+  const titled = renderToStaticMarkup(<DispatchView dispatch={{...base, title:'Day 3 goes to Team 156'}} />);
+  assert.ok(titled.includes('<h3 class="live-entry__highlight">Day 3 goes to Team 156</h3>'));
+  assert.ok(!renderToStaticMarkup(<DispatchView dispatch={{...base, title:null}} />).includes('live-entry__highlight'));
+  for (const title of ['', 'x'.repeat(81)]) assert.equal(DispatchPayloadSchema.safeParse({...base, title}).success, false);
+  const partner = renderToStaticMarkup(<DispatchView dispatch={{...base, source:'sponsor', sponsor:'bilstein', title:'Ignored'}} />);
+  assert.ok(!partner.includes('Ignored'), 'a partner highlight keeps its own heading');
+});
+
 test('a host holding the roster names the partner as it is printed', () => {
   const base = {...records[0].payload, source:'sponsor' as const};
   const named = renderToStaticMarkup(<DispatchView dispatch={{...base, sponsor:'warner-ineos'}}

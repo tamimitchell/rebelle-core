@@ -162,6 +162,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         )}
       </header>
       {partner && <h3 className="live-entry__highlight">Partner highlight<span>{sponsor.name ?? sponsorWords(sponsor.key)}</span></h3>}
+      {!partner && payload.title && <h3 className="live-entry__highlight">{payload.title}</h3>}
 
       {isQuote
         ? <figure className="rr-quote on-dark live-entry__quote">

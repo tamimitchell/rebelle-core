@@ -144,6 +144,8 @@ export const DispatchPayloadSchema = z
     posted_at: z.string().datetime({ offset: true }),
     source: z.enum(DISPATCH_SOURCES),
     kind: z.enum(DISPATCH_KINDS),
+    // A heading the poster chose. Optional on the wire: documents sent before it existed carry no key.
+    title: z.string().min(1).max(80).nullable().optional(),
     text: z.string().min(1),
     day: z.number().int().min(0).max(8),
     panel: z.enum(DISPATCH_PANELS).nullable(),
