@@ -214,8 +214,12 @@ embeds each day's presenting sponsors as `SponsorSchema` rows — supplies
 `sponsorFor`, and the chip wears the row's name and the lockup its
 `lockup_key` names; without one, the key draws a lockup of its own name from
 `SPONSOR_LOCKUPS` or its words in a plain chip. Every `source: sponsor`
-dispatch is a partner card, tinted by its brand when one is drawn and neutral
-otherwise (studio #306 quest 3).
+dispatch is a partner highlight: its photograph on top and the partner named in
+the heading, on a plain card (site Decided #231).
+
+A dispatch's optional `title` is a heading the poster chose, drawn the way the
+partner highlight's is. The key is optional on the wire because documents sent
+before it existed carry none; a partner highlight keeps its own heading.
 
 The shared row shows quote attribution, recap labels, video title/duration and
 an explicit placeholder for an unassigned clip. A YouTube clip has a watch link;
