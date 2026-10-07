@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DispatchPayloadSchema, type DispatchPayload, type DispatchPanel, type DispatchRecord } from '../dispatch.ts';
-import { SponsorLockup, sponsorBrandClass, type SponsorChip } from './sponsor-lockup.tsx';
+import { SponsorLockup, sponsorWords, type SponsorChip } from './sponsor-lockup.tsx';
 export { SponsorLockup, brandClass, sponsorBrandClass, sponsorWords, type SponsorChip } from './sponsor-lockup.tsx';
 
 type Photo = NonNullable<DispatchPayload['photos']>[number];
@@ -108,10 +108,9 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const stats = payload.stats;
   const hasWidget = stats != null && stats.pairs.length > 0;
   const sponsor: SponsorChip | null = payload.sponsor ? (sponsorFor?.(payload.sponsor) ?? { key: payload.sponsor }) : null;
-  // Every sponsor's dispatch is a partner card, drawn or not: the brand class
-  // colours it when a lockup exists, and the card's own fallback holds otherwise.
+  // Every sponsor's dispatch is a partner highlight: its photograph on top, then the partner named
+  // as the field updates name them, on a plain card (site Decided #231).
   const partner = payload.source === 'sponsor' && sponsor !== null;
-  const brand = partner ? sponsorBrandClass(sponsor) : null;
   // A quote is its own band on a fresh navy ground, unless a partner card already frames it.
   const band = isQuote && !partner;
   // A clip is one row that plays in the host's media pane: it carries its own way in, so the
@@ -126,12 +125,28 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const tagged = isQuote ? teams.filter((t) => !t.link) : teams;
   const speaker = spoken.length > 0 ? payload.attribution?.replace(/,?\s*#\d+$/, '') : payload.attribution;
 
+  const photoRow = (
+    <div className="live-entry__photos">
+      {photos.map((photo) => (
+        <button
+          key={photo.url}
+          type="button"
+          className="live-entry__photo"
+          disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
+          aria-label={`Open photo — ${photo.credit}`}
+        >
+          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo)} />
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <React.Fragment><article className={`live-entry${band ? ' live-entry--quote navy-flat' : ''}${partner ? ` live-entry--partner${brand ? ` ${brand}` : ''}` : ''}`}>
+    <React.Fragment><article className={`live-entry${band ? ' live-entry--quote navy-flat' : ''}${partner ? ' live-entry--partner' : ''}`}>
+      {partner && !hasWidget && photos.length > 0 && photoRow}
       <header className="live-entry__meta">
-        <span className={sourceChipClass(payload.source)}>{payload.source.toUpperCase()}</span>
-        {sponsor && <SponsorLockup sponsor={sponsor} />}
-        {partner && <span className="live-entry__partner">PARTNER</span>}
+        {!partner && <span className={sourceChipClass(payload.source)}>{payload.source.toUpperCase()}</span>}
+        {sponsor && !partner && <SponsorLockup sponsor={sponsor} />}
         <time className="live-entry__time" dateTime={payload.posted_at}>
           {timeLabel ?? payload.posted_at}
         </time>
@@ -146,6 +161,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
           </button>
         )}
       </header>
+      {partner && <h3 className="live-entry__highlight">Partner highlight<span>{sponsor.name ?? sponsorWords(sponsor.key)}</span></h3>}
 
       {isQuote
         ? <figure className="rr-quote on-dark live-entry__quote">
@@ -201,19 +217,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
           {/* Real <img loading="lazy">, not CSS backgrounds — a background
               can't defer, and the feed's photos are the heaviest thing this
               page ships (Heron, PR round). */}
-          <div className="live-entry__photos">
-            {photos.map((photo) => (
-              <button
-                key={photo.url}
-                type="button"
-                className="live-entry__photo"
-                disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
-                aria-label={`Open photo — ${photo.credit}`}
-              >
-                <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo)} />
-              </button>
-            ))}
-          </div>
+          {!partner && photoRow}
           <p className="live-entry__caption">
             {payload.source === 'fans' && <span className="live-entry__media">FAN REPOST</span>}
             <span className="live-entry__credit">Photo · {credits}</span>
