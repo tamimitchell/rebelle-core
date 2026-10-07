@@ -233,6 +233,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: string; poster?: string | null; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
   const kind = clipKind(video);
   const [tall, setTall] = React.useState(false);
+  const [missing, setMissing] = React.useState(false);
   const image = React.useRef<HTMLImageElement>(null);
   const measure = (img: HTMLImageElement) => setTall(img.naturalHeight > img.naturalWidth);
   // A still that finished loading before the page hydrated fired its load unheard.
@@ -243,7 +244,7 @@ function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: s
   const youtube = video.provider === 'youtube' && video.video_id && !onOpenVideo;
   const body = <React.Fragment>
     <span className="live-clip__still">
-      {video.video_id && still && <img ref={image} src={still} alt="" loading="lazy" decoding="async" onLoad={(event) => measure(event.currentTarget)} />}
+      {video.video_id && still && !missing && <img ref={image} src={still} alt="" loading="lazy" decoding="async" onLoad={(event) => measure(event.currentTarget)} onError={() => setMissing(true)} />}
       {video.video_id && <span className="live-clip__play" aria-hidden="true" />}
     </span>
     <span className="live-clip__words">
