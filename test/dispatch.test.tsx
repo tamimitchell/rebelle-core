@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
-import { DispatchView, SponsorLockup, clipKind, clipLength, linkLabel } from '../src/ui/dispatch.tsx';
+import { DispatchView, SponsorLockup, clipKind, clipLength, linkLabel, watchFor } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
 test('the Studio schema-2 writer fixture draws all six operational kinds', () => {
@@ -280,4 +280,12 @@ test('a photograph carries its credit, and only a fan repost says what it is', (
   assert.ok(field.includes('Photo · Regine Trias'));
   assert.ok(!field.includes('FIELD DISPATCH'));
   assert.ok(renderToStaticMarkup(<DispatchView dispatch={{...records[1].payload, stats:null, source:'fans', photos:[photo]}} />).includes('FAN REPOST'));
+});
+
+test('a last paragraph opening "Watch for" is the post\'s bold kicker, and nothing else is', () => {
+  assert.deepEqual(watchFor('The course.\n\nWatch for: the dunes.'), { body: 'The course.', watch: 'Watch for: the dunes.' });
+  assert.deepEqual(watchFor('Watch for: the dunes.'), { body: 'Watch for: the dunes.', watch: null });
+  assert.deepEqual(watchFor('First.\n\nTeams watch for the dunes.'), { body: 'First.\n\nTeams watch for the dunes.', watch: null });
+  const html = renderToStaticMarkup(<DispatchView dispatch={{ ...records[0].payload, text: 'The course.\n\nWatch for: the dunes.' }} />);
+  assert.ok(html.includes('<p class="live-entry__text">The course.</p><p class="live-entry__watch"><strong>Watch for: the dunes.</strong></p>'));
 });
