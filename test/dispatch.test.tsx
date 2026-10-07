@@ -244,7 +244,7 @@ test('a team with a page is a link to it in a new tab, with its crew; without on
   const html = renderToStaticMarkup(<DispatchView dispatch={dispatch} onFilterTeam={() => {}}
     teamFor={(team) => team === '156' ? { href:'/teams/2025/156/', crew:'Chang / McAdoo' } : null} />);
   assert.ok(html.includes('<a class="live-entry__team" href="/teams/2025/156/" target="_blank" rel="noopener noreferrer"'));
-  assert.ok(html.includes('<span class="live-entry__team-crew">Chang / McAdoo</span>'));
+  assert.ok(html.includes('<span class="live-entry__team-number">Team #156</span><span class="live-entry__team-crew">Chang / McAdoo</span>'));
   assert.ok(html.replaceAll('<!-- -->', '').includes('<button type="button" class="rr-chip rr-chip--neutral live-entry__team-chip">#999</button>'));
 });
 
