@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseProse } from './prose.ts';
+import { parseProse, proseLinkAllowed } from './prose.ts';
 
 /**
  * ── A STORY ────────────────────────────────────────────────────────────────
@@ -62,8 +62,10 @@ export const ProseContentSchema = z.object({
 export const QuoteContentSchema = z.object({
   text: text(2000), attribution: text(200),
 }).strict();
+/** A Figure may open a web page when tapped (`link`); a photograph in a set may not. */
 export const FigureContentSchema = z.object({
   image_id: z.string().uuid(), alt: text(1000), caption: text(1000).optional(),
+  link: z.string().max(2000).refine((href) => /^https?:\/\//i.test(href) && proseLinkAllowed(href), 'an http or https address').optional(),
 }).strict();
 export type FigureContent = z.infer<typeof FigureContentSchema>;
 
@@ -73,7 +75,7 @@ export type FigureContent = z.infer<typeof FigureContentSchema>;
  * a photograph appears in a set once.
  */
 export const PhotosContentSchema = z.object({
-  photos: z.array(FigureContentSchema).min(2).max(20)
+  photos: z.array(FigureContentSchema.omit({ link: true })).min(2).max(20)
     .refine((photos) => new Set(photos.map((photo) => photo.image_id.toLowerCase())).size === photos.length, 'a photograph appears in a set once'),
   caption: text(1000).optional(),
 }).strict();
