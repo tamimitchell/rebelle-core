@@ -275,20 +275,22 @@ swapped it in for Ways to Follow ([2025 Prologue email], [2025 Day 5 email],
 
 ```text
 The day before the first show:
-Rebelle Rally LIVE Presented By {webcast_partner} Starts TOMORROW at {first_show_time}!
+Rebelle Rally LIVE Starts TOMORROW at {first_show_time}!
 
 While the shows run:
 The Rebelle Rally Live Show is Underway!
-Presented by {webcast_partner}, the Rebelle Rally Live Show is streaming {show_dates} and bringing you daily coverage straight from the desert. Watch live and view the full broadcast schedule at rebellerally.com, or tune in on YouTube or Facebook.
+The Rebelle Rally Live Show is streaming {show_dates} and bringing you daily coverage straight from the desert. Watch live and view the full broadcast schedule at rebellerally.com, or tune in on YouTube or Facebook.
 
 On Day 8:
-Join Us for the Final Two Rebelle Rally Live Shows {final_show_date} — Presented by {webcast_partner}
+Join Us for the Final Two Rebelle Rally Live Shows {final_show_date}
 The competition may be over, but the celebration isn't! Tune in for {final_shows}. Watch live at rebellerally.com, or tune in on YouTube or Facebook.
 ```
 
 2025's "while the shows run" notice ends on a line about the year itself ("Year
 Ten is already one for the books"); that line is the year's own and is written
-fresh each year.
+fresh each year. 2025's notice named its presenter in every line ("Presented
+by Toyota"); the 2026 show has none (the schedule graphic names none, Tami
+2026-10-08), so the lines above carry no presenter. A year with one puts it back.
 
 ### About the Rebelle Rally
 
@@ -312,12 +314,11 @@ Follow live {live_dates} @ rebellerally.com/live.
 | Blank | 2025 | 2026 |
 |---|---|---|
 | `{year}` | 2025 | 2026 |
-| `{webcast_partner}` | Toyota | ❓ |
-| `{first_show_time}` | 12:00pm PDT | ❓ |
-| `{show_dates}` · `{final_show_date}` · `{final_shows}` | October 10-18 · Saturday, October 18 · Coffee with Katy and the Awards Podium from 8:00 AM to 11:00 AM, and the Rebellation Red Carpet starting at 5:00 PM | ❓ |
-| `{km}` | 2,800 | ❓ ([`canon.md`](canon.md) marks the 2026 distance open) |
+| `{first_show_time}` | 12:00pm PDT | 7:00 AM PDT |
+| `{show_dates}` · `{final_show_date}` · `{final_shows}` | October 10-18 · Saturday, October 18 · Coffee with Katy and the Awards Podium from 8:00 AM to 11:00 AM, and the Rebellation Red Carpet starting at 5:00 PM | October 8-16 · Friday, October 16 · the morning show at 7:00 AM and the closing show at 3:00 PM PDT ([2026 Live Show Schedule]) |
+| `{km}` | 2,800 | 2,400 (1,500+ miles, the MINI partner post of 2026-10-07; [`canon.md`](canon.md) has no exact figure) |
 | `{region}` | Nevada and California | Nevada and California ([`canon.md`](canon.md)) |
-| `{live_dates}` | October 9-18, 2025 | ❓ |
+| `{live_dates}` | October 9-18, 2025 | October 8-16, 2026 ([2026 Live Show Schedule]) |
 
 A ❓ blocks the text that carries it ([`canon.md`](canon.md)).
 
@@ -484,3 +485,4 @@ read for its sections; these are the ones cited.
 [2025 Day 3 email]: https://mailchi.mp/rebellerally/2025-rebelle-rally-day-3
 [2025 Day 5 email]: https://mailchi.mp/rebellerally/2025-rebelle-rally-day-5
 [2025 Day 8 email]: https://mailchi.mp/rebellerally/2025-rebelle-rally-day-8
+[2026 Live Show Schedule]: https://www.rebellerally.com/images/897de2a8-f0f6-4d85-95cd-f90e4f816e76/1280
