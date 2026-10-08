@@ -281,8 +281,9 @@ button.live-entry__team {
   cursor: pointer;
 }
 
-/* A team the words name, picked in place: the words' own size, cyan, underlined like a link. */
-.live-entry__inline-team {
+/* A team the words name, picked in place, and a link the words carry: the words' own size, cyan, underlined. */
+.live-entry__inline-team,
+.live-entry__inline-link {
   padding: 0;
   border: 0;
   background: none;
@@ -294,7 +295,8 @@ button.live-entry__team {
   cursor: pointer;
 }
 
-.live-entry__inline-team:hover {
+.live-entry__inline-team:hover,
+.live-entry__inline-link:hover {
   color: var(--cyan-lift);
   text-decoration-color: currentColor;
 }

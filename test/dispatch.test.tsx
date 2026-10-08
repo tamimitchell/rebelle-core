@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
-import { DispatchView, SponsorLockup, clipKind, clipLength, linkLabel, watchFor } from '../src/ui/dispatch.tsx';
+import { DispatchView, SponsorLockup, clipKind, clipLength, linkLabel, plainText, watchFor } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
 test('the Studio schema-2 writer fixture draws all six operational kinds', () => {
@@ -313,4 +313,15 @@ test('a host that shows a team in place turns its chips and the words’ own "#1
   const studio = renderToStaticMarkup(<DispatchView dispatch={post} teamFor={(team) => ({ href: `/teams/2026/${team}/` })} />);
   assert.ok(studio.includes('href="/teams/2026/148/"'));
   assert.ok(!studio.includes('live-entry__inline-team'));
+});
+test('a link written into the words is drawn as a link in a new tab, beside the tagged "#148", and only http and https count', () => {
+  const text = 'Presented by [Jiffy Lube](https://www.jiffylube.com/). Rookies #148 found [the gift card](https://jiffylube.egifter.com/).\n\nNot [a script](javascript:alert(1)).';
+  const post = { ...records[0].payload, teams: ['148'], text };
+  const html = renderToStaticMarkup(<DispatchView dispatch={post} onPickTeam={() => {}} />).replaceAll('<!-- -->', '');
+  assert.ok(html.includes('Presented by <a class="live-entry__inline-link" href="https://www.jiffylube.com/" target="_blank" rel="noopener noreferrer">Jiffy Lube</a>. Rookies <button type="button" class="live-entry__inline-team" aria-label="Team 148: show on the page">#148</button> found <a class="live-entry__inline-link" href="https://jiffylube.egifter.com/" target="_blank" rel="noopener noreferrer">the gift card</a>.'));
+  assert.ok(html.includes('Not [a script](javascript:alert(1)).'));
+  assert.ok(!html.includes('href="javascript'));
+  const watch = renderToStaticMarkup(<DispatchView dispatch={{ ...post, text: 'The course.\n\nWatch for: [the dunes](https://www.rebellerally.com/live/).' }} />);
+  assert.ok(watch.includes('<strong>Watch for: <a class="live-entry__inline-link" href="https://www.rebellerally.com/live/"'));
+  assert.equal(plainText(text), 'Presented by Jiffy Lube. Rookies #148 found the gift card.\n\nNot [a script](javascript:alert(1)).');
 });
