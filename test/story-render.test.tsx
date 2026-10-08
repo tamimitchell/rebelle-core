@@ -20,6 +20,11 @@ test('Figure resolves image identity through the host and escapes captions and a
   assert.match(html, /&lt;b&gt;Caption&lt;\/b&gt;/);
 });
 
+test('a Figure with a link opens it in a new tab around the photograph, never around the caption', () => {
+  const html = renderToStaticMarkup(<StoryPart part={{ component: 'Figure', content: { image_id: '11111111-1111-4111-8111-111111111111', alt: 'Flags', caption: 'Track Day', link: 'https://www.jiffylube.com/' } }} />);
+  assert.match(html, /<a href="https:\/\/www.jiffylube.com\/" target="_blank" rel="noopener noreferrer"><img [^>]*><\/a><figcaption>Track Day<\/figcaption>/);
+});
+
 test('a YouTube video has a usable link in an MCP host that cannot embed, and a player where one can', () => {
   const part = { component: 'Video' as const, content: { provider: 'youtube' as const, video_id: 'k4FNP7tL1Xg', title: 'The webcast', duration: 81 } };
   const linked = renderToStaticMarkup(<StoryPart part={part} />);

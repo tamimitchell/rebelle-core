@@ -247,6 +247,10 @@
                             "type": "string",
                             "maxLength": 1000,
                             "pattern": "\\S"
+                          },
+                          "link": {
+                            "type": "string",
+                            "maxLength": 2000
                           }
                         },
                         "required": [

@@ -177,3 +177,14 @@ test('a photo set holds two to twenty photographs, each once and each with its a
   assert(!photos([one, { ...set.photos[1], alt: ' ' }]), 'a blank alt');
   assert(!StoryComponentSchema.safeParse({ component: 'Photos', content: { ...set, html: '<b>no</b>' } }).success, 'an unknown key');
 });
+
+test('a Figure may carry a web address to open when tapped, and a photograph in a set may not', () => {
+  const figure = (content: Record<string, unknown>) => StoryComponentSchema.safeParse({ component: 'Figure', content: { image_id: '11111111-1111-4111-8111-111111111111', alt: 'Flags', ...content } }).success;
+  assert(figure({}), 'no link');
+  assert(figure({ link: 'https://jiffylube.egifter.com/' }), 'an https address');
+  assert(!figure({ link: 'javascript:alert(1)' }), 'a script');
+  assert(!figure({ link: 'mailto:hi@example.com' }), 'an email address');
+  assert(!figure({ link: '/teams/2026/' }), 'a relative address');
+  const set = story.telling[9].content;
+  assert(!StoryComponentSchema.safeParse({ component: 'Photos', content: { ...set, photos: set.photos.map((photo: object) => ({ ...photo, link: 'https://example.com/' })) } }).success, 'a set photograph');
+});

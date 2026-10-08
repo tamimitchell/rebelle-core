@@ -53,10 +53,11 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
     case 'Quote':
       return <figure className="rr-story__quote"><blockquote><p>{part.content.text}</p></blockquote><figcaption>{part.content.attribution}</figcaption></figure>;
     case 'Figure': {
-      const { image_id, alt, caption } = part.content;
+      const { image_id, alt, caption, link } = part.content;
       const imageUrl = media.imageUrl ?? ((id: string, width: number) => `/images/${id}/${width}`);
       const src = imageUrl(image_id.toLowerCase(), 960);
-      return <figure className="rr-story__figure">{src ? <img src={src} alt={alt} loading="lazy" /> : <p role="status">Image unavailable: {alt}</p>}{caption && <figcaption>{caption}</figcaption>}</figure>;
+      const image = src ? <img src={src} alt={alt} loading="lazy" /> : <p role="status">Image unavailable: {alt}</p>;
+      return <figure className="rr-story__figure">{src && link ? <a href={link} target="_blank" rel="noopener noreferrer">{image}</a> : image}{caption && <figcaption>{caption}</figcaption>}</figure>;
     }
     case 'Photos': {
       // Every photograph is in the markup with its alt; the sixth onward are folded by CSS, and a host's viewer opens them.
