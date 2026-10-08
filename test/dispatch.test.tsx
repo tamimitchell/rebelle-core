@@ -172,12 +172,12 @@ test('a post may carry a title the poster chose, drawn as its heading', () => {
   assert.ok(!partner.includes('Ignored'), 'a partner highlight keeps its own heading');
 });
 
-test('a stat card\'s kicker heads the post, out of the card, and the card wears no tag', () => {
+test('a stat card\'s kicker heads the post and its title stands over it, both out of the card, which wears no tag', () => {
   const base = {...records[0].payload, title:null, stats:{kicker:'PROLOGUE START ORDER', title:'45 teams', pairs:[{label:'First off', value:'#143'}]}};
   const html = renderToStaticMarkup(<DispatchView dispatch={base} />);
   assert.ok(html.includes('<h3 class="live-entry__highlight">PROLOGUE START ORDER</h3>'));
   assert.ok(!html.includes('WIDGET') && !html.includes('live-widget__kicker'));
-  assert.ok(html.includes('<p class="live-widget__title">45 teams</p>'));
+  assert.ok(html.includes('<p class="live-widget__title">45 teams</p><div class="live-widget'), 'the title stands over the card, outside it');
   const titled = renderToStaticMarkup(<DispatchView dispatch={{...base, title:'Chosen'}} />);
   assert.ok(titled.includes('>Chosen</h3>') && !titled.includes('PROLOGUE START ORDER'), 'the poster\'s own title wins');
 });
@@ -257,6 +257,7 @@ test('a link says where it goes, and its arrow says it leaves the page', () => {
   assert.equal(linkLabel('https://www.rebellerally.com/news/day-8', post({}), null), 'READ THE FULL STORY');
   assert.equal(linkLabel('https://rebelle.elementalsugar.com/blog/2025-rebelle-rally-field-update-day-8-presented-by-pennzoil/', post({}), null), 'READ THE DAY 8 FIELD UPDATE');
   assert.equal(linkLabel('https://pennzoil.com/rebelle', post({ source: 'sponsor', sponsor: 'pennzoil' }), { key: 'pennzoil', name: 'Pennzoil' }), 'VISIT PENNZOIL');
+  assert.equal(linkLabel('https://www.rebellerally.com/blog/mini-usa-joins/', post({ source: 'sponsor', sponsor: 'bmw' }), { key: 'bmw', name: 'MINI' }), 'READ THE FULL STORY');
   assert.equal(linkLabel('https://example.org/x', post({}), null), 'READ MORE ON EXAMPLE.ORG');
   const html = renderToStaticMarkup(<DispatchView dispatch={post({ link: 'https://mailchi.mp/rebellerally/day-8', panel: 'media' })} />);
   assert.ok(/READ THE DAY 8 FIELD UPDATE <svg class="live-entry__arrow" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
