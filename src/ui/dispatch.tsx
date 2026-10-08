@@ -27,6 +27,8 @@ export type DispatchViewProps = {
   teamFor?: (team: string) => TeamLink | null | undefined;
   /** A host that can show a team in place: its chips and the post's own "#148" become buttons that do, and the page is a tap further on. */
   onPickTeam?: (team: string) => void;
+  /** A host that can show a checkpoint on its map: the post's own "CP 1X" becomes a button that does, handed the label as "CP 1X". */
+  onPickCheckpoint?: (label: string) => void;
 };
 /** A team's page and the surnames its chip carries. */
 export type TeamLink = { href: string; crew?: string | null };
@@ -125,33 +127,43 @@ export function plainText(text: string): string {
   return text.replace(WORDS_LINK, '$1');
 }
 
-/** The post's words with each "#148" it tags drawn as a button that picks the team. */
-function pickableText(text: string, teams: string[], onPickTeam?: (team: string) => void): React.ReactNode {
-  if (!onPickTeam || teams.length === 0) return text;
-  return text.split(/(#\d+\b)/).map((part, index) => {
+/** What the words can pick in place: the teams the post tags, and checkpoints when the host can show one. */
+type Picks = { teams: string[]; onPickTeam?: (team: string) => void; onPickCheckpoint?: (label: string) => void };
+
+/** A tagged "#148", or a checkpoint named the way the course sheet names it ("CP 1X", "CP7"). */
+const PICKABLE = /(#\d+\b|\bCP ?\d+X?\b)/;
+
+/** The post's words with each "#148" it tags and each "CP 1X" it names drawn as a button that picks it. */
+function pickableText(text: string, { teams, onPickTeam, onPickCheckpoint }: Picks): React.ReactNode {
+  if (!(onPickTeam && teams.length > 0) && !onPickCheckpoint) return text;
+  return text.split(PICKABLE).map((part, index) => {
     const team = part.startsWith('#') ? part.slice(1) : null;
-    return team && teams.includes(team)
-      ? <button key={index} type="button" className="live-entry__inline-team" onClick={() => onPickTeam(team)} aria-label={`Team ${team}: show on the page`}>{part}</button>
-      : part;
+    if (team && onPickTeam && teams.includes(team))
+      return <button key={index} type="button" className="live-entry__inline-team" onClick={() => onPickTeam(team)} aria-label={`Team ${team}: show on the page`}>{part}</button>;
+    const checkpoint = part.startsWith('CP') ? `CP ${part.slice(2).trim()}` : null;
+    if (checkpoint && onPickCheckpoint)
+      return <button key={index} type="button" className="live-entry__inline-checkpoint" onClick={() => onPickCheckpoint(checkpoint)} aria-label={`${checkpoint}: show on the map`}>{part}</button>;
+    return part;
   });
 }
 
-/** The post's words with its written links drawn as links, in a new tab so the feed keeps its place, and its tagged "#148" picked between them. */
-function postText(text: string, teams: string[], onPickTeam?: (team: string) => void): React.ReactNode {
+/** The post's words with its written links drawn as links, in a new tab so the feed keeps its place, and its picks between them. */
+function postText(text: string, picks: Picks): React.ReactNode {
   const parts: React.ReactNode[] = [];
   let at = 0;
   for (const match of text.matchAll(WORDS_LINK)) {
-    if (match.index > at) parts.push(<React.Fragment key={at}>{pickableText(text.slice(at, match.index), teams, onPickTeam)}</React.Fragment>);
+    if (match.index > at) parts.push(<React.Fragment key={at}>{pickableText(text.slice(at, match.index), picks)}</React.Fragment>);
     parts.push(<a key={match.index} className="live-entry__inline-link" href={match[2]} target="_blank" rel="noopener noreferrer">{match[1]}</a>);
     at = match.index + match[0].length;
   }
-  if (parts.length === 0) return pickableText(text, teams, onPickTeam);
-  if (at < text.length) parts.push(<React.Fragment key={at}>{pickableText(text.slice(at), teams, onPickTeam)}</React.Fragment>);
+  if (parts.length === 0) return pickableText(text, picks);
+  if (at < text.length) parts.push(<React.Fragment key={at}>{pickableText(text.slice(at), picks)}</React.Fragment>);
   return parts;
 }
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam, onPickCheckpoint }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
+  const picks: Picks = { teams: payload.teams ?? [], onPickTeam, onPickCheckpoint };
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
   const isQuote = payload.kind === 'quote';
@@ -232,8 +244,8 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             </cite>}
           </figure>
         : !sameAsClip && <>
-            <p className="live-entry__text">{postText(told.body, payload.teams ?? [], onPickTeam)}</p>
-            {told.watch && <p className="live-entry__watch"><strong>{postText(told.watch, payload.teams ?? [], onPickTeam)}</strong></p>}
+            <p className="live-entry__text">{postText(told.body, picks)}</p>
+            {told.watch && <p className="live-entry__watch"><strong>{postText(told.watch, picks)}</strong></p>}
           </>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>

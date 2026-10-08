@@ -281,8 +281,9 @@ button.live-entry__team {
   cursor: pointer;
 }
 
-/* A team the words name, picked in place, and a link the words carry: the words' own size, cyan, underlined. */
+/* A team or checkpoint the words name, picked in place, and a link the words carry: the words' own size, cyan, underlined. */
 .live-entry__inline-team,
+.live-entry__inline-checkpoint,
 .live-entry__inline-link {
   padding: 0;
   border: 0;
@@ -296,6 +297,7 @@ button.live-entry__team {
 }
 
 .live-entry__inline-team:hover,
+.live-entry__inline-checkpoint:hover,
 .live-entry__inline-link:hover {
   color: var(--cyan-lift);
   text-decoration-color: currentColor;
