@@ -121,6 +121,8 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const isQuote = payload.kind === 'quote';
   const stats = payload.stats;
   const hasWidget = stats != null && stats.pairs.length > 0;
+  // A stat card's kicker heads the post, out of the card, when the post has no title of its own.
+  const heading = payload.title ?? stats?.kicker ?? null;
   const sponsor: SponsorChip | null = payload.sponsor ? (sponsorFor?.(payload.sponsor) ?? { key: payload.sponsor }) : null;
   // Every sponsor's dispatch is a partner highlight: its photograph on top, then the partner named
   // as the field updates name them, on a plain card (site Decided #231).
@@ -177,7 +179,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
         )}
       </header>
       {partner && <h3 className="live-entry__highlight">Partner highlight<span>{sponsor.name ?? sponsorWords(sponsor.key)}</span></h3>}
-      {!partner && payload.title && <h3 className="live-entry__highlight">{payload.title}</h3>}
+      {!partner && heading && <h3 className="live-entry__highlight">{heading}</h3>}
 
       {isQuote
         ? <figure className="rr-quote on-dark live-entry__quote">
@@ -205,10 +207,6 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 
       {stats && hasWidget && (
         <div className="live-widget rr-card rr-card--lit">
-          <div className="live-widget__head">
-            {stats.kicker && <span className="live-widget__kicker">{stats.kicker}</span>}
-            <span className="live-widget__tag">WIDGET</span>
-          </div>
           {stats.title && <p className="live-widget__title">{stats.title}</p>}
           <div className="live-widget__stats">
             {stats.pairs.map((stat) => (

@@ -166,10 +166,20 @@ test('a post may carry a title the poster chose, drawn as its heading', () => {
   assert.ok(!('title' in base), 'a document sent before titles existed still parses');
   const titled = renderToStaticMarkup(<DispatchView dispatch={{...base, title:'Day 3 goes to Team 156'}} />);
   assert.ok(titled.includes('<h3 class="live-entry__highlight">Day 3 goes to Team 156</h3>'));
-  assert.ok(!renderToStaticMarkup(<DispatchView dispatch={{...base, title:null}} />).includes('live-entry__highlight'));
+  assert.ok(!renderToStaticMarkup(<DispatchView dispatch={{...base, title:null, stats:null}} />).includes('live-entry__highlight'));
   for (const title of ['', 'x'.repeat(81)]) assert.equal(DispatchPayloadSchema.safeParse({...base, title}).success, false);
   const partner = renderToStaticMarkup(<DispatchView dispatch={{...base, source:'sponsor', sponsor:'bilstein', title:'Ignored'}} />);
   assert.ok(!partner.includes('Ignored'), 'a partner highlight keeps its own heading');
+});
+
+test('a stat card\'s kicker heads the post, out of the card, and the card wears no tag', () => {
+  const base = {...records[0].payload, title:null, stats:{kicker:'PROLOGUE START ORDER', title:'45 teams', pairs:[{label:'First off', value:'#143'}]}};
+  const html = renderToStaticMarkup(<DispatchView dispatch={base} />);
+  assert.ok(html.includes('<h3 class="live-entry__highlight">PROLOGUE START ORDER</h3>'));
+  assert.ok(!html.includes('WIDGET') && !html.includes('live-widget__kicker'));
+  assert.ok(html.includes('<p class="live-widget__title">45 teams</p>'));
+  const titled = renderToStaticMarkup(<DispatchView dispatch={{...base, title:'Chosen'}} />);
+  assert.ok(titled.includes('>Chosen</h3>') && !titled.includes('PROLOGUE START ORDER'), 'the poster\'s own title wins');
 });
 
 test('a host holding the roster names the partner as it is printed', () => {
