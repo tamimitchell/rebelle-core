@@ -117,6 +117,14 @@ const LEAVES = arrow('M4.5 11.5l7-7M6 4.5h5.5V10');
 const OPENS = arrow('M3 8h10M9 4l4 4-4 4', true);
 const GOES = arrow('M3 8h10M9 4l4 4-4 4');
 
+/** A web link written into a post's words, `[words](https://…)`; only http and https count, so nothing else becomes an address. */
+const WORDS_LINK = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g;
+
+/** The post's words as a reader reads them anywhere without links: each written link leaves only its words. */
+export function plainText(text: string): string {
+  return text.replace(WORDS_LINK, '$1');
+}
+
 /** The post's words with each "#148" it tags drawn as a button that picks the team. */
 function pickableText(text: string, teams: string[], onPickTeam?: (team: string) => void): React.ReactNode {
   if (!onPickTeam || teams.length === 0) return text;
@@ -126,6 +134,20 @@ function pickableText(text: string, teams: string[], onPickTeam?: (team: string)
       ? <button key={index} type="button" className="live-entry__inline-team" onClick={() => onPickTeam(team)} aria-label={`Team ${team}: show on the page`}>{part}</button>
       : part;
   });
+}
+
+/** The post's words with its written links drawn as links, in a new tab so the feed keeps its place, and its tagged "#148" picked between them. */
+function postText(text: string, teams: string[], onPickTeam?: (team: string) => void): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  let at = 0;
+  for (const match of text.matchAll(WORDS_LINK)) {
+    if (match.index > at) parts.push(<React.Fragment key={at}>{pickableText(text.slice(at, match.index), teams, onPickTeam)}</React.Fragment>);
+    parts.push(<a key={match.index} className="live-entry__inline-link" href={match[2]} target="_blank" rel="noopener noreferrer">{match[1]}</a>);
+    at = match.index + match[0].length;
+  }
+  if (parts.length === 0) return pickableText(text, teams, onPickTeam);
+  if (at < text.length) parts.push(<React.Fragment key={at}>{pickableText(text.slice(at), teams, onPickTeam)}</React.Fragment>);
+  return parts;
 }
 
 export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam }: DispatchViewProps) {
@@ -210,8 +232,8 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             </cite>}
           </figure>
         : !sameAsClip && <>
-            <p className="live-entry__text">{pickableText(told.body, payload.teams ?? [], onPickTeam)}</p>
-            {told.watch && <p className="live-entry__watch"><strong>{told.watch}</strong></p>}
+            <p className="live-entry__text">{postText(told.body, payload.teams ?? [], onPickTeam)}</p>
+            {told.watch && <p className="live-entry__watch"><strong>{postText(told.watch, payload.teams ?? [], onPickTeam)}</strong></p>}
           </>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
