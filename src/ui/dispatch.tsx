@@ -64,7 +64,6 @@ export function linkLabel(link: string, payload: DispatchPayload, sponsor: Spons
     return 'OPEN THE LINK';
   }
   const host = url.hostname.replace(/^www\./, '');
-  if (payload.source === 'sponsor' && sponsor) return `VISIT ${(sponsor.name ?? sponsor.key).toUpperCase()}`;
   if (/(^|\.)(youtube\.com|youtu\.be)$/.test(host)) return url.searchParams.has('t') ? 'WATCH THIS MOMENT ON THE BROADCAST' : 'WATCH THE SHOW';
   if (host.endsWith('instagram.com')) {
     const liveNow = /\/live\/?$/.test(url.pathname) && now - Date.parse(payload.posted_at) < INSTAGRAM_LIVE_WINDOW_MS;
@@ -76,6 +75,8 @@ export function linkLabel(link: string, payload: DispatchPayload, sponsor: Spons
   if (host.endsWith('rebellerally.com') || host === 'rebelle.elementalsugar.com') {
     return url.pathname.includes('field-update') ? fieldUpdate : 'READ THE FULL STORY';
   }
+  // A partner's post sends the reader to the partner, unless it points at the site's own story.
+  if (payload.source === 'sponsor' && sponsor) return `VISIT ${(sponsor.name ?? sponsor.key).toUpperCase()}`;
   return `READ MORE ON ${host.toUpperCase()}`;
 }
 
@@ -206,8 +207,8 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
       {payload.story && <button type="button" className="live-entry__link" disabled={!onOpenStory} onClick={() => onOpenStory?.(payload.story!)}>OPEN · THE STORY {GOES}</button>}
 
       {stats && hasWidget && (
+        <>{stats.title && <p className="live-widget__title">{stats.title}</p>}
         <div className="live-widget rr-card rr-card--lit">
-          {stats.title && <p className="live-widget__title">{stats.title}</p>}
           <div className="live-widget__stats">
             {stats.pairs.map((stat) => (
               <div className="live-widget__stat" key={stat.label}>
@@ -226,7 +227,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
               <DispatchPhoto photo={photos[0]} url={photoUrl ? photoUrl(photos[0]) : photos[0].url} sources={photoSources?.(photos[0])} />
             </button>
           )}
-        </div>
+        </div></>
       )}
 
       {!hasWidget && photos.length > 0 && (
