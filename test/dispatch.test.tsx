@@ -300,3 +300,17 @@ test('a last paragraph opening "Watch for" is the post\'s bold kicker, and nothi
   const html = renderToStaticMarkup(<DispatchView dispatch={{ ...records[0].payload, text: 'The course.\n\nWatch for: the dunes.' }} />);
   assert.ok(html.includes('<p class="live-entry__text">The course.</p><p class="live-entry__watch"><strong>Watch for: the dunes.</strong></p>'));
 });
+test('a host that shows a team in place turns its chips and the words’ own "#148" into buttons that pick it', () => {
+  const post = { ...records[0].payload, kind: 'checkpoint' as const, teams: ['148', '107'], text: 'Rookies #148 and #107 found every checkpoint. #999 is not tagged.' };
+  const picked: string[] = [];
+  const html = renderToStaticMarkup(<DispatchView dispatch={post} onPickTeam={(team) => picked.push(team)}
+    teamFor={(team) => ({ href: `/teams/2026/${team}/`, crew: team === '148' ? 'Gerstl / Harkins' : null })} />).replaceAll('<!-- -->', '');
+  assert.ok(html.includes('<button type="button" class="live-entry__inline-team" aria-label="Team 148: show on the page">#148</button>'));
+  assert.ok(html.includes('<button type="button" class="live-entry__inline-team" aria-label="Team 107: show on the page">#107</button>'));
+  assert.ok(html.includes(' #999 is not tagged.'));
+  assert.ok(html.includes('<button type="button" class="live-entry__team" aria-label="Team 148, Gerstl / Harkins: show on the page"><span class="live-entry__team-number">Team #148</span><span class="live-entry__team-crew">Gerstl / Harkins</span></button>'));
+  assert.ok(!html.includes('href="/teams/2026/148/"'));
+  const studio = renderToStaticMarkup(<DispatchView dispatch={post} teamFor={(team) => ({ href: `/teams/2026/${team}/` })} />);
+  assert.ok(studio.includes('href="/teams/2026/148/"'));
+  assert.ok(!studio.includes('live-entry__inline-team'));
+});

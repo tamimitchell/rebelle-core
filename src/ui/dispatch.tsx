@@ -25,6 +25,8 @@ export type DispatchViewProps = {
   videoPoster?: (video: NonNullable<DispatchPayload['video']>) => string | null | undefined;
   /** A host with team pages names where a team's chip leads, and its crew; without one, the chip filters. */
   teamFor?: (team: string) => TeamLink | null | undefined;
+  /** A host that can show a team in place: its chips and the post's own "#148" become buttons that do, and the page is a tap further on. */
+  onPickTeam?: (team: string) => void;
 };
 /** A team's page and the surnames its chip carries. */
 export type TeamLink = { href: string; crew?: string | null };
@@ -115,7 +117,18 @@ const LEAVES = arrow('M4.5 11.5l7-7M6 4.5h5.5V10');
 const OPENS = arrow('M3 8h10M9 4l4 4-4 4', true);
 const GOES = arrow('M3 8h10M9 4l4 4-4 4');
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor }: DispatchViewProps) {
+/** The post's words with each "#148" it tags drawn as a button that picks the team. */
+function pickableText(text: string, teams: string[], onPickTeam?: (team: string) => void): React.ReactNode {
+  if (!onPickTeam || teams.length === 0) return text;
+  return text.split(/(#\d+\b)/).map((part, index) => {
+    const team = part.startsWith('#') ? part.slice(1) : null;
+    return team && teams.includes(team)
+      ? <button key={index} type="button" className="live-entry__inline-team" onClick={() => onPickTeam(team)} aria-label={`Team ${team}: show on the page`}>{part}</button>
+      : part;
+  });
+}
+
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const photos = payload.photos ?? [];
   const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
@@ -197,7 +210,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             </cite>}
           </figure>
         : !sameAsClip && <>
-            <p className="live-entry__text">{told.body}</p>
+            <p className="live-entry__text">{pickableText(told.body, payload.teams ?? [], onPickTeam)}</p>
             {told.watch && <p className="live-entry__watch"><strong>{told.watch}</strong></p>}
           </>}
       {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
@@ -252,7 +265,14 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
       {tagged.length > 0 && (
         <div className="live-entry__teams">
           {tagged.map(({ team, link }) => {
-            // A team with a page is a link to it, in a new tab so the feed keeps its place (site Decided #229).
+            // A host that shows a team in place picks it; otherwise a team with a page is a link to it, in a new tab so the feed keeps its place (site Decided #229).
+            if (onPickTeam) return (
+              <button key={team} type="button" className="live-entry__team" onClick={() => onPickTeam(team)}
+                aria-label={`Team ${team}${link?.crew ? `, ${link.crew}` : ''}: show on the page`}>
+                <span className="live-entry__team-number">Team #{team}</span>
+                {link?.crew && <span className="live-entry__team-crew">{link.crew}</span>}
+              </button>
+            );
             return link
               ? <a key={team} className="live-entry__team" href={link.href} target="_blank" rel="noopener noreferrer"
                   aria-label={`Team ${team}${link.crew ? `, ${link.crew}` : ''}: team page, opens in a new tab`}>

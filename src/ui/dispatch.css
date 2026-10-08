@@ -276,6 +276,29 @@
   box-shadow: inset 0 0 12px color-mix(in srgb, var(--cyan) 55%, transparent);
 }
 
+button.live-entry__team {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* A team the words name, picked in place: the words' own size, cyan, underlined like a link. */
+.live-entry__inline-team {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cyan);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--cyan) 45%, transparent);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.live-entry__inline-team:hover {
+  color: var(--cyan-lift);
+  text-decoration-color: currentColor;
+}
+
 .live-entry__team-number {
   color: var(--cyan);
   font-family: var(--font-display);
