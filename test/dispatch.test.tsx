@@ -325,3 +325,12 @@ test('a link written into the words is drawn as a link in a new tab, beside the 
   assert.ok(watch.includes('<strong>Watch for: <a class="live-entry__inline-link" href="https://www.rebellerally.com/live/"'));
   assert.equal(plainText(text), 'Presented by Jiffy Lube. Rookies #148 found the gift card.\n\nNot [a script](javascript:alert(1)).');
 });
+test('a host that shows a checkpoint on its map turns the words’ own "CP 1X" into a button, handed the course sheet’s label', () => {
+  const post = { ...records[0].payload, teams: ['160'], text: 'Rookie #160 went after CP 1X, and CP7 is next.' };
+  const picked: string[] = [];
+  const html = renderToStaticMarkup(<DispatchView dispatch={post} onPickTeam={() => {}} onPickCheckpoint={(label) => picked.push(label)} />).replaceAll('<!-- -->', '');
+  assert.ok(html.includes('went after <button type="button" class="live-entry__inline-checkpoint" aria-label="CP 1X: show on the map">CP 1X</button>, and <button type="button" class="live-entry__inline-checkpoint" aria-label="CP 7: show on the map">CP7</button> is next.'));
+  assert.ok(html.includes('class="live-entry__inline-team"'));
+  const plain = renderToStaticMarkup(<DispatchView dispatch={post} />);
+  assert.ok(!plain.includes('live-entry__inline-checkpoint'));
+});
