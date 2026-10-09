@@ -91,7 +91,7 @@
 }
 
 .live-entry--quote .live-entry__context {
-  padding: 18px 12px 0;
+  margin-top: 16px;
   white-space: pre-line;
 }
 
