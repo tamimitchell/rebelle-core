@@ -324,6 +324,8 @@ export const PostPayloadSchema = z.object({
   published_at: z.string().datetime({ offset: true }).optional(),
   // false leaves off the ending a post shares with its email: About the Rebelle Rally and the partners band.
   about_and_partners: z.boolean().optional(),
+  // The photograph a post's card wears in a list, when its lead is a header graphic that crops badly.
+  card_image_id: z.string().uuid().optional(),
 }).strict().superRefine((post, context) => {
   if (post.telling) {
     for (const key of ['slug', 'published_at'] as const) {

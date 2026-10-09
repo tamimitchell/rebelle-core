@@ -19,6 +19,8 @@ test('article metadata and bounds are required, review-only material is refused 
   assert.equal(PostPayloadSchema.safeParse({ ...post, slug: undefined }).success, false);
   assert.equal(PostPayloadSchema.safeParse({ ...post, sources: [{ label: 'private' }] }).success, false);
   assert.ok(PostPayloadSchema.safeParse({ ...post, about_and_partners: false }).success);
+  assert.ok(PostPayloadSchema.safeParse({ ...post, card_image_id: '3f2b8f8e-9c1d-4b7a-8e2f-0a1b2c3d4e5f' }).success);
+  assert.equal(PostPayloadSchema.safeParse({ ...post, card_image_id: 'header.png' }).success, false);
   assert.ok(PostPayloadSchema.safeParse({ ...post, telling: Array(60).fill(post.telling[0]) }).success);
   assert.equal(PostPayloadSchema.safeParse({ ...post, telling: Array(61).fill(post.telling[0]) }).success, false);
 });
