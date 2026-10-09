@@ -23,6 +23,13 @@ test('the Studio schema-2 writer fixture draws all six operational kinds', () =>
   assert.ok(recap.includes('OPEN · THE STORY'));
   assert.ok(recap.includes('ALL TEAMS IN CAMP'));
 });
+test('a quote highlights the words it marks and keeps the rest', () => {
+  const quote = records[2].payload;
+  const marked = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, text: '**A lot different than Ohio.** But I feel good now.' }} />);
+  assert.ok(marked.includes('<blockquote>“<mark class="live-entry__quote-mark">A lot different than Ohio.</mark> But I feel good now.”</blockquote>'));
+  assert.equal(plainText('**A lot different.** Fine.'), 'A lot different. Fine.');
+});
+
 test('a quote is the navy band: the star, its words in one pair of marks, and who said it', () => {
   const quote = records[2].payload;
   const typed = renderToStaticMarkup(<DispatchView dispatch={quote} />);

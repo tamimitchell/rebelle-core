@@ -108,6 +108,14 @@
   white-space: pre-line;
 }
 
+.live-entry__quote-mark {
+  color: inherit;
+  font-weight: 600;
+  background: linear-gradient(transparent 50%, color-mix(in srgb, var(--cyan) 50%, transparent) 50%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 .live-entry__quote > cite:has(.live-entry__speaker-team) {
   display: flex;
   flex-wrap: wrap;
