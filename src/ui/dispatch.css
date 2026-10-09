@@ -670,6 +670,16 @@ a.live-clip:hover .live-clip__watch {
   aspect-ratio: 9 / 16;
 }
 
+.live-clip--wide {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.live-clip--wide .live-clip__play {
+  width: 56px;
+  height: 56px;
+}
+
 .live-clip .live-clip__watch {
   margin-top: 0;
 }

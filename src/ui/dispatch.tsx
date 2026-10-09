@@ -108,6 +108,11 @@ export function clipKind(video: Video): 'SHORT' | 'LIVE SHOW' | 'STORY' | 'VIDEO
   return /\bLIVE\b/.test(video.title) ? 'LIVE SHOW' : 'VIDEO';
 }
 
+/** A course flyover the studio hosts, rendered from Mapbox: its shelf name starts "Flyover". */
+export function isFlyover(video: Video | null | undefined): boolean {
+  return video?.provider === 'hosted' && /^flyover\b/i.test(video.title);
+}
+
 /** A YouTube title without the hashtags the channel trails it with. */
 function clipTitle(title: string): string {
   return title.replace(/(\s*#[\w-]+)+\s*$/, '').trim() || title;
@@ -180,7 +185,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const stats = payload.stats;
   const hasWidget = stats != null && stats.pairs.length > 0;
   // A stat card's kicker heads the post, out of the card, when the post has no title of its own.
-  const heading = payload.title ?? stats?.kicker ?? null;
+  const heading = payload.title ?? stats?.kicker ?? (isFlyover(payload.video) ? 'Mapbox Flyover' : null);
   const sponsor: SponsorChip | null = payload.sponsor ? (sponsorFor?.(payload.sponsor) ?? { key: payload.sponsor }) : null;
   // Every sponsor's dispatch is a partner highlight: its photograph on top, then the partner named
   // as the field updates name them, on a plain card (site Decided #231).
@@ -356,6 +361,8 @@ function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: s
   // A still that finished loading before the page hydrated fired its load unheard.
   React.useEffect(() => { if (image.current?.complete && image.current.naturalWidth) measure(image.current); }, []);
   const portrait = kind === 'SHORT' || tall;
+  // A flyover is a map: it gets the post's full width, the still above its words.
+  const wide = !portrait && isFlyover(video);
   const still = video.provider === 'youtube' && video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg` : poster;
   const meta = [kind, video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
   const youtube = video.provider === 'youtube' && video.video_id && !onOpenVideo;
@@ -371,7 +378,7 @@ function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: s
       {youtube && <span className="live-entry__link live-clip__watch">Watch on YouTube {LEAVES}</span>}
     </span>
   </React.Fragment>;
-  const className = `live-clip${portrait ? ' live-clip--portrait' : ''}`;
+  const className = `live-clip${portrait ? ' live-clip--portrait' : wide ? ' live-clip--wide' : ''}`;
   if (video.video_id && onOpenVideo) return <button type="button" className={className} onClick={(event) => onOpenVideo(video, event.currentTarget)}>{body}</button>;
   if (youtube) return <a className={className} href={`https://www.youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">{body}</a>;
   return <div className={className}>{body}</div>;

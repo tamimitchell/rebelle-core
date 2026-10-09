@@ -116,6 +116,17 @@ test('a hosted clip is the same row, titled by the post, its still from the host
   assert.ok(!placeholder.includes('<iframe') && !placeholder.includes('<video') && !placeholder.includes('<button type="button" class="live-clip'));
 });
 
+test('a flyover is headed Mapbox Flyover and plays full width, unless the post names itself', () => {
+  const video = {provider:'hosted' as const, video_id:'04bdf9bc-ac28-4d62-9228-b73b4b783cfc', title:'Flyover · Prologue course', duration:163};
+  const dispatch = {...records[4].payload, title:null, stats:null, text:'The Prologue course from above.', panel:'media' as const, video};
+  const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
+  assert.ok(reader.includes('<h3 class="live-entry__highlight">Mapbox Flyover</h3>'));
+  assert.ok(reader.includes('class="live-clip live-clip--wide"'));
+  assert.ok(renderToStaticMarkup(<DispatchView dispatch={{...dispatch, title:'Day 1 from above'}} onOpenVideo={() => {}} />).includes('>Day 1 from above</h3>'));
+  const story = renderToStaticMarkup(<DispatchView dispatch={{...dispatch, video:{...video, title:'Instagram story · Oct 9, 2026'}}} onOpenVideo={() => {}} />);
+  assert.ok(!story.includes('Mapbox Flyover') && !story.includes('live-clip--wide'));
+});
+
 test('a YouTube Short stands tall', () => {
   const dispatch = {...records[4].payload, video:{provider:'youtube' as const, video_id:'lZZpREBCc_M', title:'Entered the chat. #shorts', duration:16}};
   assert.ok(renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />).includes('class="live-clip live-clip--portrait"'));
