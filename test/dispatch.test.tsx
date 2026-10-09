@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
-import { DispatchView, SponsorLockup, clipKind, clipLength, linkLabel, plainText, watchFor } from '../src/ui/dispatch.tsx';
+import { DispatchView, SponsorLockup, clipHeading, clipKind, clipLength, linkLabel, plainText, watchFor } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
 test('the Studio schema-2 writer fixture draws all six operational kinds', () => {
@@ -127,6 +127,19 @@ test('a flyover is headed Mapbox Flyover and plays full width, unless the post n
   assert.ok(!story.includes('Mapbox Flyover') && !story.includes('live-clip--wide'));
 });
 
+test('a live show is headed by which show it is and plays full width', () => {
+  const video = {provider:'youtube' as const, video_id:'a91BF9BEJ6Y', title:'Evening show · Day 1', duration:null};
+  assert.equal(clipKind(video), 'LIVE SHOW');
+  assert.equal(clipHeading(video), 'Evening Show');
+  assert.equal(clipHeading({...video, title:'Morning show · Prologue · LIVE'}), 'Morning Show');
+  assert.equal(clipHeading({...video, title:'2025 Rebelle Rally LIVE', duration:3412}), 'Live Show');
+  assert.equal(clipHeading({...video, title:'The Rebelle Format', duration:300}), null);
+  const dispatch = {...records[4].payload, title:null, stats:null, text:'Catch up on the day.', panel:'media' as const, video};
+  const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
+  assert.ok(reader.includes('<h3 class="live-entry__highlight">Evening Show</h3>'));
+  assert.ok(reader.includes('class="live-clip live-clip--wide"'));
+});
+
 test('a YouTube Short stands tall', () => {
   const dispatch = {...records[4].payload, video:{provider:'youtube' as const, video_id:'lZZpREBCc_M', title:'Entered the chat. #shorts', duration:16}};
   assert.ok(renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />).includes('class="live-clip live-clip--portrait"'));
@@ -136,9 +149,9 @@ test('a YouTube clip is one row that plays in the reader; previews link to YouTu
   const video = {provider:'youtube' as const, video_id:'7hq77WoZA-w', title:'Rebelle Rally LIVE | DAY 3 START', duration:4315};
   const dispatch = {...records[4].payload, text:video.title, panel:'media' as const, link:'https://www.youtube.com/watch?v=7hq77WoZA-w', video};
   const preview = renderToStaticMarkup(<DispatchView dispatch={dispatch} />);
-  assert.ok(preview.includes('<a class="live-clip" href="https://www.youtube.com/watch?v=7hq77WoZA-w"'));
+  assert.ok(preview.includes('<a class="live-clip live-clip--wide" href="https://www.youtube.com/watch?v=7hq77WoZA-w"'));
   const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} panelLabels={{media:'LIVE MEDIA'}} onViewPanel={() => {}} />);
-  assert.ok(reader.includes('<button type="button" class="live-clip">'));
+  assert.ok(reader.includes('<button type="button" class="live-clip live-clip--wide">'));
   assert.ok(reader.includes('i.ytimg.com/vi/7hq77WoZA-w/hqdefault.jpg'));
   assert.ok(reader.includes('LIVE SHOW · 1:11:55'));
   assert.ok(!reader.includes('youtube.com/watch'), 'no link out to YouTube');
