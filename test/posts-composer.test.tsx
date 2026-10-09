@@ -18,6 +18,7 @@ test('article metadata and bounds are required, review-only material is refused 
   assert.ok(PostPayloadSchema.safeParse(post).success);
   assert.equal(PostPayloadSchema.safeParse({ ...post, slug: undefined }).success, false);
   assert.equal(PostPayloadSchema.safeParse({ ...post, sources: [{ label: 'private' }] }).success, false);
+  assert.ok(PostPayloadSchema.safeParse({ ...post, about_and_partners: false }).success);
   assert.ok(PostPayloadSchema.safeParse({ ...post, telling: Array(60).fill(post.telling[0]) }).success);
   assert.equal(PostPayloadSchema.safeParse({ ...post, telling: Array(61).fill(post.telling[0]) }).success, false);
 });
