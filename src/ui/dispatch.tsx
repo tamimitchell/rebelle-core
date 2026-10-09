@@ -56,6 +56,16 @@ function quoted(text: string): string {
   return /^["“‘']/.test(text) ? text : `“${text}”`;
 }
 
+/** Words a quote marks to stand out, `**like this**`, so a line can be highlighted without cutting the rest. */
+const QUOTE_MARK = /\*\*([^*\n]+)\*\*/g;
+
+/** A quote's words with each marked stretch drawn highlighted. */
+function quoteText(text: string): React.ReactNode {
+  const parts = text.split(QUOTE_MARK);
+  if (parts.length === 1) return text;
+  return parts.map((part, index) => index % 2 === 1 ? <mark key={index} className="live-entry__quote-mark">{part}</mark> : part);
+}
+
 /** How long a post pointing at an Instagram Live says the Live is on; after that the address shows the profile. */
 export const INSTAGRAM_LIVE_WINDOW_MS = 90 * 60_000;
 
@@ -124,7 +134,7 @@ const WORDS_LINK = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g;
 
 /** The post's words as a reader reads them anywhere without links: each written link leaves only its words. */
 export function plainText(text: string): string {
-  return text.replace(WORDS_LINK, '$1');
+  return text.replace(WORDS_LINK, '$1').replace(QUOTE_MARK, '$1');
 }
 
 /** What the words can pick in place: the teams the post tags, and checkpoints when the host can show one. */
@@ -232,7 +242,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
       {isQuote
         ? <figure className="rr-quote on-dark live-entry__quote">
             <span className="rr-star live-entry__star" aria-hidden="true"></span>
-            <blockquote>{quoted(payload.text)}</blockquote>
+            <blockquote>{quoteText(quoted(payload.text))}</blockquote>
             {(speaker || spoken.length > 0) && <cite>
               {speaker && <span className="live-entry__speaker">{speaker}</span>}
               {spoken.map(({ team, link }) => (
