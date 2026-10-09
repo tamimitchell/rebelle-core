@@ -280,6 +280,15 @@ test('a team with a page is a link to it in a new tab, with its crew; without on
   assert.ok(html.replaceAll('<!-- -->', '').includes('<button type="button" class="rr-chip rr-chip--neutral live-entry__team-chip">#999</button>'));
 });
 
+test('a quote on a page that can show a team picks it in place from the speaker line', () => {
+  const quote = records[2].payload; // Sabrina Howells, #172
+  const picked: string[] = [];
+  const html = renderToStaticMarkup(<DispatchView dispatch={quote} onPickTeam={(team) => picked.push(team)}
+    teamFor={(team) => ({ href:`/teams/2026/${team}/`, crew:'Howells / Pike' })} />).replaceAll('<!-- -->', '');
+  assert.ok(html.includes('<cite><span class="live-entry__speaker">Sabrina Howells</span><button type="button" class="live-entry__speaker-team" aria-label="Team 172, Howells / Pike: show on the page">Team #172</button></cite>'));
+  assert.ok(!html.includes('live-entry__teams'));
+});
+
 test('a quote names its speaker\'s team on the speaker line, and that team leaves the tag row', () => {
   const quote = records[2].payload; // Sabrina Howells, #172
   const html = renderToStaticMarkup(<DispatchView dispatch={quote}

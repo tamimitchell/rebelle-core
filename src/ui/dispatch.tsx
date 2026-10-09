@@ -196,8 +196,8 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const sameAsClip = clip != null && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
   // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
   const teams = (payload.teams ?? []).map((team) => ({ team, link: teamFor?.(team) ?? null }));
-  const spoken = isQuote ? teams.filter((t) => t.link) : [];
-  const tagged = isQuote ? teams.filter((t) => !t.link) : teams;
+  const spoken = isQuote ? teams.filter((t) => t.link || onPickTeam) : [];
+  const tagged = isQuote ? teams.filter((t) => !t.link && !onPickTeam) : teams;
   const speaker = spoken.length > 0 ? payload.attribution?.replace(/,?\s*#\d+$/, '') : payload.attribution;
 
   const photoRow = (
@@ -245,7 +245,12 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             <blockquote>{quoteText(quoted(payload.text))}</blockquote>
             {(speaker || spoken.length > 0) && <cite>
               {speaker && <span className="live-entry__speaker">{speaker}</span>}
-              {spoken.map(({ team, link }) => (
+              {spoken.map(({ team, link }) => onPickTeam
+                ? <button key={team} type="button" className="live-entry__speaker-team" onClick={() => onPickTeam(team)}
+                    aria-label={`Team ${team}${link?.crew ? `, ${link.crew}` : ''}: show on the page`}>
+                    Team #{team}
+                  </button>
+                : (
                 <a key={team} className="live-entry__speaker-team" href={link!.href} target="_blank" rel="noopener noreferrer"
                   aria-label={`Team ${team}${link!.crew ? `, ${link!.crew}` : ''}: team page, opens in a new tab`}>
                   Team #{team} {LEAVES}
