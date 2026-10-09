@@ -90,6 +90,11 @@
   border-top: 1px solid var(--hairline-inverse);
 }
 
+.live-entry--quote .live-entry__context {
+  padding: 18px 12px 0;
+  white-space: pre-line;
+}
+
 .live-entry .live-entry__quote {
   gap: 14px;
   padding: 18px 12px 0;
