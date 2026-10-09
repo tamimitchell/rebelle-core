@@ -23,6 +23,15 @@ test('the Studio schema-2 writer fixture draws all six operational kinds', () =>
   assert.ok(recap.includes('OPEN · THE STORY'));
   assert.ok(recap.includes('ALL TEAMS IN CAMP'));
 });
+test('a quote may lead in with context, drawn over its words; no other kind carries any', () => {
+  const quote = records[2].payload;
+  const html = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, context: 'Team 172 are rookies.\n\nShe navigates.' }} />);
+  const lead = html.indexOf('<p class="live-entry__text live-entry__context">Team 172 are rookies.\n\nShe navigates.</p>');
+  assert.ok(lead > 0 && lead < html.indexOf('<blockquote>'));
+  assert.ok(!renderToStaticMarkup(<DispatchView dispatch={quote} />).includes('live-entry__context'));
+  assert.throws(() => DispatchPayloadSchema.parse({ ...records[0].payload, context: 'Not on an update.' }));
+});
+
 test('a quote highlights the words it marks and keeps the rest', () => {
   const quote = records[2].payload;
   const marked = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, text: '**A lot different than Ohio.** But I feel good now.' }} />);

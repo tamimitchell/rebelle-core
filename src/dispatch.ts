@@ -155,6 +155,8 @@ export const DispatchPayloadSchema = z
     photos: z.array(z.object({ url: PhotoUrlSchema, credit: z.string().min(1) }).strict()).nullable(),
     link: HttpUrlSchema.nullable(),
     attribution: z.string().min(1).max(200).nullable(),
+    // A quote's lead-in: who she is and why her words matter, drawn over the quote. Optional on the wire.
+    context: z.string().min(1).max(600).nullable().optional(),
     authorship: z.enum(AUTHORSHIP),
     video: VideoSchema.nullable(),
     moments: z.array(MomentSchema).max(12).nullable(),
@@ -162,11 +164,14 @@ export const DispatchPayloadSchema = z
   })
   .strict()
   // The kind decides what rides with it, as the studio's own shape does: a
-  // quote names who said it, a video post carries its clip and nothing else
+  // quote names who said it and only a quote carries context, a video post carries its clip and nothing else
   // does, only a recap carries moments.
   .superRefine((payload, context) => {
     if (payload.kind === 'quote' && payload.attribution === null) {
       context.addIssue({ code: z.ZodIssueCode.custom, path: ['attribution'], message: 'a quote names who said it' });
+    }
+    if (payload.kind !== 'quote' && payload.context != null) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ['context'], message: 'only a quote carries context' });
     }
     if ((payload.kind === 'video') !== (payload.video !== null)) {
       context.addIssue({ code: z.ZodIssueCode.custom, path: ['video'], message: 'a video post carries its clip, and only a video post does' });
