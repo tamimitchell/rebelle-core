@@ -110,7 +110,8 @@
 
 .live-entry__quote-mark {
   color: inherit;
-  background: linear-gradient(transparent 58%, color-mix(in srgb, var(--cyan) 55%, transparent) 58%);
+  font-weight: 600;
+  background: linear-gradient(transparent 50%, color-mix(in srgb, var(--cyan) 50%, transparent) 50%);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
