@@ -105,12 +105,24 @@ type Video = NonNullable<DispatchPayload['video']>;
 export function clipKind(video: Video): 'SHORT' | 'LIVE SHOW' | 'STORY' | 'VIDEO' {
   if (video.provider === 'hosted') return /^instagram story\b/i.test(video.title) ? 'STORY' : 'VIDEO';
   if (/#shorts\b/i.test(video.title) || (video.duration != null && video.duration <= 60)) return 'SHORT';
-  return /\bLIVE\b/.test(video.title) ? 'LIVE SHOW' : 'VIDEO';
+  return /\bLIVE\b/.test(video.title) || SHOW.test(video.title) ? 'LIVE SHOW' : 'VIDEO';
 }
+
+/** The live show's YouTube titles: "Morning show · Day 1", "Evening show · Day 1". */
+const SHOW = /^(morning|evening) show\b/i;
 
 /** A course flyover the studio hosts, rendered from Mapbox: its shelf name starts "Flyover". */
 export function isFlyover(video: Video | null | undefined): boolean {
   return video?.provider === 'hosted' && /^flyover\b/i.test(video.title);
+}
+
+/** The heading a title-less post takes from its clip: a flyover's, or which live show it is. */
+export function clipHeading(video: Video | null | undefined): string | null {
+  if (!video) return null;
+  if (isFlyover(video)) return 'Mapbox Flyover';
+  if (clipKind(video) !== 'LIVE SHOW') return null;
+  const show = SHOW.exec(video.title);
+  return show ? `${show[1][0].toUpperCase()}${show[1].slice(1).toLowerCase()} Show` : 'Live Show';
 }
 
 /** A YouTube title without the hashtags the channel trails it with. */
@@ -185,7 +197,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const stats = payload.stats;
   const hasWidget = stats != null && stats.pairs.length > 0;
   // A stat card's kicker heads the post, out of the card, when the post has no title of its own.
-  const heading = payload.title ?? stats?.kicker ?? (isFlyover(payload.video) ? 'Mapbox Flyover' : null);
+  const heading = payload.title ?? stats?.kicker ?? clipHeading(payload.video);
   const sponsor: SponsorChip | null = payload.sponsor ? (sponsorFor?.(payload.sponsor) ?? { key: payload.sponsor }) : null;
   // Every sponsor's dispatch is a partner highlight: its photograph on top, then the partner named
   // as the field updates name them, on a plain card (site Decided #231).
@@ -361,8 +373,8 @@ function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: s
   // A still that finished loading before the page hydrated fired its load unheard.
   React.useEffect(() => { if (image.current?.complete && image.current.naturalWidth) measure(image.current); }, []);
   const portrait = kind === 'SHORT' || tall;
-  // A flyover is a map: it gets the post's full width, the still above its words.
-  const wide = !portrait && isFlyover(video);
+  // A flyover and a live show get the post's full width, the still above their words.
+  const wide = !portrait && (isFlyover(video) || kind === 'LIVE SHOW');
   const still = video.provider === 'youtube' && video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg` : poster;
   const meta = [kind, video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
   const youtube = video.provider === 'youtube' && video.video_id && !onOpenVideo;
