@@ -322,6 +322,8 @@ export const PostPayloadSchema = z.object({
   telling: z.array(StoryComponentSchema).min(1).max(60).optional(),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(200).optional(),
   published_at: z.string().datetime({ offset: true }).optional(),
+  // false leaves off the ending a post shares with its email: About the Rebelle Rally and the partners band.
+  about_and_partners: z.boolean().optional(),
 }).strict().superRefine((post, context) => {
   if (post.telling) {
     for (const key of ['slug', 'published_at'] as const) {
