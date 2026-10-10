@@ -198,6 +198,13 @@
   margin-top: var(--sp-24);
 }
 
+.rr-pp-profile__extra video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--navy);
+}
+
 .rr-pp-profile__words > .rr-btn {
   margin-top: var(--sp-24);
   text-decoration: none;
