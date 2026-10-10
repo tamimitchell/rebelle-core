@@ -45,6 +45,8 @@ export const StandingsRowSchema = z
     vehicle: text(120).optional(),
     /** The total as it stood at `as_of`, after penalties — a snapshot, never recomputed. */
     points: z.number().int(),
+    /** Share of the points on offer, as scoring prints it beside the total. */
+    completion: z.number().int().min(0).max(100).optional(),
   })
   .strict();
 
