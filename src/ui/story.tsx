@@ -163,6 +163,7 @@ const round = (value: number) => Math.round(value * 100) / 100;
 function Standings({ content }: { content: StandingsContent }) {
   const crew = content.rows.some((row) => row.crew);
   const vehicle = content.rows.some((row) => row.vehicle);
+  const share = content.rows.some((row) => row.completion !== undefined);
   return (
     <table className="rr-story__standings">
       {content.caption && <caption>{content.caption}</caption>}
@@ -173,6 +174,7 @@ function Standings({ content }: { content: StandingsContent }) {
           {crew && <th scope="col">Driver / Navigator</th>}
           {vehicle && <th scope="col">Vehicle</th>}
           <th scope="col">Points</th>
+          {share && <th scope="col">% Pts</th>}
         </tr>
       </thead>
       <tbody>
@@ -185,6 +187,7 @@ function Standings({ content }: { content: StandingsContent }) {
             {crew && <td>{row.crew}</td>}
             {vehicle && <td>{row.vehicle}</td>}
             <td>{row.points.toLocaleString('en-US')}</td>
+            {share && <td>{row.completion === undefined ? '' : `${row.completion}%`}</td>}
           </tr>
         ))}
       </tbody>
