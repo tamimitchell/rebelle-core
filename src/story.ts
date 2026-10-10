@@ -38,7 +38,11 @@ export const StandingsRowSchema = z
     position: z.number().int().min(1).max(999),
     /** A numeric string, as the scoring API and the roster both spell it. */
     team_number: z.string().regex(/^\d{1,4}$/),
+    /** The team's name; on rows written before `crew`, the crew stood here instead. */
     name: text(120),
+    /** Driver / navigator, and the vehicle, each drawn in its own column when present. */
+    crew: text(120).optional(),
+    vehicle: text(120).optional(),
     /** The total as it stood at `as_of`, after penalties — a snapshot, never recomputed. */
     points: z.number().int(),
   })

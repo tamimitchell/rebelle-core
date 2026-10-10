@@ -134,6 +134,16 @@
                                   "maxLength": 120,
                                   "pattern": "\\S"
                                 },
+                                "crew": {
+                                  "type": "string",
+                                  "maxLength": 120,
+                                  "pattern": "\\S"
+                                },
+                                "vehicle": {
+                                  "type": "string",
+                                  "maxLength": 120,
+                                  "pattern": "\\S"
+                                },
                                 "points": {
                                   "type": "integer"
                                 }

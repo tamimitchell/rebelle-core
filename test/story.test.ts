@@ -55,6 +55,8 @@ test('standings rows are a snapshot: numeric team strings, one to ten rows, ties
   assert(!standings(Array.from({ length: 11 }, () => rows[0])));
   assert(!standings([{ ...rows[0], team_number: 129 }]));
   assert(!standings([{ ...rows[0], points: 1188.5 }]));
+  assert(standings([{ ...rows[0], crew: 'Laura Wanlass / Teralin Petereit', vehicle: '2025 Ford Ranger Raptor' }]));
+  assert(!standings([{ ...rows[0], crew: 'x'.repeat(121) }]));
 });
 
 test('a map carries towns and their years, never a person, and is bounded like any snapshot', () => {
