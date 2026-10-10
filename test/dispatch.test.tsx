@@ -127,6 +127,16 @@ test('a flyover is headed Mapbox Flyover and plays full width, unless the post n
   assert.ok(!story.includes('Mapbox Flyover') && !story.includes('live-clip--wide'));
 });
 
+test('a partner\'s film stands full width under the post\'s words, named by its own title', () => {
+  const video = {provider:'hosted' as const, video_id:'bec52eb1-57dd-41f6-b4dc-13c68c0c5db3', title:'Iridium, Deutsche Telekom and Toyota', duration:45};
+  const dispatch = {...records[4].payload, title:null, stats:null, source:'sponsor' as const, sponsor:'iridium', text:'Day 1 is presented by Iridium.', video};
+  const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
+  assert.ok(reader.includes('<p class="live-entry__text">Day 1 is presented by Iridium.</p>'));
+  assert.ok(reader.includes('class="live-clip live-clip--wide"'));
+  assert.ok(reader.includes('<span class="live-clip__title">Iridium, Deutsche Telekom and Toyota</span>'));
+  assert.ok(reader.indexOf('live-entry__text') < reader.indexOf('live-clip'));
+});
+
 test('a live show is headed by which show it is and plays full width', () => {
   const video = {provider:'youtube' as const, video_id:'a91BF9BEJ6Y', title:'Evening show · Day 1', duration:null};
   assert.equal(clipKind(video), 'LIVE SHOW');
