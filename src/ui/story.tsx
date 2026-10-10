@@ -161,6 +161,8 @@ const plural = (count: number, one: string, many: string) => `${count.toLocaleSt
 const round = (value: number) => Math.round(value * 100) / 100;
 
 function Standings({ content }: { content: StandingsContent }) {
+  const crew = content.rows.some((row) => row.crew);
+  const vehicle = content.rows.some((row) => row.vehicle);
   return (
     <table className="rr-story__standings">
       {content.caption && <caption>{content.caption}</caption>}
@@ -168,6 +170,8 @@ function Standings({ content }: { content: StandingsContent }) {
         <tr>
           <th scope="col">Pos</th>
           <th scope="col">Team</th>
+          {crew && <th scope="col">Driver / Navigator</th>}
+          {vehicle && <th scope="col">Vehicle</th>}
           <th scope="col">Points</th>
         </tr>
       </thead>
@@ -178,6 +182,8 @@ function Standings({ content }: { content: StandingsContent }) {
             <td>
               <span className="rr-story__team-number">#{row.team_number}</span> {row.name}
             </td>
+            {crew && <td>{row.crew}</td>}
+            {vehicle && <td>{row.vehicle}</td>}
             <td>{row.points.toLocaleString('en-US')}</td>
           </tr>
         ))}
