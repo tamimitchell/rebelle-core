@@ -209,8 +209,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   // A hosted clip's title is the studio's shelf name, so its row reads the post's words instead.
   const clip = payload.video;
   const told = watchFor(payload.text);
-  const clipWords = clip?.provider === 'hosted' ? payload.text : clip ? clipTitle(clip.title) : null;
-  const sameAsClip = clip != null && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
+  // A partner's hosted film keeps the post's words above it and stands wide under them, named by its own title.
+  const partnerFilm = partner && clip?.provider === 'hosted';
+  const clipWords = clip?.provider === 'hosted' && !partnerFilm ? payload.text : clip ? clipTitle(clip.title) : null;
+  const sameAsClip = clip != null && !partnerFilm && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
   // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
   const teams = (payload.teams ?? []).map((team) => ({ team, link: teamFor?.(team) ?? null }));
   const spoken = isQuote ? teams.filter((t) => t.link || onPickTeam) : [];
@@ -281,7 +283,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             <p className="live-entry__text">{postText(told.body, picks)}</p>
             {told.watch && <p className="live-entry__watch"><strong>{postText(told.watch, picks)}</strong></p>}
           </>}
-      {clip && <ClipRow video={clip} title={clipWords ?? ''} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
+      {clip && <ClipRow video={clip} title={clipWords ?? ''} wide={partnerFilm} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
         {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} {GOES}</button> : <span>{moment.label}</span>}
       </li>)}</ol>}
@@ -364,7 +366,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
  * media pane; a host without one links a YouTube clip out and leaves a hosted one still. The
  * still keeps the clip's shape: a Short is tall, and a hosted still is tall when its picture is.
  */
-function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: string; poster?: string | null; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
+function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo }: { video: Video; title: string; poster?: string | null; wide?: boolean; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
   const kind = clipKind(video);
   const [tall, setTall] = React.useState(false);
   const [missing, setMissing] = React.useState(false);
@@ -373,8 +375,8 @@ function ClipRow({ video, title, poster, onOpenVideo }: { video: Video; title: s
   // A still that finished loading before the page hydrated fired its load unheard.
   React.useEffect(() => { if (image.current?.complete && image.current.naturalWidth) measure(image.current); }, []);
   const portrait = kind === 'SHORT' || tall;
-  // A flyover and a live show get the post's full width, the still above their words.
-  const wide = !portrait && (isFlyover(video) || kind === 'LIVE SHOW');
+  // A flyover, a live show and a partner's film get the post's full width, the still above their words.
+  const wide = !portrait && (asked || isFlyover(video) || kind === 'LIVE SHOW');
   const still = video.provider === 'youtube' && video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg` : poster;
   const meta = [kind, video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
   const youtube = video.provider === 'youtube' && video.video_id && !onOpenVideo;
