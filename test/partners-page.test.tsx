@@ -39,6 +39,12 @@ test('the profiles alternate paper and navy, a navy one drawing the dark-ground 
   assert.match(html, /class="rr-btn rr-btn--md rr-btn--primary" href/, 'on navy the primary is the cyan one');
 });
 
+test('a page can add its own content under one partner\'s profile, before the door', () => {
+  const html = renderToStaticMarkup(<PartnerProfiles partners={[gold('one'), gold('two')]} extras={{ two: <video src="/videos/x" /> }} />);
+  assert.equal((html.match(/rr-pp-profile__extra/g) ?? []).length, 1);
+  assert.match(html, /<div class="rr-pp-profile__extra"><video src="\/videos\/x"><\/video><\/div><a class="rr-btn/);
+});
+
 test('a partner without a profile or a site keeps its name and its logo, unlinked', () => {
   const html = renderToStaticMarkup(<PartnerProfiles partners={[gold('quiet', { profile: null, link: null })]} />);
   assert.doesNotMatch(html, /<p>/);

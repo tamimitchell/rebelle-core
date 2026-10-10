@@ -115,11 +115,15 @@ export function PartnersHero({ lineA, lineB, lead, photo, video, mark, headingId
   );
 }
 
-/** Gold partners, each a band of its own: the logo, the name, the profile and a door to its site. */
-export function PartnerProfiles({ partners, heading = 'Official partners', headingId = 'official-partners' }: {
+/**
+ * Gold partners, each a band of its own: the logo, the name, the profile and a door to its site.
+ * `extras` adds a page's own content under a partner's profile, keyed by partner key (a film).
+ */
+export function PartnerProfiles({ partners, heading = 'Official partners', headingId = 'official-partners', extras = {} }: {
   partners: readonly Partner[];
   heading?: string;
   headingId?: string;
+  extras?: Partial<Record<string, React.ReactNode>>;
 }) {
   const gold = partners.filter((partner) => partner.tier === 'gold');
   if (gold.length === 0) return null;
@@ -140,6 +144,7 @@ export function PartnerProfiles({ partners, heading = 'Official partners', headi
               <div className="rr-pp-profile__words">
                 <h3 id={`partner-${partner.key}`}>{partner.name}</h3>
                 {partner.profile && <p>{partner.profile}</p>}
+                {extras[partner.key] && <div className="rr-pp-profile__extra">{extras[partner.key]}</div>}
                 {/* Each profile is its own band, so its door is that band's primary, drawn for the ground (Field Glass 08). */}
                 {partner.link && (
                   <a className={`rr-btn rr-btn--md rr-btn--primary${ground === 'paper' ? ' rr-g-terrain' : ''}`} href={partner.link} {...outside(partner.link)}>

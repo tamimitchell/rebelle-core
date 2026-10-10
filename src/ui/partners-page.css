@@ -193,6 +193,11 @@
   color: var(--white-soft);
 }
 
+.rr-pp-profile__extra {
+  max-width: var(--measure-article, 68ch);
+  margin-top: var(--sp-24);
+}
+
 .rr-pp-profile__words > .rr-btn {
   margin-top: var(--sp-24);
   text-decoration: none;
