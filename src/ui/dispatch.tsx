@@ -188,11 +188,14 @@ function postText(text: string, picks: Picks): React.ReactNode {
   return parts;
 }
 
+const HOUSE_CREDIT = 'Rebelle Rally';
+
 export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam, onPickCheckpoint }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const picks: Picks = { teams: payload.teams ?? [], onPickTeam, onPickCheckpoint };
   const photos = payload.photos ?? [];
-  const credits = [...new Set(photos.map((p) => p.credit))].join(' / ');
+  // Our own graphics (tables, signs) are credited to the house, and the house is not named under them.
+  const credits = [...new Set(photos.map((p) => p.credit).filter((credit) => credit !== HOUSE_CREDIT))].join(' / ');
   const isQuote = payload.kind === 'quote';
   const stats = payload.stats;
   const hasWidget = stats != null && stats.pairs.length > 0;
@@ -319,10 +322,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
               can't defer, and the feed's photos are the heaviest thing this
               page ships (Heron, PR round). */}
           {!partner && photoRow}
-          <p className="live-entry__caption">
+          {(payload.source === 'fans' || credits) && <p className="live-entry__caption">
             {payload.source === 'fans' && <span className="live-entry__media">FAN REPOST</span>}
-            <span className="live-entry__credit">Photo · {credits}</span>
-          </p>
+            {credits && <span className="live-entry__credit">Photo · {credits}</span>}
+          </p>}
         </>
       )}
 

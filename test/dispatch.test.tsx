@@ -352,6 +352,15 @@ test('a photograph carries its credit, and only a fan repost says what it is', (
   assert.ok(renderToStaticMarkup(<DispatchView dispatch={{...records[1].payload, stats:null, source:'fans', photos:[photo]}} />).includes('FAN REPOST'));
 });
 
+test('a photograph credited to Rebelle Rally is a house graphic and carries no credit line', () => {
+  const table = { url:'https://example.com/table.png', credit:'Rebelle Rally' };
+  const house = renderToStaticMarkup(<DispatchView dispatch={{...records[1].payload, stats:null, source:'hq', photos:[table]}} />);
+  assert.ok(!house.includes('live-entry__caption'));
+  const mixed = renderToStaticMarkup(<DispatchView dispatch={{...records[1].payload, stats:null, source:'hq', photos:[table, { url:'https://example.com/a.jpg', credit:'Regine Trias' }]}} />).replaceAll('<!-- -->', '');
+  assert.ok(mixed.includes('Photo · Regine Trias</span>'));
+  assert.ok(!mixed.includes('Photo · Rebelle Rally'));
+});
+
 test('a last paragraph opening "Watch for" is the post\'s bold kicker, and nothing else is', () => {
   assert.deepEqual(watchFor('The course.\n\nWatch for: the dunes.'), { body: 'The course.', watch: 'Watch for: the dunes.' });
   assert.deepEqual(watchFor('Watch for: the dunes.'), { body: 'Watch for: the dunes.', watch: null });
