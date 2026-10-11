@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
+import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, type DispatchPayload, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
 import { DispatchView, SponsorLockup, clipHeading, clipKind, clipLength, linkLabel, plainText, watchFor } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
@@ -90,6 +90,15 @@ test('a host\'s other sizes let the browser pick a copy, and the photo\'s own ad
   }
   const plain = renderToStaticMarkup(<DispatchView dispatch={gallery} />);
   assert.ok(plain.includes(`<img src="${url}"`) && !plain.includes('srcSet') && !plain.includes('sizes='));
+});
+test('a host is told which frame each photo sits in, so it can crop around the focus point', () => {
+  const photo = (n: number) => ({ url: `https://rebelle.example/images/f4e20456-d961-473d-8c3f-5b3d16db6ab${n}/1280`, credit: 'Regine Trias' });
+  const frames = (dispatch: DispatchPayload) => [...renderToStaticMarkup(
+    <DispatchView dispatch={dispatch} photoSources={(_, frame) => ({ srcSet: `${frame}.jpg 640w`, sizes: '100vw' })} />,
+  ).matchAll(/srcSet="([^"]+)\.jpg 640w"/g)].map((match) => match[1]);
+  assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1)] }), ['own']);
+  assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1), photo(2)] }), ['4:3', '4:3']);
+  assert.deepEqual(frames({ ...records[0].payload, photos: [photo(1)] }), ['16:9']);
 });
 test('text is literal, generated authorship stays private, and unsafe URLs refuse', () => {
   const dispatch = {...records[0].payload, text:'<script>alert(1)</script> **literal**', authorship:'ai-assisted' as const};

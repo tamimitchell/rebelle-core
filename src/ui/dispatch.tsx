@@ -6,6 +6,8 @@ export { SponsorLockup, brandClass, sponsorBrandClass, sponsorWords, type Sponso
 type Photo = NonNullable<DispatchPayload['photos']>[number];
 /** A photograph's copies at other widths, as the `<img>` attributes a browser picks one by. */
 export type PhotoSources = { srcSet: string; sizes: string };
+/** The frame a photo is drawn in: its own shape, or a crop a host can cut around the photo's focus point. */
+export type PhotoFrame = 'own' | '4:3' | '16:9';
 export type DispatchViewProps = {
   dispatch: DispatchPayload; timeLabel?: string; panelLabels?: Partial<Record<DispatchPanel, string>>;
   onViewPanel?: (panel: DispatchPanel) => void; onFilterTeam?: (team: string) => void;
@@ -14,8 +16,11 @@ export type DispatchViewProps = {
   onOpenVideo?: (video: NonNullable<DispatchPayload['video']>, trigger: HTMLButtonElement) => void;
   /** A preview host can resolve authenticated bytes or return null. Never stored. */
   photoUrl?: (photo: Photo) => string | null | undefined;
-  /** A host that serves a photograph at several widths lists them; the photo's own address stays the fallback `src`. */
-  photoSources?: (photo: Photo) => PhotoSources | null | undefined;
+  /**
+   * A host that serves a photograph at several widths lists them; the photo's own address stays the fallback `src`.
+   * ⚠️ The browser crops a framed photo around its centre, so a host that can crop around the focus point serves that frame's shape.
+   */
+  photoSources?: (photo: Photo, frame: PhotoFrame) => PhotoSources | null | undefined;
   /**
    * A host holding the sponsor roster names the chip and says which lockup it
    * wears; without one, the key draws the lockup it names or its own words.
@@ -232,7 +237,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
           disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
           aria-label={`Open photo — ${photo.credit}`}
         >
-          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo)} />
+          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, photos.length > 1 ? '4:3' : 'own')} />
         </button>
       ))}
     </div>
@@ -310,7 +315,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
               disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photos[0])}
               aria-label={`Open photo — ${photos[0].credit}`}
             >
-              <DispatchPhoto photo={photos[0]} url={photoUrl ? photoUrl(photos[0]) : photos[0].url} sources={photoSources?.(photos[0])} />
+              <DispatchPhoto photo={photos[0]} url={photoUrl ? photoUrl(photos[0]) : photos[0].url} sources={photoSources?.(photos[0], '16:9')} />
             </button>
           )}
         </div></>
