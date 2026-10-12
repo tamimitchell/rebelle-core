@@ -34,7 +34,11 @@ export type DispatchViewProps = {
   onPickTeam?: (team: string) => void;
   /** A host that can show a checkpoint on its map: the post's own "CP 1X" becomes a button that does, handed the label as "CP 1X". */
   onPickCheckpoint?: (label: string) => void;
+  /** A host that can show a spot on its map: coordinates in the post's words become a button that does, handed the place they name. */
+  onPickPlace?: (place: Place) => void;
 };
+/** A spot a post names by its coordinates, in decimal degrees, and the words that named it. */
+export type Place = { latitude: number; longitude: number; label: string };
 /** A team's page and the surnames its chip carries. */
 export type TeamLink = { href: string; crew?: string | null };
 function sourceChipClass(source: DispatchRecord['payload']['source']): string {
@@ -159,15 +163,34 @@ export function plainText(text: string): string {
   return text.replace(WORDS_LINK, '$1').replace(QUOTE_MARK, '$1');
 }
 
-/** What the words can pick in place: the teams the post tags, and checkpoints when the host can show one. */
-type Picks = { teams: string[]; onPickTeam?: (team: string) => void; onPickCheckpoint?: (label: string) => void };
+/** What the words can pick in place: the teams the post tags, and checkpoints and spots when the host can show one. */
+type Picks = { teams: string[]; onPickTeam?: (team: string) => void; onPickCheckpoint?: (label: string) => void; onPickPlace?: (place: Place) => void };
 
-/** A tagged "#148", or a checkpoint named the way the course sheet names it ("CP 1X", "CP7"). */
-const PICKABLE = /(#\d+\b|\bCP ?\d+X?\b)/;
+/** One axis in degrees, minutes and seconds, any of the last two left off, then its hemisphere: `37° 23′ 4.96″ N`. */
+const AXIS = String.raw`\d{1,3}(?:\.\d+)?\s*°(?:\s*\d{1,2}(?:\.\d+)?\s*['′’])?(?:\s*\d{1,2}(?:\.\d+)?\s*(?:["″”]|''|′′))?\s*`;
+/** Latitude then longitude, as a map app copies them: with hemispheres, or as two signed decimals of four places or more. */
+const COORDINATES = String.raw`${AXIS}[NS],?\s*${AXIS}[EW]\b|-?\d{1,2}\.\d{4,},\s*-?\d{1,3}\.\d{4,}`;
 
-/** The post's words with each "#148" it tags and each "CP 1X" it names drawn as a button that picks it. */
-function pickableText(text: string, { teams, onPickTeam, onPickCheckpoint }: Picks): React.ReactNode {
-  if (!(onPickTeam && teams.length > 0) && !onPickCheckpoint) return text;
+/** The spot coordinates name, or null for words that only look like some. */
+export function placeOf(words: string): Place | null {
+  const text = words.trim();
+  const signed = /^(-?\d{1,2}\.\d{4,}),\s*(-?\d{1,3}\.\d{4,})$/.exec(text);
+  const axes = signed ? null : [...text.matchAll(/(\d{1,3}(?:\.\d+)?)\s*°(?:\s*(\d{1,2}(?:\.\d+)?)\s*['′’])?(?:\s*(\d{1,2}(?:\.\d+)?)\s*(?:["″”]|''|′′))?\s*([NSEW])/g)];
+  if (!signed && axes?.length !== 2) return null;
+  const degrees = (axis: RegExpMatchArray) => (Number(axis[1]) + Number(axis[2] ?? 0) / 60 + Number(axis[3] ?? 0) / 3600) * (/[SW]/.test(axis[4]) ? -1 : 1);
+  const latitude = signed ? Number(signed[1]) : degrees(axes![0]);
+  const longitude = signed ? Number(signed[2]) : degrees(axes![1]);
+  if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return null;
+  return { latitude, longitude, label: text };
+}
+
+/** A tagged "#148", a checkpoint named the way the course sheet names it ("CP 1X", "CP7"), or a spot's coordinates. */
+const PICKABLE_PLACE = new RegExp(COORDINATES);
+const PICKABLE = new RegExp(String.raw`(#\d+\b|\bCP ?\d+X?\b|${COORDINATES})`);
+
+/** The post's words with each "#148" it tags, each "CP 1X" and each spot it names drawn as a button that picks it. */
+function pickableText(text: string, { teams, onPickTeam, onPickCheckpoint, onPickPlace }: Picks): React.ReactNode {
+  if (!(onPickTeam && teams.length > 0) && !onPickCheckpoint && !onPickPlace) return text;
   return text.split(PICKABLE).map((part, index) => {
     const team = part.startsWith('#') ? part.slice(1) : null;
     if (team && onPickTeam && teams.includes(team))
@@ -175,6 +198,9 @@ function pickableText(text: string, { teams, onPickTeam, onPickCheckpoint }: Pic
     const checkpoint = part.startsWith('CP') ? `CP ${part.slice(2).trim()}` : null;
     if (checkpoint && onPickCheckpoint)
       return <button key={index} type="button" className="live-entry__inline-checkpoint" onClick={() => onPickCheckpoint(checkpoint)} aria-label={`${checkpoint}: show on the map`}>{part}</button>;
+    const place = index % 2 === 1 && onPickPlace ? placeOf(part) : null;
+    if (place && onPickPlace)
+      return <button key={index} type="button" className="live-entry__inline-place" onClick={() => onPickPlace(place)} aria-label={`${part}: show on the map`}>{part}</button>;
     return part;
   });
 }
@@ -195,9 +221,9 @@ function postText(text: string, picks: Picks): React.ReactNode {
 
 const HOUSE_CREDIT = 'Rebelle Rally';
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam, onPickCheckpoint }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam, onPickCheckpoint, onPickPlace }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
-  const picks: Picks = { teams: payload.teams ?? [], onPickTeam, onPickCheckpoint };
+  const picks: Picks = { teams: payload.teams ?? [], onPickTeam, onPickCheckpoint, onPickPlace };
   const photos = payload.photos ?? [];
   // Our own graphics (tables, signs) are credited to the house, and the house is not named under them.
   const credits = [...new Set(photos.map((p) => p.credit).filter((credit) => credit !== HOUSE_CREDIT))].join(' / ');
@@ -219,8 +245,10 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const told = watchFor(payload.text);
   // A partner's hosted film keeps the post's words above it and stands wide under them, named by its own title.
   const partnerFilm = partner && clip?.provider === 'hosted';
-  const clipWords = clip?.provider === 'hosted' && !partnerFilm ? payload.text : clip ? clipTitle(clip.title) : null;
-  const sameAsClip = clip != null && !partnerFilm && (clip.provider === 'hosted' || payload.text.trim() === clip.title.trim());
+  // Words naming a spot stand above a hosted clip, where they can be pressed, and the clip keeps its own title.
+  const placed = onPickPlace != null && PICKABLE_PLACE.test(payload.text);
+  const clipWords = clip?.provider === 'hosted' && !partnerFilm && !placed ? payload.text : clip ? clipTitle(clip.title) : null;
+  const sameAsClip = clip != null && !partnerFilm && ((clip.provider === 'hosted' && !placed) || payload.text.trim() === clip.title.trim());
   // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
   const teams = (payload.teams ?? []).map((team) => ({ team, link: teamFor?.(team) ?? null }));
   const spoken = isQuote ? teams.filter((t) => t.link || onPickTeam) : [];
