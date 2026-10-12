@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { DispatchesFeedDocumentSchema, DispatchPayloadSchema, type DispatchPayload, MarkSchema, SPONSOR_LOCKUPS, SponsorSchema, dispatchArchiveKey, parseDispatchDraft } from '../src/dispatch.ts';
-import { DispatchView, SponsorLockup, clipHeading, clipKind, clipLength, linkLabel, plainText, watchFor } from '../src/ui/dispatch.tsx';
+import { DispatchView, SponsorLockup, clipHeading, clipKind, clipLength, linkLabel, placeOf, plainText, watchFor } from '../src/ui/dispatch.tsx';
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/dispatches.json', import.meta.url), 'utf8'));
 const records = DispatchesFeedDocumentSchema.parse(fixture).records;
 test('the Studio schema-2 writer fixture draws all six operational kinds', () => {
@@ -410,4 +410,28 @@ test('a host that shows a checkpoint on its map turns the words’ own "CP 1X" i
   assert.ok(html.includes('class="live-entry__inline-team"'));
   const plain = renderToStaticMarkup(<DispatchView dispatch={post} />);
   assert.ok(!plain.includes('live-entry__inline-checkpoint'));
+});
+test('coordinates read as a spot: degrees, minutes and seconds with hemispheres, or two signed decimals', () => {
+  const water = placeOf('37° 23′ 4.96″ N, 114° 33′ 14.51″ W')!;
+  assert.ok(Math.abs(water.latitude - 37.384711) < 1e-6);
+  assert.ok(Math.abs(water.longitude + 114.554031) < 1e-6);
+  assert.equal(water.label, '37° 23′ 4.96″ N, 114° 33′ 14.51″ W');
+  assert.deepEqual(placeOf('34.9897, -115.6201'), { latitude: 34.9897, longitude: -115.6201, label: '34.9897, -115.6201' });
+  const typed = placeOf(`35° 0' 1" S 115°36.5'E`)!;
+  assert.ok(Math.abs(typed.latitude + 35.000278) < 1e-6 && Math.abs(typed.longitude - 115.608333) < 1e-6);
+  assert.equal(placeOf('95° 0′ N, 114° 33′ W'), null);
+  assert.equal(placeOf('Team 148 scored 12.5, 40.25 today'), null);
+});
+test('a host that shows a spot on its map turns coordinates in the words into a button, and a hosted clip keeps its own title under them', () => {
+  const words = '37° 23′ 4.96″ N, 114° 33′ 14.51″ W';
+  const clip = { ...records[0].payload, kind: 'video' as const, text: words, photos: null, video: { title: 'Water over Rainbow Canyon Road · Day 4', duration: 9, provider: 'hosted' as const, video_id: '1fc2eec5-fc82-4cf4-b805-287e93e02aa5' } };
+  const picked: unknown[] = [];
+  const html = renderToStaticMarkup(<DispatchView dispatch={clip} onOpenVideo={() => {}} onPickPlace={(place) => picked.push(place)} />).replaceAll('<!-- -->', '');
+  assert.ok(html.includes(`<p class="live-entry__text"><button type="button" class="live-entry__inline-place" aria-label="${words}: show on the map">${words}</button></p>`));
+  assert.ok(html.includes('<span class="live-clip__title">Water over Rainbow Canyon Road · Day 4</span>'));
+  const plain = renderToStaticMarkup(<DispatchView dispatch={clip} onOpenVideo={() => {}} />);
+  assert.ok(!plain.includes('live-entry__inline-place'));
+  assert.ok(plain.includes(`<span class="live-clip__title">${words}</span>`));
+  const update = renderToStaticMarkup(<DispatchView dispatch={{ ...records[0].payload, text: 'Water over the road at 37.38471, -114.55403 this morning.' }} onPickPlace={() => {}} />);
+  assert.ok(update.includes('at <button type="button" class="live-entry__inline-place" aria-label="37.38471, -114.55403: show on the map">37.38471, -114.55403</button> this morning.'));
 });
