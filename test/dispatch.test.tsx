@@ -97,7 +97,8 @@ test('a host is told which frame each photo sits in, so it can crop around the f
     <DispatchView dispatch={dispatch} photoSources={(_, frame) => ({ srcSet: `${frame}.jpg 640w`, sizes: '100vw' })} />,
   ).matchAll(/srcSet="([^"]+)\.jpg 640w"/g)].map((match) => match[1]);
   assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1)] }), ['own']);
-  assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1), photo(2)] }), ['4:3', '4:3']);
+  assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1), photo(2)] }), ['1:1', '1:1']);
+  assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1), photo(2), photo(3)] }), ['4:3', '4:3', '4:3']);
   assert.deepEqual(frames({ ...records[0].payload, photos: [photo(1)] }), ['16:9']);
 });
 test('text is literal, generated authorship stays private, and unsafe URLs refuse', () => {
