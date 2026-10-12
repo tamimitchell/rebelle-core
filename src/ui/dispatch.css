@@ -174,6 +174,10 @@
   cursor: zoom-in;
 }
 
+.live-entry__photo--square {
+  aspect-ratio: 1;
+}
+
 .live-entry__photo:only-child {
   aspect-ratio: auto;
   border-radius: var(--radius-crystal);

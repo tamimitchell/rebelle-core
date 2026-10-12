@@ -7,7 +7,7 @@ type Photo = NonNullable<DispatchPayload['photos']>[number];
 /** A photograph's copies at other widths, as the `<img>` attributes a browser picks one by. */
 export type PhotoSources = { srcSet: string; sizes: string };
 /** The frame a photo is drawn in: its own shape, or a crop a host can cut around the photo's focus point. */
-export type PhotoFrame = 'own' | '4:3' | '16:9';
+export type PhotoFrame = 'own' | '1:1' | '4:3' | '16:9';
 export type DispatchViewProps = {
   dispatch: DispatchPayload; timeLabel?: string; panelLabels?: Partial<Record<DispatchPanel, string>>;
   onViewPanel?: (panel: DispatchPanel) => void; onFilterTeam?: (team: string) => void;
@@ -255,17 +255,19 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const tagged = isQuote ? teams.filter((t) => !t.link && !onPickTeam) : teams;
   const speaker = spoken.length > 0 ? payload.attribution?.replace(/,?\s*#\d+$/, '') : payload.attribution;
 
+  /** Two photos stand square side by side; three keep 4:3 so the row stays short. */
+  const rowFrame: PhotoFrame = photos.length === 2 ? '1:1' : photos.length > 2 ? '4:3' : 'own';
   const photoRow = (
     <div className="live-entry__photos">
       {photos.map((photo) => (
         <button
           key={photo.url}
           type="button"
-          className="live-entry__photo"
+          className={`live-entry__photo${rowFrame === '1:1' ? ' live-entry__photo--square' : ''}`}
           disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
           aria-label={`Open photo — ${photo.credit}`}
         >
-          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, photos.length > 1 ? '4:3' : 'own')} />
+          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, rowFrame)} />
         </button>
       ))}
     </div>
