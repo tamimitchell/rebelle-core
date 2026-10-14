@@ -326,6 +326,9 @@ test('a link says where it goes, and its arrow says it leaves the page', () => {
   assert.equal(linkLabel('https://www.instagram.com/rebellerally/live/', post({}), null, posted + 10 * 60_000), 'WATCH LIVE ON INSTAGRAM');
   assert.equal(linkLabel('https://www.instagram.com/rebellerally/live/', post({}), null, posted + 2 * 3600_000), 'SEE IT ON INSTAGRAM');
   assert.equal(linkLabel('https://www.rebellerally.com/news/day-8', post({}), null), 'READ THE FULL STORY');
+  assert.equal(linkLabel('https://www.rebellerally.com/mini/#enter', post({}), null), 'ENTER THE GIVEAWAY');
+  assert.equal(linkLabel('https://www.rebellerally.com/giveaway/', post({}), null), 'ENTER THE GIVEAWAY');
+  assert.equal(linkLabel('https://www.rebellerally.com/mini/rules/', post({}), null), 'READ THE FULL STORY');
   assert.equal(linkLabel('https://rebelle.elementalsugar.com/blog/2025-rebelle-rally-field-update-day-8-presented-by-pennzoil/', post({}), null), 'READ THE DAY 8 FIELD UPDATE');
   assert.equal(linkLabel('https://pennzoil.com/rebelle', post({ source: 'sponsor', sponsor: 'pennzoil' }), { key: 'pennzoil', name: 'Pennzoil' }), 'VISIT PENNZOIL');
   assert.equal(linkLabel('https://www.rebellerally.com/blog/mini-usa-joins/', post({ source: 'sponsor', sponsor: 'bmw' }), { key: 'bmw', name: 'MINI' }), 'READ THE FULL STORY');
@@ -333,6 +336,16 @@ test('a link says where it goes, and its arrow says it leaves the page', () => {
   const html = renderToStaticMarkup(<DispatchView dispatch={post({ link: 'https://mailchi.mp/rebellerally/day-8', panel: 'media' })} />);
   assert.ok(/READ THE DAY 8 FIELD UPDATE <svg class="live-entry__arrow" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
   assert.ok(/SEE MEDIA <svg class="live-entry__arrow live-entry__arrow--panel" viewBox="0 0 16 16" aria-hidden="true">/.test(html));
+});
+
+test('a post linking a giveaway sends its photograph there too; any other post opens the photo', () => {
+  const post = (link: string) => parseDispatchDraft({ posted_at: '2026-10-14T12:00:00-07:00', source: 'hq', kind: 'update', text: 'Hi', day: 6, authorship: 'human',
+    link, photos: [{ url: '/images/24331f8d-0000-4000-8000-000000000000/1280', credit: 'Rebelle Rally' }] });
+  const entry = renderToStaticMarkup(<DispatchView dispatch={post('https://www.rebellerally.com/mini/#enter')} onOpenPhoto={() => {}} />);
+  assert.ok(entry.includes('<a class="live-entry__photo" href="https://www.rebellerally.com/mini/#enter" target="_blank"'), entry);
+  assert.ok(entry.includes('ENTER THE GIVEAWAY <svg') && !entry.includes('Open photo'), entry);
+  const story = renderToStaticMarkup(<DispatchView dispatch={post('https://www.rebellerally.com/news/day-8')} onOpenPhoto={() => {}} />);
+  assert.ok(story.includes('<button type="button" class="live-entry__photo"') && !story.includes('<a class="live-entry__photo"'), story);
 });
 
 test('a team with a page is a link to it in a new tab, with its crew; without one the chip filters', () => {
