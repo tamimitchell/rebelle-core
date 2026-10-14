@@ -13,7 +13,9 @@ export type DispatchViewProps = {
   onViewPanel?: (panel: DispatchPanel) => void; onFilterTeam?: (team: string) => void;
   onOpenPhoto?: (photo: Photo) => void; onOpenMoment?: (id: string) => void; onOpenStory?: (id: string) => void;
   /** A reader can open its media pane and keep the trigger for return focus. */
-  onOpenVideo?: (video: NonNullable<DispatchPayload['video']>, trigger: HTMLButtonElement) => void;
+  onOpenVideo?: (video: NonNullable<DispatchPayload['video']>, trigger: HTMLButtonElement, shape: 'tall' | 'wide') => void;
+  /** A host that plays a clip in place returns its player, drawn above the clip's words; null keeps the row. */
+  clipPlayer?: (video: NonNullable<DispatchPayload['video']>) => React.ReactNode;
   /** A preview host can resolve authenticated bytes or return null. Never stored. */
   photoUrl?: (photo: Photo) => string | null | undefined;
   /**
@@ -237,7 +239,7 @@ function postText(text: string, picks: Picks): React.ReactNode {
 
 const HOUSE_CREDIT = 'Rebelle Rally';
 
-export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam, onPickCheckpoint, onPickPlace }: DispatchViewProps) {
+export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPanel, onFilterTeam, onOpenPhoto, onOpenMoment, onOpenStory, onOpenVideo, clipPlayer, photoUrl, photoSources, sponsorFor, videoPoster, teamFor, onPickTeam, onPickCheckpoint, onPickPlace }: DispatchViewProps) {
   const payload = DispatchPayloadSchema.parse(dispatch);
   const picks: Picks = { teams: payload.teams ?? [], onPickTeam, onPickCheckpoint, onPickPlace };
   const photos = payload.photos ?? [];
@@ -266,6 +268,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const clipWords = clip?.provider === 'hosted' && !partnerFilm && !placed ? payload.text : clip ? clipTitle(clip.title) : null;
   // A clip post that names its speaker is someone talking: the words read whole and the clip is one link, no still.
   const spokenClip = clip?.video_id && payload.attribution != null ? clip : null;
+  const spokenPlayer = spokenClip ? clipPlayer?.(spokenClip) : null;
   const sameAsClip = clip != null && !partnerFilm && !spokenClip && ((clip.provider === 'hosted' && !placed) || payload.text.trim() === clip.title.trim());
   // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
   const teams = (payload.teams ?? []).map((team) => ({ team, link: teamFor?.(team) ?? null }));
@@ -350,10 +353,12 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             {told.watch && <p className="live-entry__watch"><strong>{postText(told.watch, picks)}</strong></p>}
           </>}
       {spokenClip
-        ? <button type="button" className="live-entry__link" disabled={!onOpenVideo} onClick={(event) => onOpenVideo?.(spokenClip, event.currentTarget)}>
-            Watch{spokenClip.duration ? ` · ${clipLength(spokenClip.duration)}` : ''} {OPENS}
-          </button>
-        : clip && <ClipRow video={clip} title={clipWords ?? ''} wide={partnerFilm} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
+        ? (spokenPlayer != null
+          ? <div className="live-clip live-clip--player">{spokenPlayer}</div>
+          : <button type="button" className="live-entry__link" disabled={!onOpenVideo} onClick={(event) => onOpenVideo?.(spokenClip, event.currentTarget, 'wide')}>
+              Watch{spokenClip.duration ? ` · ${clipLength(spokenClip.duration)}` : ''} {OPENS}
+            </button>)
+        : clip && <ClipRow video={clip} title={clipWords ?? ''} wide={partnerFilm} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} player={clipPlayer?.(clip)} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
         {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} {GOES}</button> : <span>{moment.label}</span>}
       </li>)}</ol>}
@@ -436,7 +441,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
  * media pane; a host without one links a YouTube clip out and leaves a hosted one still. The
  * still keeps the clip's shape: a Short is tall, and a hosted still is tall when its picture is.
  */
-function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo }: { video: Video; title: string; poster?: string | null; wide?: boolean; onOpenVideo?: DispatchViewProps['onOpenVideo'] }) {
+function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo, player }: { video: Video; title: string; poster?: string | null; wide?: boolean; onOpenVideo?: DispatchViewProps['onOpenVideo']; player?: React.ReactNode }) {
   const kind = clipKind(video);
   const [tall, setTall] = React.useState(false);
   const [missing, setMissing] = React.useState(false);
@@ -449,6 +454,10 @@ function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo }: { v
   const wide = !portrait && (asked || isFlyover(video) || kind === 'LIVE SHOW');
   const still = video.provider === 'youtube' && video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/hqdefault.jpg` : poster;
   const meta = [kind, video.duration ? clipLength(video.duration) : null, video.video_id ? null : 'Coming soon'].filter(Boolean).join(' · ');
+  if (player != null) return <div className="live-clip live-clip--player">
+    {player}
+    <span className="live-clip__words"><span className="live-clip__meta">{meta}</span><span className="live-clip__title">{title}</span></span>
+  </div>;
   const youtube = video.provider === 'youtube' && video.video_id && !onOpenVideo;
   const body = <React.Fragment>
     <span className="live-clip__still">
@@ -463,7 +472,7 @@ function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo }: { v
     </span>
   </React.Fragment>;
   const className = `live-clip${portrait ? ' live-clip--portrait' : wide ? ' live-clip--wide' : ''}`;
-  if (video.video_id && onOpenVideo) return <button type="button" className={className} onClick={(event) => onOpenVideo(video, event.currentTarget)}>{body}</button>;
+  if (video.video_id && onOpenVideo) return <button type="button" className={className} onClick={(event) => onOpenVideo(video, event.currentTarget, portrait ? 'tall' : 'wide')}>{body}</button>;
   if (youtube) return <a className={className} href={`https://www.youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">{body}</a>;
   return <div className={className}>{body}</div>;
 }
