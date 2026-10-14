@@ -78,6 +78,21 @@ function quoteText(text: string): React.ReactNode {
 /** How long a post pointing at an Instagram Live says the Live is on; after that the address shows the profile. */
 export const INSTAGRAM_LIVE_WINDOW_MS = 90 * 60_000;
 
+/** A site page that takes entries: a post linking one says so on its button, and its photographs lead there too. */
+const ENTRY_PAGE = /^\/(mini|giveaway)\/?$/;
+
+/** Whether a link is one of the site's entry pages, at its own name or its stand-in. */
+export function isEntryLink(link: string | null | undefined): boolean {
+  if (!link) return false;
+  try {
+    const url = new URL(link);
+    const host = url.hostname.replace(/^www\./, '');
+    return (host.endsWith('rebellerally.com') || host === 'rebelle.elementalsugar.com') && ENTRY_PAGE.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
 /** Where a post's link goes, said plainly: the place, the show, the sponsor, the day's update. */
 export function linkLabel(link: string, payload: DispatchPayload, sponsor: SponsorChip | null, now = Date.now()): string {
   let url: URL;
@@ -96,6 +111,7 @@ export function linkLabel(link: string, payload: DispatchPayload, sponsor: Spons
   if (host === 'mailchi.mp') return fieldUpdate;
   // The site answers at its own name and at its stand-in.
   if (host.endsWith('rebellerally.com') || host === 'rebelle.elementalsugar.com') {
+    if (isEntryLink(link)) return 'ENTER THE GIVEAWAY';
     return url.pathname.includes('field-update') ? fieldUpdate : 'READ THE FULL STORY';
   }
   // A partner's post sends the reader to the partner, unless it points at the site's own story.
@@ -259,9 +275,19 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
 
   /** Two photos stand square side by side; three keep 4:3 so the row stays short. */
   const rowFrame: PhotoFrame = photos.length === 2 ? '1:1' : photos.length > 2 ? '4:3' : 'own';
+  const entry = isEntryLink(payload.link) ? payload.link! : null;
   const photoRow = (
     <div className="live-entry__photos">
-      {photos.map((photo) => (
+      {photos.map((photo) => entry ? (
+        <a
+          key={photo.url}
+          className={`live-entry__photo${rowFrame === '1:1' ? ' live-entry__photo--square' : ''}`}
+          href={entry} target="_blank" rel="noopener noreferrer"
+          aria-label="Enter the giveaway, opens in a new tab"
+        >
+          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, rowFrame)} />
+        </a>
+      ) : (
         <button
           key={photo.url}
           type="button"
