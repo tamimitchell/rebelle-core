@@ -440,6 +440,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
  * The still, the kind and length, the title and WATCH, as one control: a reader plays it in its
  * media pane; a host without one links a YouTube clip out and leaves a hosted one still. The
  * still keeps the clip's shape: a Short is tall, and a hosted still is tall when its picture is.
+ * A tall clip plays in place, so its still and play mark say it and WATCH is left off.
  */
 function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo, player }: { video: Video; title: string; poster?: string | null; wide?: boolean; onOpenVideo?: DispatchViewProps['onOpenVideo']; player?: React.ReactNode }) {
   const kind = clipKind(video);
@@ -467,7 +468,7 @@ function ClipRow({ video, title, poster, wide: asked = false, onOpenVideo, playe
     <span className="live-clip__words">
       <span className="live-clip__meta">{meta}</span>
       <span className="live-clip__title">{title}</span>
-      {video.video_id && onOpenVideo && <span className="live-entry__link live-clip__watch">Watch {OPENS}</span>}
+      {video.video_id && onOpenVideo && !portrait && <span className="live-entry__link live-clip__watch">Watch {OPENS}</span>}
       {youtube && <span className="live-entry__link live-clip__watch">Watch on YouTube {LEAVES}</span>}
     </span>
   </React.Fragment>;
