@@ -671,14 +671,15 @@ a.live-clip:hover .live-clip__watch {
 }
 
 .live-clip--portrait {
-  grid-template-columns: 96px 1fr;
+  grid-template-columns: minmax(96px, 34%) 1fr;
 }
 
 .live-clip--portrait .live-clip__still {
   aspect-ratio: 9 / 16;
 }
 
-.live-clip--wide {
+.live-clip--wide,
+.live-clip--player {
   grid-template-columns: 1fr;
   gap: 12px;
 }

@@ -111,6 +111,17 @@ test('text is literal, generated authorship stays private, and unsafe URLs refus
     assert.throws(() => parseDispatchDraft({...dispatch, photos:[{url,credit:'Fixture'}]}));
   }
 });
+test('a host that plays a clip in place draws its player above the clip\'s words, and null keeps the row', () => {
+  const video = {provider:'hosted' as const, video_id:'c207246a-b190-4890-ae77-b0ddde8efac3', title:'Instagram story · Oct 12, 2025 · 6:15 PM', duration:61};
+  const dispatch = {...records[4].payload, text:'Chrissie Beavis on Day 2', panel:'media' as const, video};
+  const inline = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} clipPlayer={() => <video data-player="" />} />);
+  assert.match(inline, /<div class="live-clip live-clip--player"><video data-player=""><\/video><span class="live-clip__words"><span class="live-clip__meta">STORY · 1:01<\/span><span class="live-clip__title">Chrissie Beavis on Day 2<\/span>/);
+  assert.ok(!inline.includes('<button type="button" class="live-clip'));
+  const row = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} clipPlayer={() => null} />);
+  assert.ok(row.includes('<button type="button" class="live-clip') && !row.includes('live-clip--player'));
+  const spoken = renderToStaticMarkup(<DispatchView dispatch={{...dispatch, attribution:'Chrissie Beavis'}} onOpenVideo={() => {}} clipPlayer={() => <video data-player="" />} />);
+  assert.ok(spoken.includes('<div class="live-clip live-clip--player"><video data-player=""></video></div>') && !spoken.includes('Watch'));
+});
 test('a hosted clip is the same row, titled by the post, its still from the host', () => {
   const video = {provider:'hosted' as const, video_id:'c207246a-b190-4890-ae77-b0ddde8efac3', title:'Instagram story · Oct 12, 2025 · 6:15 PM', duration:61};
   const dispatch = {...records[4].payload, text:'Chrissie Beavis on Day 2', link:'https://www.instagram.com/stories/highlights/1/', panel:'media' as const, video};
