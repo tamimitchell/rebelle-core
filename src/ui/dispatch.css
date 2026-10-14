@@ -186,7 +186,7 @@ a.live-entry__photo { cursor: pointer; }
 }
 
 /* One photograph keeps its own shape (site Decided #228): a wide one fills the column to a
- * height cap, and a tall one, measured as it loads, stands at the cap at its own width. */
+ * height cap, and a tall one, measured as it loads, stands centered at the cap at its own width. */
 .live-entry__photo:only-child img {
   position: static;
   display: block;
@@ -197,6 +197,7 @@ a.live-entry__photo { cursor: pointer; }
 
 .live-entry__photo:only-child:has(.live-entry__photo-tall) {
   flex: 0 1 auto;
+  margin-inline: auto;
 }
 
 .live-entry__photo:only-child img.live-entry__photo-tall {
