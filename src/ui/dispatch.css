@@ -684,6 +684,14 @@ a.live-clip:hover .live-clip__watch {
   gap: 12px;
 }
 
+/* A clip playing in place is the clip itself, with no card around it. */
+.live-clip--player {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
 .live-clip--wide .live-clip__play {
   width: 56px;
   height: 56px;
