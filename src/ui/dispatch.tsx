@@ -248,7 +248,9 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   // Words naming a spot stand above a hosted clip, where they can be pressed, and the clip keeps its own title.
   const placed = onPickPlace != null && PICKABLE_PLACE.test(payload.text);
   const clipWords = clip?.provider === 'hosted' && !partnerFilm && !placed ? payload.text : clip ? clipTitle(clip.title) : null;
-  const sameAsClip = clip != null && !partnerFilm && ((clip.provider === 'hosted' && !placed) || payload.text.trim() === clip.title.trim());
+  // A clip post that names its speaker is someone talking: the words read whole and the clip is one link, no still.
+  const spokenClip = clip?.video_id && payload.attribution != null ? clip : null;
+  const sameAsClip = clip != null && !partnerFilm && !spokenClip && ((clip.provider === 'hosted' && !placed) || payload.text.trim() === clip.title.trim());
   // A quote names its speaker's team on the speaker line, so a team with a page leaves the tag row (site Decided #230).
   const teams = (payload.teams ?? []).map((team) => ({ team, link: teamFor?.(team) ?? null }));
   const spoken = isQuote ? teams.filter((t) => t.link || onPickTeam) : [];
@@ -321,7 +323,11 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
             <p className="live-entry__text">{postText(told.body, picks)}</p>
             {told.watch && <p className="live-entry__watch"><strong>{postText(told.watch, picks)}</strong></p>}
           </>}
-      {clip && <ClipRow video={clip} title={clipWords ?? ''} wide={partnerFilm} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
+      {spokenClip
+        ? <button type="button" className="live-entry__link" disabled={!onOpenVideo} onClick={(event) => onOpenVideo?.(spokenClip, event.currentTarget)}>
+            Watch{spokenClip.duration ? ` · ${clipLength(spokenClip.duration)}` : ''} {OPENS}
+          </button>
+        : clip && <ClipRow video={clip} title={clipWords ?? ''} wide={partnerFilm} poster={clip.provider === 'hosted' ? videoPoster?.(clip) : null} onOpenVideo={onOpenVideo} />}
       {payload.moments && payload.moments.length > 0 && <ol className="live-entry__moments">{payload.moments.map((moment, index) => <li key={index}>
         {onOpenMoment ? <button type="button" className="live-entry__link" onClick={() => onOpenMoment(moment.dispatch_id)}>{moment.label} {GOES}</button> : <span>{moment.label}</span>}
       </li>)}</ol>}

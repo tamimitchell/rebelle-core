@@ -126,6 +126,17 @@ test('a hosted clip is the same row, titled by the post, its still from the host
   assert.ok(!placeholder.includes('<iframe') && !placeholder.includes('<video') && !placeholder.includes('<button type="button" class="live-clip'));
 });
 
+test('a clip post naming its speaker keeps the words whole and plays the clip from one link', () => {
+  const video = {provider:'hosted' as const, video_id:'225b26fa-3dd7-41ca-9fe4-c3859c00584c', title:'Day 6 competition update · Chrissie Beavis', duration:57};
+  const dispatch = {...records[4].payload, title:'Competition update', text:'So, I\'d like everyone at home to know.\n\nToday it\'s different.', attribution:'Chrissie Beavis', link:'https://www.instagram.com/p/DefAUGuvZ6X/', panel:null, video};
+  const reader = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
+  assert.ok(reader.includes('<p class="live-entry__text">So, I&#x27;d like everyone at home to know.\n\nToday it&#x27;s different.</p>'));
+  assert.ok(!reader.includes('live-clip'), 'no still beside the words');
+  assert.ok(reader.includes('Watch · 0:57'));
+  assert.ok(!reader.includes('instagram.com'), 'no link out to the same clip');
+  assert.ok(!renderToStaticMarkup(<DispatchView dispatch={{...dispatch, attribution:null}} onOpenVideo={() => {}} />).includes('Watch · 0:57'), 'an unnamed clip keeps its row');
+});
+
 test('a flyover is headed Mapbox Flyover and plays full width, unless the post names itself', () => {
   const video = {provider:'hosted' as const, video_id:'04bdf9bc-ac28-4d62-9228-b73b4b783cfc', title:'Flyover · Prologue course', duration:163};
   const dispatch = {...records[4].payload, title:null, stats:null, text:'The Prologue course from above.', panel:'media' as const, video};
