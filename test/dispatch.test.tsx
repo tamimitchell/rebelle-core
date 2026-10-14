@@ -137,6 +137,12 @@ test('a hosted clip is the same row, titled by the post, its still from the host
   assert.ok(!placeholder.includes('<iframe') && !placeholder.includes('<video') && !placeholder.includes('<button type="button" class="live-clip'));
 });
 
+test('a tall clip is its still and play mark, with no Watch beside it', () => {
+  const video = {provider:'youtube' as const, video_id:'abcdefghijk', title:'A Short', duration:30};
+  const dispatch = {...records[4].payload, text:'Up on the Hammers', panel:'media' as const, video:{...video, title:'#shorts A Short'}};
+  const tall = renderToStaticMarkup(<DispatchView dispatch={dispatch} onOpenVideo={() => {}} />);
+  assert.ok(tall.includes('live-clip--portrait') && !tall.includes('live-clip__watch'));
+});
 test('a clip post naming its speaker keeps the words whole and plays the clip from one link', () => {
   const video = {provider:'hosted' as const, video_id:'225b26fa-3dd7-41ca-9fe4-c3859c00584c', title:'Day 6 competition update · Chrissie Beavis', duration:57};
   const dispatch = {...records[4].payload, title:'Competition update', text:'So, I\'d like everyone at home to know.\n\nToday it\'s different.', attribution:'Chrissie Beavis', link:'https://www.instagram.com/p/DefAUGuvZ6X/', panel:null, video};
