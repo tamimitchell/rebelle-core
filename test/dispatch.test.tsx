@@ -91,6 +91,21 @@ test('a host\'s other sizes let the browser pick a copy, and the photo\'s own ad
   const plain = renderToStaticMarkup(<DispatchView dispatch={gallery} />);
   assert.ok(plain.includes(`<img src="${url}"`) && !plain.includes('srcSet') && !plain.includes('sizes='));
 });
+test('a photo carries the studio\'s alt and title: the alt is drawn, the title names the button that opens it', () => {
+  const url = 'https://rebelle.example/images/f4e20456-d961-473d-8c3f-5b3d16db6abd/1280';
+  const described = { url, credit: 'Regine Trias', alt: 'A tan pickup crosses a dry wash under low cloud.', title: 'Crossing the wash' };
+  for (const dispatch of [{ ...records[1].payload, photos: [described] }, { ...records[0].payload, photos: [described] }]) {
+    assert.equal(DispatchPayloadSchema.safeParse(dispatch).success, true);
+    const html = renderToStaticMarkup(<DispatchView dispatch={dispatch} />);
+    assert.ok(html.includes('aria-label="Open photo — Crossing the wash"'), html);
+    assert.ok(html.includes('alt="A tan pickup crosses a dry wash under low cloud."'), html);
+  }
+  const unnamed = { ...records[1].payload, photos: [{ ...described, alt: null, title: null }] };
+  assert.equal(DispatchPayloadSchema.safeParse(unnamed).success, true);
+  const plain = renderToStaticMarkup(<DispatchView dispatch={unnamed} />);
+  assert.ok(plain.includes('aria-label="Open photo — Regine Trias"') && plain.includes('alt=""'), plain);
+  assert.equal(DispatchPayloadSchema.safeParse({ ...unnamed, photos: [{ url, credit: 'Regine Trias', alt: '' }] }).success, false);
+});
 test('a host is told which frame each photo sits in, so it can crop around the focus point', () => {
   const photo = (n: number) => ({ url: `https://rebelle.example/images/f4e20456-d961-473d-8c3f-5b3d16db6ab${n}/1280`, credit: 'Regine Trias' });
   const frames = (dispatch: DispatchPayload) => [...renderToStaticMarkup(

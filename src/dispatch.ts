@@ -139,6 +139,17 @@ const VideoSchema = z
 
 const MomentSchema = z.object({ dispatch_id: z.string().uuid(), label: z.string().min(1).max(120) }).strict();
 
+// The studio's own title and alt text for the photograph, null when it has none.
+// Optional on the wire: documents sent before them carry no keys.
+const DispatchPhotoSchema = z
+  .object({
+    url: PhotoUrlSchema,
+    credit: z.string().min(1),
+    alt: z.string().min(1).max(1000).nullable().optional(),
+    title: z.string().min(1).max(200).nullable().optional(),
+  })
+  .strict();
+
 export const DispatchPayloadSchema = z
   .object({
     posted_at: z.string().datetime({ offset: true }),
@@ -152,7 +163,7 @@ export const DispatchPayloadSchema = z
     teams: z.array(TeamNumberSchema).nullable(),
     sponsor: SponsorKeySchema.nullable(),
     stats: StatsSchema.nullable(),
-    photos: z.array(z.object({ url: PhotoUrlSchema, credit: z.string().min(1) }).strict()).nullable(),
+    photos: z.array(DispatchPhotoSchema).nullable(),
     link: HttpUrlSchema.nullable(),
     attribution: z.string().min(1).max(200).nullable(),
     // A quote's lead-in: who she is and why her words matter, drawn over the quote. Optional on the wire.
