@@ -101,14 +101,17 @@ test('a host is told which frame each photo sits in, so it can crop around the f
   assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1), photo(2), photo(3)] }), ['4:3', '4:3', '4:3']);
   assert.deepEqual(frames({ ...records[0].payload, photos: [photo(1)] }), ['16:9']);
 });
-test('four photos stand two by two and five or more wrap three to a row', () => {
+test('a set of four or more stands two to a row, and an odd one out leads it wide', () => {
   const photo = (n: number) => ({ url: `https://rebelle.example/images/f4e20456-d961-473d-8c3f-5b3d16db6a${String(n).padStart(2, '0')}/1280`, credit: 'Regine Trias' });
-  const row = (count: number) => renderToStaticMarkup(
-    <DispatchView dispatch={{ ...records[1].payload, photos: Array.from({ length: count }, (_, n) => photo(n)) }} />,
-  ).match(/class="(live-entry__photos[^"]*)"/)![1];
-  assert.equal(row(3), 'live-entry__photos');
-  assert.equal(row(4), 'live-entry__photos live-entry__photos--grid live-entry__photos--pairs');
-  assert.equal(row(9), 'live-entry__photos live-entry__photos--grid');
+  const render = (count: number) => renderToStaticMarkup(
+    <DispatchView dispatch={{ ...records[1].payload, photos: Array.from({ length: count }, (_, n) => photo(n)) }} photoSources={(_, frame) => ({ srcSet: `${frame}.jpg 640w`, sizes: '100vw' })} />,
+  );
+  const frames = (html: string) => [...html.matchAll(/srcSet="([^"]+)\.jpg 640w"/g)].map((match) => match[1]);
+  assert.ok(!render(3).includes('live-entry__photos--grid'));
+  assert.deepEqual(frames(render(4)), ['4:3', '4:3', '4:3', '4:3']);
+  assert.ok(render(4).includes('live-entry__photos--grid') && !render(4).includes('--lead'));
+  assert.deepEqual(frames(render(9)), ['16:9', '4:3', '4:3', '4:3', '4:3', '4:3', '4:3', '4:3', '4:3']);
+  assert.equal(render(9).match(/live-entry__photo--lead/g)!.length, 1);
 });
 test('text is literal, generated authorship stays private, and unsafe URLs refuse', () => {
   const dispatch = {...records[0].payload, text:'<script>alert(1)</script> **literal**', authorship:'ai-assisted' as const};
