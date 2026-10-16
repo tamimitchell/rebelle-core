@@ -176,6 +176,11 @@
 
 a.live-entry__photo { cursor: pointer; }
 
+/* Four photos stand two by two; five or more three to a row, a short last row filling its width. */
+.live-entry__photos--grid { flex-wrap: wrap; }
+.live-entry__photos--grid > .live-entry__photo { flex: 1 1 calc((100% - 10px) / 3); }
+.live-entry__photos--pairs > .live-entry__photo { flex-basis: calc((100% - 5px) / 2); }
+
 .live-entry__photo--square {
   aspect-ratio: 1;
 }

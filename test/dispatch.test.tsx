@@ -101,6 +101,15 @@ test('a host is told which frame each photo sits in, so it can crop around the f
   assert.deepEqual(frames({ ...records[1].payload, photos: [photo(1), photo(2), photo(3)] }), ['4:3', '4:3', '4:3']);
   assert.deepEqual(frames({ ...records[0].payload, photos: [photo(1)] }), ['16:9']);
 });
+test('four photos stand two by two and five or more wrap three to a row', () => {
+  const photo = (n: number) => ({ url: `https://rebelle.example/images/f4e20456-d961-473d-8c3f-5b3d16db6a${String(n).padStart(2, '0')}/1280`, credit: 'Regine Trias' });
+  const row = (count: number) => renderToStaticMarkup(
+    <DispatchView dispatch={{ ...records[1].payload, photos: Array.from({ length: count }, (_, n) => photo(n)) }} />,
+  ).match(/class="(live-entry__photos[^"]*)"/)![1];
+  assert.equal(row(3), 'live-entry__photos');
+  assert.equal(row(4), 'live-entry__photos live-entry__photos--grid live-entry__photos--pairs');
+  assert.equal(row(9), 'live-entry__photos live-entry__photos--grid');
+});
 test('text is literal, generated authorship stays private, and unsafe URLs refuse', () => {
   const dispatch = {...records[0].payload, text:'<script>alert(1)</script> **literal**', authorship:'ai-assisted' as const};
   const html = renderToStaticMarkup(<DispatchView dispatch={dispatch} />);

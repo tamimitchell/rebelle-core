@@ -276,11 +276,12 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const tagged = isQuote ? teams.filter((t) => !t.link && !onPickTeam) : teams;
   const speaker = spoken.length > 0 ? payload.attribution?.replace(/,?\s*#\d+$/, '') : payload.attribution;
 
-  /** Two photos stand square side by side; three keep 4:3 so the row stays short. */
+  /** Two photos stand square side by side; three or more keep 4:3, and four or more wrap into a grid. */
   const rowFrame: PhotoFrame = photos.length === 2 ? '1:1' : photos.length > 2 ? '4:3' : 'own';
+  const grid = photos.length === 4 ? ' live-entry__photos--grid live-entry__photos--pairs' : photos.length > 4 ? ' live-entry__photos--grid' : '';
   const entry = isEntryLink(payload.link) ? payload.link! : null;
   const photoRow = (
-    <div className="live-entry__photos">
+    <div className={`live-entry__photos${grid}`}>
       {photos.map((photo) => entry ? (
         <a
           key={photo.url}
