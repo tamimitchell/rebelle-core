@@ -32,6 +32,12 @@ test('a quote may lead in with context, drawn over its words; no other kind carr
   assert.throws(() => DispatchPayloadSchema.parse({ ...records[0].payload, context: 'Not on an update.' }));
 });
 
+test('a post may be pinned; absent, it is not', () => {
+  assert.equal(DispatchPayloadSchema.parse({ ...records[0].payload, pinned: true }).pinned, true);
+  assert.equal(DispatchPayloadSchema.parse(records[0].payload).pinned, undefined);
+  assert.throws(() => DispatchPayloadSchema.parse({ ...records[0].payload, pinned: 'yes' }));
+});
+
 test('a quote highlights the words it marks and keeps the rest', () => {
   const quote = records[2].payload;
   const marked = renderToStaticMarkup(<DispatchView dispatch={{ ...quote, text: '**A lot different than Ohio.** But I feel good now.' }} />);
