@@ -176,6 +176,11 @@
 
 a.live-entry__photo { cursor: pointer; }
 
+/* A set of four or more stands two to a row; an odd one out leads it, full width at 16:9. */
+.live-entry__photos--grid { flex-wrap: wrap; }
+.live-entry__photos--grid > .live-entry__photo { flex: 1 1 calc((100% - 5px) / 2); }
+.live-entry__photos--grid > .live-entry__photo--lead { flex-basis: 100%; aspect-ratio: 16 / 9; }
+
 .live-entry__photo--square {
   aspect-ratio: 1;
 }

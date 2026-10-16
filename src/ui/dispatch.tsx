@@ -276,29 +276,33 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
   const tagged = isQuote ? teams.filter((t) => !t.link && !onPickTeam) : teams;
   const speaker = spoken.length > 0 ? payload.attribution?.replace(/,?\s*#\d+$/, '') : payload.attribution;
 
-  /** Two photos stand square side by side; three keep 4:3 so the row stays short. */
+  /** Two photos stand square side by side and three keep 4:3 in a row. Four or more are a set: two to a row, and an odd one out leads it wide. */
   const rowFrame: PhotoFrame = photos.length === 2 ? '1:1' : photos.length > 2 ? '4:3' : 'own';
+  const grid = photos.length > 3;
+  const lead = grid && photos.length % 2 === 1 ? photos[0] : null;
+  const frameOf = (photo: Photo): PhotoFrame => (photo === lead ? '16:9' : rowFrame);
+  const photoClass = (photo: Photo) => `live-entry__photo${rowFrame === '1:1' ? ' live-entry__photo--square' : ''}${photo === lead ? ' live-entry__photo--lead' : ''}`;
   const entry = isEntryLink(payload.link) ? payload.link! : null;
   const photoRow = (
-    <div className="live-entry__photos">
+    <div className={`live-entry__photos${grid ? ' live-entry__photos--grid' : ''}`}>
       {photos.map((photo) => entry ? (
         <a
           key={photo.url}
-          className={`live-entry__photo${rowFrame === '1:1' ? ' live-entry__photo--square' : ''}`}
+          className={photoClass(photo)}
           href={entry} target="_blank" rel="noopener noreferrer"
           aria-label="Enter the giveaway, opens in a new tab"
         >
-          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, rowFrame)} />
+          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, frameOf(photo))} />
         </a>
       ) : (
         <button
           key={photo.url}
           type="button"
-          className={`live-entry__photo${rowFrame === '1:1' ? ' live-entry__photo--square' : ''}`}
+          className={photoClass(photo)}
           disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
           aria-label={`Open photo — ${photo.credit}`}
         >
-          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, rowFrame)} />
+          <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, frameOf(photo))} />
         </button>
       ))}
     </div>
