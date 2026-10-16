@@ -161,6 +161,8 @@ export const DispatchPayloadSchema = z
     video: VideoSchema.nullable(),
     moments: z.array(MomentSchema).max(12).nullable(),
     story: z.string().uuid().nullable(),
+    // Held at the top of its day's feed, over story order. Optional on the wire.
+    pinned: z.boolean().nullable().optional(),
   })
   .strict()
   // The kind decides what rides with it, as the studio's own shape does: a
