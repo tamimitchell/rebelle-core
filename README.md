@@ -221,6 +221,10 @@ A dispatch's optional `title` is a heading the poster chose, drawn the way the
 partner highlight's is. The key is optional on the wire because documents sent
 before it existed carry none; a partner highlight keeps its own heading.
 
+A photo may carry the studio's own `alt` and `title` for it, each null when the
+studio has none and absent on documents sent before them. The photo draws its
+`alt`; the button that opens it is named by its `title`, else its credit.
+
 The shared row shows quote attribution, recap labels, video title/duration and
 an explicit placeholder for an unassigned clip. A YouTube clip has a watch link;
 hosted playback and delivery of a referenced story remain consumer integration

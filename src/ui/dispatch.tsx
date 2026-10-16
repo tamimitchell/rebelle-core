@@ -300,7 +300,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
           type="button"
           className={photoClass(photo)}
           disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photo)}
-          aria-label={`Open photo — ${photo.credit}`}
+          aria-label={`Open photo — ${photo.title ?? photo.credit}`}
         >
           <DispatchPhoto photo={photo} url={photoUrl ? photoUrl(photo) : photo.url} sources={photoSources?.(photo, frameOf(photo))} />
         </button>
@@ -384,7 +384,7 @@ export function DispatchView({ dispatch, timeLabel, panelLabels = {}, onViewPane
               type="button"
               className="live-widget__photo"
               disabled={!onOpenPhoto} onClick={() => onOpenPhoto?.(photos[0])}
-              aria-label={`Open photo — ${photos[0].credit}`}
+              aria-label={`Open photo — ${photos[0].title ?? photos[0].credit}`}
             >
               <DispatchPhoto photo={photos[0]} url={photoUrl ? photoUrl(photos[0]) : photos[0].url} sources={photoSources?.(photos[0], '16:9')} />
             </button>
@@ -491,7 +491,7 @@ function DispatchPhoto({ photo, url, sources }: { photo: Photo; url: string | nu
   // A photograph that finished loading before the page hydrated fired its load unheard.
   React.useEffect(() => { if (image.current?.complete && image.current.naturalWidth) measure(image.current); }, []);
   return <React.Fragment>{url && failed !== url
-    ? <img ref={image} className={tall ? 'live-entry__photo-tall' : undefined} srcSet={sources?.srcSet} sizes={sources?.sizes} src={url} alt="" loading="lazy" decoding="async"
+    ? <img ref={image} className={tall ? 'live-entry__photo-tall' : undefined} srcSet={sources?.srcSet} sizes={sources?.sizes} src={url} alt={photo.alt ?? ''} loading="lazy" decoding="async"
         onLoad={(event) => measure(event.currentTarget)} onError={() => setFailed(url)} />
     : <span className="live-entry__missing">Photograph unavailable · {photo.credit}</span>}
   </React.Fragment>;
