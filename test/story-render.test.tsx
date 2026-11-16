@@ -91,7 +91,7 @@ test('a photo set draws every photograph with its alt, the first large, and coun
   assert.equal(html.match(/<img /g)?.length, 7);
   for (const photo of part.content.photos) assert.match(html, new RegExp(`alt="${photo.alt}"`));
   assert.match(html, /6f1a2b3c-4d5e-4f60-8a71-b2c3d4e5f601\/960/);
-  assert.match(html, /6f1a2b3c-4d5e-4f60-8a71-b2c3d4e5f602\/480/);
+  assert.match(html, /6f1a2b3c-4d5e-4f60-8a71-b2c3d4e5f602\/640/);
   assert.match(html, /<span class="rr-story__more" aria-hidden="true">\+2<\/span>/);
   assert.match(html, /<figcaption>Illustrative set of seven\.<\/figcaption>/);
   const pair = { component: 'Photos' as const, content: { photos: part.content.photos.slice(0, 2) } };
