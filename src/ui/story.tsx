@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { parseProse, type Inline, type ProseDocument } from '../prose.ts';
-import { asOfLabel, durationLabel, mapFigures, placeLabel, routeFigures, videoUrls, type MapContent, type MapRoute, type Story, type StoryComponent } from '../story.ts';
+import { asOfLabel, choiceLetter, durationLabel, mapFigures, placeLabel, routeFigures, videoUrls, type MapContent, type MapRoute, type QuizContent, type Story, type StoryComponent } from '../story.ts';
 import { HostedVideoPlayer, type HostedVideoMedia } from './hosted-video.tsx';
 import { LAND } from './land.ts';
 
@@ -93,7 +93,43 @@ export function StoryPart({ part, media = {} }: { part: StoryComponent; media?: 
     }
     case 'Map':
       return <PlacesMap content={part.content} />;
+    case 'Quiz':
+      return <Quiz content={part.content} />;
   }
+}
+
+/**
+ * Radios and a reveal box, styled by `story.css`: checking either shows the
+ * answer and says whether the pick was right. A browser without `:has()`
+ * shows the answer from the start.
+ */
+function Quiz({ content }: { content: QuizContent }) {
+  // A radio group's name from its own words, so two quizzes rendered apart never share one.
+  const name = `rr-quiz-${hash([content.question, ...content.choices].join('\n'))}`;
+  return (
+    <fieldset className="rr-story__quiz">
+      <legend className="rr-story__quiz-question">
+        {content.title && <span className="rr-story__quiz-title">{content.title}</span>}
+        {content.question}
+      </legend>
+      <div className="rr-story__quiz-choices">
+        {content.choices.map((choice, index) => (
+          <label key={index} className="rr-story__quiz-choice">
+            <input type="radio" name={name} value={choiceLetter(index)} data-correct={index === content.answer ? '' : undefined} />
+            <span className="rr-story__quiz-letter" aria-hidden="true">{choiceLetter(index)}</span>
+            <span>{choice}</span>
+          </label>
+        ))}
+      </div>
+      <label className="rr-story__quiz-reveal"><input type="checkbox" />Reveal answer</label>
+      <div className="rr-story__quiz-answer" aria-live="polite">
+        <p className="rr-story__quiz-verdict" data-verdict="right">Correct!</p>
+        <p className="rr-story__quiz-verdict" data-verdict="wrong">Not quite.</p>
+        <p className="rr-story__quiz-key">The answer is {choiceLetter(content.answer)}: {content.choices[content.answer]}</p>
+        <div className="rr-story__prose"><ProseBlocks document={parseProse(content.explanation)} /></div>
+      </div>
+    </fieldset>
+  );
 }
 
 // The world as longitude and latitude, 75°N to 60°S, where every town sits.
@@ -157,6 +193,8 @@ function RouteList({ route }: { route: MapRoute }) {
   );
 }
 
+/** FNV-1a, as base 36: short and the same on every server. */
+const hash = (value: string) => { let h = 0x811c9dc5; for (const char of value) h = Math.imul(h ^ char.codePointAt(0)!, 0x01000193); return (h >>> 0).toString(36); };
 const plural = (count: number, one: string, many: string) => `${count.toLocaleString('en-US')} ${count === 1 ? one : many}`;
 const round = (value: number) => Math.round(value * 100) / 100;
 

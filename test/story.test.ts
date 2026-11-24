@@ -17,7 +17,7 @@ test('the shared fixture is a release artifact carrying one story in one slot', 
   assert.equal(parsed.placements.length, 1);
   assert.equal(parsed.placements[0].slot, 'site:home-feature');
   assert.deepEqual(parsed.placements[0].story.telling.map((part) => part.component), ['Paragraph', 'Standings', 'Paragraph', 'Prose', 'Quote', 'Figure', 'Video', 'Video', 'Map', 'Photos']);
-  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Photos', 'Video', 'Map']);
+  assert.deepEqual(STORY_COMPONENTS, ['Paragraph', 'Standings', 'Prose', 'Quote', 'Figure', 'Photos', 'Video', 'Map', 'Quiz']);
 });
 
 test('an artifact under the previous version or with an unknown key is refused, not read partially', () => {
@@ -191,4 +191,15 @@ test('a Figure may carry a web address to open when tapped, and a photograph in 
   assert(!figure({ link: '/teams/2026/' }), 'a relative address');
   const set = story.telling[9].content;
   assert(!StoryComponentSchema.safeParse({ component: 'Photos', content: { ...set, photos: set.photos.map((photo: object) => ({ ...photo, link: 'https://example.com/' })) } }).success, 'a set photograph');
+});
+
+test('a quiz names its right answer among two to five choices, and explains it in Prose', () => {
+  const quiz = { question: 'Can you go back for CP 4?', choices: ['Yes', 'No', 'Sometimes'], answer: 1, explanation: 'Per **Rule 8.5(e)**, no.' };
+  const ok = (content: object) => StoryComponentSchema.safeParse({ component: 'Quiz', content }).success;
+  assert(ok(quiz));
+  assert(ok({ ...quiz, title: 'Can you go back?' }));
+  assert(!ok({ ...quiz, answer: 3 }), 'an answer past the choices');
+  assert(!ok({ ...quiz, choices: ['Only one'], answer: 0 }), 'one choice');
+  assert(!ok({ ...quiz, choices: ['A', 'B', 'C', 'D', 'E', 'F'] }), 'six choices');
+  assert(!ok({ ...quiz, html: '<b>no</b>' }), 'an unknown key');
 });

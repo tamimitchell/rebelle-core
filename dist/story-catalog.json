@@ -598,6 +598,61 @@
                       "content"
                     ],
                     "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "component": {
+                        "type": "string",
+                        "const": "Quiz"
+                      },
+                      "content": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "maxLength": 120,
+                            "pattern": "\\S"
+                          },
+                          "question": {
+                            "type": "string",
+                            "maxLength": 600,
+                            "pattern": "\\S"
+                          },
+                          "choices": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "maxLength": 300,
+                              "pattern": "\\S"
+                            },
+                            "minItems": 2,
+                            "maxItems": 5
+                          },
+                          "answer": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "explanation": {
+                            "type": "string",
+                            "maxLength": 12000,
+                            "pattern": "\\S"
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "choices",
+                          "answer",
+                          "explanation"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "component",
+                      "content"
+                    ],
+                    "additionalProperties": false
                   }
                 ]
               },

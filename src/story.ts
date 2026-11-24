@@ -116,6 +116,24 @@ export function videoUrls(value: VideoContent): VideoUrls {
   }
 }
 
+/**
+ * A question with one right answer among two to five choices, and why. The
+ * explanation is Prose's Markdown. The renderer reveals it with HTML and CSS
+ * alone, so a reader who picks a choice or asks for the answer sees it, and
+ * nothing an author wrote runs.
+ */
+export const QuizContentSchema = z.object({
+  title: text(120).optional(),
+  question: text(600),
+  choices: z.array(text(300)).min(2).max(5),
+  answer: z.number().int().min(0),
+  explanation: ProseContentSchema.shape.markdown,
+}).strict().refine((quiz) => quiz.answer < quiz.choices.length, { message: 'the answer is one of the choices', path: ['answer'] });
+export type QuizContent = z.infer<typeof QuizContentSchema>;
+
+/** A choice's letter as a reader sees it: 0 is A. */
+export const choiceLetter = (index: number) => String.fromCharCode(65 + index);
+
 const ascending = <T>(key: (item: T) => number) => (items: T[]) => items.every((item, index) => index === 0 || key(item) > key(items[index - 1]));
 const point = { latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180) };
 
@@ -183,6 +201,7 @@ export const StoryComponentSchema = z.discriminatedUnion('component', [
   z.object({ component: z.literal('Photos'), content: PhotosContentSchema }).strict(),
   z.object({ component: z.literal('Video'), content: VideoContentSchema }).strict(),
   z.object({ component: z.literal('Map'), content: MapContentSchema }).strict(),
+  z.object({ component: z.literal('Quiz'), content: QuizContentSchema }).strict(),
 ]);
 export type StoryComponent = z.infer<typeof StoryComponentSchema>;
 
