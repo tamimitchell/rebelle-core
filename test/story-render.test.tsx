@@ -100,3 +100,14 @@ test('a photo set draws every photograph with its alt, the first large, and coun
   assert.doesNotMatch(drawn, /rr-story__more/);
   assert.match(drawn, /<ul data-shown="2">/, 'a pair is drawn side by side, not as a lead with a gap beside it');
 });
+
+test('a quiz is radios and a reveal box over its answer, the right choice marked for the stylesheet and nothing scripted', () => {
+  const html = renderToStaticMarkup(<StoryPart part={{ component: 'Quiz', content: { title: 'Can you go back?', question: 'You skipped CP 4.', choices: ['Yes', 'No'], answer: 1, explanation: 'Per **Rule 8.5(e)**, no.' } }} />);
+  assert.match(html, /<fieldset class="rr-story__quiz"><legend class="rr-story__quiz-question"><span class="rr-story__quiz-title">Can you go back\?<\/span>You skipped CP 4.<\/legend>/);
+  assert.equal(html.match(/type="radio"/g)?.length, 2);
+  assert.match(html, /<input type="radio" data-correct="" name="rr-quiz-[0-9a-z]+" value="B"\/>/);
+  assert.match(html, /<input type="radio" name="rr-quiz-[0-9a-z]+" value="A"\/>/);
+  assert.match(html, /The answer is B: No/);
+  assert.match(html, /<strong>Rule 8.5\(e\)<\/strong>/);
+  assert.doesNotMatch(html, /<script|onclick/);
+});
